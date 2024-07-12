@@ -13,9 +13,9 @@
 class Sample
 {
 public:
-	Sample(HWND hWnd, uint32_t width, uint32_t heigth, bool useWarp);
+	Sample(uint32_t width, uint32_t heigth);
 
-	void OnInit();
+	void OnInit(HWND hWnd);
 	void OnUpdate();
 	void OnRender();
 	void OnDestroy();
@@ -23,6 +23,8 @@ public:
 private:
 	bool checkTearingSupport();
 	void loadPipeline();
+	void parseCommandLineArguments();
+	void enableDebugLayer();
 
 private:
 	HWND handleWin;

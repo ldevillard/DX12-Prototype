@@ -10,7 +10,6 @@ public:
 	const ComPtr<ID3D12Device2>& Get() const;
 
 private:
-	void enableDebugLayer();
 	ComPtr<IDXGIAdapter4> getAdapter(bool useWarp);
 
 private:

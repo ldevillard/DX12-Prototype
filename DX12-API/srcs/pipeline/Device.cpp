@@ -50,18 +50,6 @@ const ComPtr<ID3D12Device2>& Device::Get() const
 
 #pragma region Private Methods
 
-void Device::enableDebugLayer()
-{
-#if defined(_DEBUG)
-    // always enable the debug layer before doing anything DX12 related
-    // so all possible errors generated while creating DX12 objects
-    // are caught by the debug layer.
-    ComPtr<ID3D12Debug> debugInterface;
-    ThrowIfFailed(D3D12GetDebugInterface(IID_PPV_ARGS(&debugInterface)));
-    debugInterface->EnableDebugLayer();
-#endif
-}
-
 ComPtr<IDXGIAdapter4> Device::getAdapter(bool useWarp)
 {
     ComPtr<IDXGIFactory4> dxgiFactory;

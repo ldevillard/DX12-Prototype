@@ -1,0 +1,139 @@
+#include "PrecompiledHeaders.h"
+#include "Window.h"
+
+#include <iostream>
+
+HWND Window::handleWin;
+RECT Window::windowRect;
+UINT Window::width;
+UINT Window::heigth;
+std::wstring Window::name;
+std::unique_ptr<Sample> Window::sample;
+
+#pragma region Public Methods
+
+int Window::Run(HINSTANCE hInstance, UINT windowWidth, UINT windowHeight, std::wstring windowName, int cmdShow)
+{
+    width = windowWidth;
+    heigth = windowHeight;
+    name = windowName;
+
+    sample = std::make_unique<Sample>(width, heigth);
+
+    registerWindowClass(hInstance);
+    createWindow(hInstance, L"DX12");
+
+    // Initialize the global window rect variable.
+    ::GetWindowRect(handleWin, &windowRect);
+
+    sample->OnInit(handleWin);
+
+    ShowWindow(handleWin, cmdShow);
+
+    // Main sample loop.
+    MSG msg = {};
+    while (msg.message != WM_QUIT)
+    {
+        // Process any messages in the queue.
+        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+    }
+
+    sample->OnDestroy();
+
+    // Return this part of the WM_QUIT message to Windows.
+    return static_cast<char>(msg.wParam);
+}
+
+#pragma endregion
+
+#pragma region Private Methods
+
+void Window::registerWindowClass(HINSTANCE hInst)
+{
+    // register a window class for creating our render window with.
+    WNDCLASSEXW windowClass = {};
+
+    windowClass.cbSize = sizeof(WNDCLASSEXW);
+    windowClass.style = CS_HREDRAW | CS_VREDRAW;
+    windowClass.lpfnWndProc = windowProcessing;
+    windowClass.hInstance = hInst;
+    windowClass.hCursor = ::LoadCursor(NULL, IDC_ARROW);
+    windowClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+    windowClass.lpszClassName = name.c_str();
+
+    static HRESULT hr = ::RegisterClassExW(&windowClass);
+    assert(SUCCEEDED(hr));
+}
+
+void Window::createWindow(HINSTANCE hInst, const wchar_t* windowTitle)
+{
+    int screenWidth = ::GetSystemMetrics(SM_CXSCREEN);
+    int screenHeight = ::GetSystemMetrics(SM_CYSCREEN);
+
+    RECT windowRect = { 0, 0, static_cast<LONG>(width), static_cast<LONG>(heigth) };
+    ::AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
+
+    int windowWidth = windowRect.right - windowRect.left;
+    int windowHeight = windowRect.bottom - windowRect.top;
+
+    // center the window within the screen. Clamp to 0, 0 for the top-left corner.
+    int windowX = std::max<int>(0, (screenWidth - windowWidth) / 2);
+    int windowY = std::max<int>(0, (screenHeight - windowHeight) / 2);
+
+    handleWin = ::CreateWindowExW(
+        NULL,
+        name.c_str(),
+        windowTitle,
+        WS_OVERLAPPEDWINDOW,
+        windowX,
+        windowY,
+        windowWidth,
+        windowHeight,
+        NULL,
+        NULL,
+        hInst,
+        nullptr
+    );
+
+    if (!handleWin)
+    {
+        DWORD error = GetLastError();
+        std::wcerr << L"Failed to create window. Error: " << error << std::endl;
+    }
+
+    assert(handleWin && "Failed to create window");
+}
+
+LRESULT CALLBACK Window::windowProcessing(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    switch (uMsg)
+    {
+    case WM_CREATE:
+    {
+        // Save the DXSample* passed in to CreateWindow.
+        LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
+        SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
+    }
+    return 0;
+    case WM_PAINT:
+        if (sample)
+        {
+            sample->OnUpdate();
+            sample->OnRender();
+        }
+        return 0;
+
+    case WM_DESTROY:
+        PostQuitMessage(0);
+        return 0;
+    }
+
+    // Handle any messages the switch statement didn't.
+    return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}
+
+#pragma endregion

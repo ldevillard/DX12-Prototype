@@ -5,17 +5,18 @@
 
 #pragma region Public Methods
 
-Sample::Sample(HWND hWnd, uint32_t w, uint32_t h, bool warp)
-	: handleWin(hWnd)
-	, width(w)
+Sample::Sample(uint32_t w, uint32_t h)
+	: width(w)
 	, heigth(h)
-	, useWarp(warp)
 {
+    parseCommandLineArguments();
+    enableDebugLayer();
 	allowTearing = checkTearingSupport();
 }
 
-void Sample::OnInit()
+void Sample::OnInit(HWND hWnd)
 {
+    handleWin = hWnd;
 	loadPipeline();
 }
 
@@ -144,6 +145,33 @@ void Sample::loadPipeline()
 
     commandList = std::make_unique<CommandList>(*device, *commandAllocators[swapChain->GetCurrentBackBufferIndex()], D3D12_COMMAND_LIST_TYPE_DIRECT);
     fence = std::make_unique<Fence>(*device);
+}
+
+void Sample::parseCommandLineArguments()
+{
+    int argc;
+    wchar_t** argv = ::CommandLineToArgvW(::GetCommandLineW(), &argc);
+    for (int i = 1; i < argc; ++i)
+    {
+        if (_wcsnicmp(argv[i], L"-warp", wcslen(argv[i])) == 0 ||
+            _wcsnicmp(argv[i], L"/warp", wcslen(argv[i])) == 0)
+        {
+            useWarp = true;
+        }
+    }
+    ::LocalFree(argv);
+}
+
+void Sample::enableDebugLayer()
+{
+#if defined(_DEBUG)
+    // always enable the debug layer before doing anything DX12 related
+    // so all possible errors generated while creating DX12 objects
+    // are caught by the debug layer.
+    ComPtr<ID3D12Debug> debugInterface;
+    ThrowIfFailed(D3D12GetDebugInterface(IID_PPV_ARGS(&debugInterface)));
+    debugInterface->EnableDebugLayer();
+#endif
 }
 
 #pragma endregion
