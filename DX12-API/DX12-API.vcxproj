@@ -107,6 +107,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>PrecompiledHeaders.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,10 +133,29 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="headers\d3dx12.h" />
+    <ClInclude Include="headers\Helpers\Helpers.h" />
+    <ClInclude Include="headers\pipeline\CommandAllocator.h" />
+    <ClInclude Include="headers\pipeline\CommandList.h" />
+    <ClInclude Include="headers\pipeline\CommandQueue.h" />
+    <ClInclude Include="headers\pipeline\DescriptorHeap.h" />
+    <ClInclude Include="headers\pipeline\Device.h" />
+    <ClInclude Include="headers\pipeline\Fence.h" />
+    <ClInclude Include="headers\pipeline\SwapChain.h" />
     <ClInclude Include="headers\PrecompiledHeaders.h" />
+    <ClInclude Include="headers\rendering\Sample.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="srcs\PrecompiledHeaders.cpp" />
+    <ClCompile Include="srcs\pipeline\CommandAllocator.cpp" />
+    <ClCompile Include="srcs\pipeline\CommandList.cpp" />
+    <ClCompile Include="srcs\pipeline\CommandQueue.cpp" />
+    <ClCompile Include="srcs\pipeline\DescriptorHeap.cpp" />
+    <ClCompile Include="srcs\pipeline\Device.cpp" />
+    <ClCompile Include="srcs\pipeline\Fence.cpp" />
+    <ClCompile Include="srcs\pipeline\SwapChain.cpp" />
+    <ClCompile Include="srcs\PrecompiledHeaders.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="srcs\rendering\Sample.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

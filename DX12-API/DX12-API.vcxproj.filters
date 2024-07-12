@@ -13,6 +13,21 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\helpers">
+      <UniqueIdentifier>{bdbe03dd-8fa0-4d3f-b720-47103f29c83e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pipeline">
+      <UniqueIdentifier>{1f337c62-0563-4185-83fa-59eda6199164}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\pipeline">
+      <UniqueIdentifier>{1ae9eac1-279e-4181-98ce-0be5b57031a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendering">
+      <UniqueIdentifier>{c534abca-2132-4a67-8805-5f9f2280b9b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendering">
+      <UniqueIdentifier>{0618fa05-fb00-4ef9-93e4-5f93fc8d6f66}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\PrecompiledHeaders.h">
@@ -21,10 +36,61 @@
     <ClInclude Include="headers\d3dx12.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="headers\Helpers\Helpers.h">
+      <Filter>Header Files\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\pipeline\Device.h">
+      <Filter>Header Files\pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\pipeline\SwapChain.h">
+      <Filter>Header Files\pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\pipeline\CommandQueue.h">
+      <Filter>Header Files\pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\rendering\Sample.h">
+      <Filter>Header Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\pipeline\DescriptorHeap.h">
+      <Filter>Header Files\pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\pipeline\CommandAllocator.h">
+      <Filter>Header Files\pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\pipeline\CommandList.h">
+      <Filter>Header Files\pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\pipeline\Fence.h">
+      <Filter>Header Files\pipeline</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="srcs\PrecompiledHeaders.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\pipeline\Device.cpp">
+      <Filter>Source Files\pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\pipeline\CommandQueue.cpp">
+      <Filter>Source Files\pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\pipeline\SwapChain.cpp">
+      <Filter>Source Files\pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\rendering\Sample.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\pipeline\DescriptorHeap.cpp">
+      <Filter>Source Files\pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\pipeline\CommandAllocator.cpp">
+      <Filter>Source Files\pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\pipeline\CommandList.cpp">
+      <Filter>Source Files\pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\pipeline\Fence.cpp">
+      <Filter>Source Files\pipeline</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

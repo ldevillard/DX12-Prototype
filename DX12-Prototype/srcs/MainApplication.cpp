@@ -1,7 +1,7 @@
-#include <iostream>
+#include "PrecompiledHeaders.h"
 
-int main()
+_Use_decl_annotations_
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 {
-	std::cout << "Hello World!" << std::endl;
 	return 0;
 }
