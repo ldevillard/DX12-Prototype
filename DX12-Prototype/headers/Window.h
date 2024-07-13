@@ -12,7 +12,7 @@ private:
 	static void registerWindowClass(HINSTANCE hInst);
 	static void createWindow(HINSTANCE hInst, const wchar_t* windowTitle);
 
-	static LRESULT CALLBACK windowProcessing(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	static LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	static HWND handleWin;

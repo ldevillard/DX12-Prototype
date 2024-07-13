@@ -47,8 +47,8 @@ void Sample::OnRender()
     
     frameFenceValues[currentBackBufferIndex] = fence->Signal(*commandQueue);
     
-    UINT syncInterval = VSync ? 1 : 0;
-    UINT presentFlags = allowTearing && !VSync ? DXGI_PRESENT_ALLOW_TEARING : 0;
+    UINT syncInterval = vSync ? 1 : 0;
+    UINT presentFlags = allowTearing && !vSync ? DXGI_PRESENT_ALLOW_TEARING : 0;
     ThrowIfFailed(swapChain->Get()->Present(syncInterval, presentFlags));
     
     currentBackBufferIndex = swapChain->GetCurrentBackBufferIndex();

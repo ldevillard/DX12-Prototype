@@ -35,7 +35,7 @@ private:
 
 	bool useWarp;
 	bool allowTearing;
-	bool VSync = true;
+	bool vSync = true;
 
 	Timer timer;
 

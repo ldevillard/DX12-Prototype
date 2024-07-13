@@ -23,18 +23,18 @@ int Window::Run(HINSTANCE hInstance, UINT windowWidth, UINT windowHeight, std::w
     registerWindowClass(hInstance);
     createWindow(hInstance, L"DX12");
 
-    // Initialize the global window rect variable.
+    // initialize the global window rect variable.
     ::GetWindowRect(handleWin, &windowRect);
 
     sample->OnInit(handleWin);
 
     ShowWindow(handleWin, cmdShow);
 
-    // Main sample loop.
+    // main sample loop.
     MSG msg = {};
     while (msg.message != WM_QUIT)
     {
-        // Process any messages in the queue.
+        // process any messages in the queue.
         if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
         {
             TranslateMessage(&msg);
@@ -44,7 +44,7 @@ int Window::Run(HINSTANCE hInstance, UINT windowWidth, UINT windowHeight, std::w
 
     sample->OnDestroy();
 
-    // Return this part of the WM_QUIT message to Windows.
+    // return this part of the WM_QUIT message to Windows.
     return static_cast<char>(msg.wParam);
 }
 
@@ -59,7 +59,7 @@ void Window::registerWindowClass(HINSTANCE hInst)
 
     windowClass.cbSize = sizeof(WNDCLASSEXW);
     windowClass.style = CS_HREDRAW | CS_VREDRAW;
-    windowClass.lpfnWndProc = windowProcessing;
+    windowClass.lpfnWndProc = WinProc;
     windowClass.hInstance = hInst;
     windowClass.hCursor = ::LoadCursor(NULL, IDC_ARROW);
     windowClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
@@ -96,43 +96,38 @@ void Window::createWindow(HINSTANCE hInst, const wchar_t* windowTitle)
         NULL,
         NULL,
         hInst,
-        nullptr
+        sample.get()
     );
-
-    if (!handleWin)
-    {
-        DWORD error = GetLastError();
-        std::wcerr << L"Failed to create window. Error: " << error << std::endl;
-    }
 
     assert(handleWin && "Failed to create window");
 }
 
-LRESULT CALLBACK Window::windowProcessing(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK Window::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+    Sample* sample = reinterpret_cast<Sample*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+
     switch (uMsg)
     {
-    case WM_CREATE:
-    {
-        // Save the DXSample* passed in to CreateWindow.
-        LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
-        SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
-    }
-    return 0;
-    case WM_PAINT:
-        if (sample)
+        case WM_CREATE:
         {
-            sample->OnUpdate();
-            sample->OnRender();
+            LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
+            SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
         }
         return 0;
+        case WM_PAINT:
+            if (sample)
+            {
+                sample->OnUpdate();
+                sample->OnRender();
+            }
+            return 0;
 
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        return 0;
+        case WM_DESTROY:
+            PostQuitMessage(0);
+            return 0;
     }
 
-    // Handle any messages the switch statement didn't.
+    // handle any messages the switch statement didn't.
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
