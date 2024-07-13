@@ -13,14 +13,16 @@ public:
 
 	HANDLE GetEvent() const;
 
-    uint64_t Signal(const CommandQueue& commandQueue, uint64_t& fenceValue);
-    void WaitForFenceValue(uint64_t fenceValue, std::chrono::milliseconds duration = std::chrono::milliseconds::max());
-	void Flush(const CommandQueue& commandQueue, uint64_t& fenceValue);
+    uint64_t Signal(const CommandQueue& commandQueue);
+    void WaitForFenceValue(uint64_t fValue, std::chrono::milliseconds duration = std::chrono::milliseconds::max());
+	void Flush(const CommandQueue& commandQueue);
 
 private:
 	void createFenceEventHandle();
 
 private:
 	HANDLE fenceEvent;
+	uint64_t fenceValue = 0;
+
 	ComPtr<ID3D12Fence> fence;
 };

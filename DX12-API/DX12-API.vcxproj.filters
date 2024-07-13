@@ -63,6 +63,9 @@
     <ClInclude Include="headers\pipeline\Fence.h">
       <Filter>Header Files\pipeline</Filter>
     </ClInclude>
+    <ClInclude Include="headers\helpers\Timer.h">
+      <Filter>Header Files\helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="srcs\PrecompiledHeaders.cpp">
@@ -91,6 +94,9 @@
     </ClCompile>
     <ClCompile Include="srcs\pipeline\Fence.cpp">
       <Filter>Source Files\pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\helpers\Timer.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

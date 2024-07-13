@@ -16,7 +16,7 @@ HANDLE Fence::GetEvent() const
 	return fenceEvent;
 }
 
-uint64_t Fence::Signal(const CommandQueue& commandQueue, uint64_t &fenceValue)
+uint64_t Fence::Signal(const CommandQueue& commandQueue)
 {
 	uint64_t fenceValueForSignal = ++fenceValue;
 	ThrowIfFailed(commandQueue.Get()->Signal(fence.Get(), fenceValueForSignal));
@@ -24,18 +24,18 @@ uint64_t Fence::Signal(const CommandQueue& commandQueue, uint64_t &fenceValue)
 	return fenceValueForSignal;
 }
 
-void Fence::WaitForFenceValue(uint64_t fenceValue, std::chrono::milliseconds duration)
+void Fence::WaitForFenceValue(uint64_t fValue, std::chrono::milliseconds duration)
 {
-	if (fence->GetCompletedValue() < fenceValue)
+	if (fence->GetCompletedValue() < fValue)
 	{
-		ThrowIfFailed(fence->SetEventOnCompletion(fenceValue, fenceEvent));
+		ThrowIfFailed(fence->SetEventOnCompletion(fValue, fenceEvent));
 		::WaitForSingleObject(fenceEvent, static_cast<DWORD>(duration.count()));
 	}
 }
 
-void Fence::Flush(const CommandQueue& commandQueue, uint64_t& fenceValue)
+void Fence::Flush(const CommandQueue& commandQueue)
 {
-	uint64_t fenceValueForSignal = Signal(commandQueue, fenceValue);
+	uint64_t fenceValueForSignal = Signal(commandQueue);
 	WaitForFenceValue(fenceValueForSignal);
 }
 

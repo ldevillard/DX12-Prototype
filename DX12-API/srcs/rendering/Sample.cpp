@@ -8,6 +8,7 @@
 Sample::Sample(uint32_t w, uint32_t h)
 	: width(w)
 	, heigth(h)
+    , timer()
 {
     parseCommandLineArguments();
     enableDebugLayer();
@@ -22,27 +23,10 @@ void Sample::OnInit(HWND hWnd)
 
 void Sample::OnUpdate()
 {
-    static uint64_t frameCounter = 0;
-    static double elapsedSeconds = 0.0;
-    static std::chrono::high_resolution_clock clock;
-    static auto t0 = clock.now();
+    timer.OnUpdate();
 
-    frameCounter++;
-    auto t1 = clock.now();
-    auto deltaTime = t1 - t0;
-    t0 = t1;
-
-    elapsedSeconds += deltaTime.count() * 1e-9;
-    if (elapsedSeconds > 1.0)
-    {
-        char buffer[500];
-        auto fps = frameCounter / elapsedSeconds;
-        sprintf_s(buffer, 500, "FPS: %f\n", fps);
-        OutputDebugStringA(buffer);
-
-        frameCounter = 0;
-        elapsedSeconds = 0.0;
-    }
+    std::string fps = std::to_string(timer.GetFrameRate()) + "\n";
+    OutputDebugStringA(fps.c_str());
 }
 
 void Sample::OnRender()
@@ -54,7 +38,7 @@ void Sample::OnRender()
     commandAllocator->Reset();
     commandList->Reset(*commandAllocator, nullptr);
 
-    // Clear the render target.
+    // clear the render target.
     {
         CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
             backBuffer.Get(),
@@ -83,7 +67,7 @@ void Sample::OnRender()
         };
         commandQueue->Get()->ExecuteCommandLists(_countof(commandLists), commandLists);
 
-        frameFenceValues[currentBackBufferIndex] = fence->Signal(*commandQueue, fenceValue);
+        frameFenceValues[currentBackBufferIndex] = fence->Signal(*commandQueue);
 
         UINT syncInterval = VSync ? 1 : 0;
         UINT presentFlags = allowTearing && !VSync ? DXGI_PRESENT_ALLOW_TEARING : 0;
@@ -97,7 +81,7 @@ void Sample::OnRender()
 
 void Sample::OnDestroy()
 {
-    fence->Flush(*commandQueue, fenceValue);
+    fence->Flush(*commandQueue);
     CloseHandle(fence->GetEvent());
 }
 

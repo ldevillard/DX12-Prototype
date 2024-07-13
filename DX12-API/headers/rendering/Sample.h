@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "helpers/Timer.h"
 #include "pipeline/CommandAllocator.h"
 #include "pipeline/CommandList.h"
 #include "pipeline/CommandQueue.h"
@@ -36,7 +37,8 @@ private:
 	bool allowTearing;
 	bool VSync = true;
 
-	uint64_t fenceValue = 0;
+	Timer timer;
+
 	uint64_t frameFenceValues[SwapChain::FrameCount] = {};
 
 	std::unique_ptr<Device> device;

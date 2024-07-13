@@ -134,6 +134,7 @@
   <ItemGroup>
     <ClInclude Include="headers\d3dx12.h" />
     <ClInclude Include="headers\Helpers\Helpers.h" />
+    <ClInclude Include="headers\helpers\Timer.h" />
     <ClInclude Include="headers\pipeline\CommandAllocator.h" />
     <ClInclude Include="headers\pipeline\CommandList.h" />
     <ClInclude Include="headers\pipeline\CommandQueue.h" />
@@ -145,6 +146,7 @@
     <ClInclude Include="headers\rendering\Sample.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="srcs\helpers\Timer.cpp" />
     <ClCompile Include="srcs\pipeline\CommandAllocator.cpp" />
     <ClCompile Include="srcs\pipeline\CommandList.cpp" />
     <ClCompile Include="srcs\pipeline\CommandQueue.cpp" />
