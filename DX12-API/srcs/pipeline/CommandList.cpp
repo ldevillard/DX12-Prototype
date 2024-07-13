@@ -19,6 +19,11 @@ const ComPtr<ID3D12GraphicsCommandList>& CommandList::Get()
     return commandList;
 }
 
+ID3D12GraphicsCommandList* CommandList::GetPtr()
+{
+    return commandList.Get();
+}
+
 void CommandList::Populate(const DescriptorHeap& RTVdescriptorHeap, CommandAllocator& commandAllocator, const Resource& backBuffer, UINT currentBackBufferIndex)
 {
     commandAllocator.Reset();

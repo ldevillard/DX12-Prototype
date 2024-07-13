@@ -39,8 +39,9 @@ void Sample::OnRender()
 
     commandList->Populate(*RTVdescriptorHeap, *commandAllocator, backBuffer, currentBackBufferIndex);
 
-    ID3D12CommandList* const commandLists[] = {
-        commandList->Get().Get()
+    ID3D12CommandList* const commandLists[] = 
+    {
+        commandList->GetPtr()
     };
     commandQueue->Get()->ExecuteCommandLists(_countof(commandLists), commandLists);
     

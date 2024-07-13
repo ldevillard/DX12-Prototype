@@ -29,7 +29,7 @@ SwapChain::SwapChain(HWND hWnd, const CommandQueue& commandQueue, uint32_t width
 
     ComPtr<IDXGISwapChain1> swapChain1;
     ThrowIfFailed(dxgiFactory4->CreateSwapChainForHwnd(
-        commandQueue.Get().Get(),
+        commandQueue.GetPtr(),
         hWnd,
         &swapChainDesc,
         nullptr,

@@ -17,4 +17,9 @@ const ComPtr<ID3D12CommandQueue>& CommandQueue::Get() const
 	return commandQueue;
 }
 
+ID3D12CommandQueue* CommandQueue::GetPtr() const
+{
+	return commandQueue.Get();
+}
+
 #pragma endregion

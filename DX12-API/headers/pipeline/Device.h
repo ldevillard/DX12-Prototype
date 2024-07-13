@@ -2,6 +2,8 @@
 
 #include "helpers/Helpers.h"
 
+class Resource;
+
 class Device
 {
 public:
