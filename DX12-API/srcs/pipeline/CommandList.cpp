@@ -2,6 +2,8 @@
 #include "pipeline/CommandList.h"
 
 #include "pipeline/CommandAllocator.h"
+#include "pipeline/DescriptorHeap.h"
+#include "resources/Resource.h"
 
 #pragma region Public Methods
 
@@ -17,24 +19,35 @@ const ComPtr<ID3D12GraphicsCommandList>& CommandList::Get()
     return commandList;
 }
 
-HRESULT CommandList::Reset(const CommandAllocator& commandAllocator, ID3D12PipelineState* pInitialState)
+void CommandList::Populate(const DescriptorHeap& RTVdescriptorHeap, CommandAllocator& commandAllocator, const Resource& backBuffer, UINT currentBackBufferIndex)
 {
-    return commandList->Reset(commandAllocator.Get().Get(), pInitialState);
-}
+    commandAllocator.Reset();
+    commandList->Reset(commandAllocator.GetPtr(), nullptr);
 
-void CommandList::ResourceBarrier(UINT numBarriers, const D3D12_RESOURCE_BARRIER* pBarriers)
-{
-    commandList->ResourceBarrier(numBarriers, pBarriers);
-}
+    // clear the render target.
+    {
+        CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+            backBuffer.GetPtr(),
+            D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
-void CommandList::ClearRenderTargetView(D3D12_CPU_DESCRIPTOR_HANDLE RenderTargetView, const FLOAT ColorRGBA[4], UINT NumRects, const D3D12_RECT* pRects)
-{
-    commandList->ClearRenderTargetView(RenderTargetView, ColorRGBA, NumRects, pRects);
-}
+        commandList->ResourceBarrier(1, &barrier);
 
-HRESULT CommandList::Close()
-{
-    return commandList->Close();
+        FLOAT clearColor[] = { 0.4f, 0.6f, 0.9f, 1.0f };
+        CD3DX12_CPU_DESCRIPTOR_HANDLE rtv(RTVdescriptorHeap.Get()->GetCPUDescriptorHandleForHeapStart(),
+            currentBackBufferIndex, RTVdescriptorHeap.GetRTVDescriptorSize());
+
+        commandList->ClearRenderTargetView(rtv, clearColor, 0, nullptr);
+    }
+
+    // present
+    {
+        CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+            backBuffer.GetPtr(),
+            D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+        commandList->ResourceBarrier(1, &barrier);
+
+        ThrowIfFailed(commandList->Close());
+    }
 }
 
 #pragma endregion

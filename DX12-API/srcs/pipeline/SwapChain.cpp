@@ -56,7 +56,7 @@ const UINT SwapChain::GetCurrentBackBufferIndex()
     return currentBackBufferIndex;
 }
 
-const ComPtr<ID3D12Resource>& SwapChain::GetCurrentBackBuffer() const
+const Resource& SwapChain::GetCurrentBackBuffer() const
 {
     return backBuffers[currentBackBufferIndex];
 }
@@ -73,7 +73,7 @@ void SwapChain::UpdateRenderTargetViews(const Device& device, const DescriptorHe
 
         device.Get()->CreateRenderTargetView(backBuffer.Get(), nullptr, rtvHandle);
 
-        backBuffers[i] = backBuffer;
+        backBuffers[i] = Resource(backBuffer);
 
         rtvHandle.Offset(rtvDescriptorSize);
     }

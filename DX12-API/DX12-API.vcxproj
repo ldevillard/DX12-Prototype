@@ -133,7 +133,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="headers\d3dx12.h" />
-    <ClInclude Include="headers\Helpers\Helpers.h" />
+    <ClInclude Include="headers\helpers\Helpers.h" />
     <ClInclude Include="headers\helpers\Timer.h" />
     <ClInclude Include="headers\pipeline\CommandAllocator.h" />
     <ClInclude Include="headers\pipeline\CommandList.h" />
@@ -144,6 +144,7 @@
     <ClInclude Include="headers\pipeline\SwapChain.h" />
     <ClInclude Include="headers\PrecompiledHeaders.h" />
     <ClInclude Include="headers\rendering\Sample.h" />
+    <ClInclude Include="headers\resources\Resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="srcs\helpers\Timer.cpp" />
@@ -158,6 +159,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="srcs\rendering\Sample.cpp" />
+    <ClCompile Include="srcs\resources\Resource.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -3,6 +3,8 @@
 
 #include <chrono>
 
+#include "resources/Resource.h"
+
 #pragma region Public Methods
 
 Sample::Sample(uint32_t w, uint32_t h)
@@ -33,50 +35,24 @@ void Sample::OnRender()
 {
     UINT currentBackBufferIndex = swapChain->GetCurrentBackBufferIndex();
     std::unique_ptr<CommandAllocator>& commandAllocator = commandAllocators[currentBackBufferIndex];
-    ComPtr<ID3D12Resource> backBuffer = swapChain->GetCurrentBackBuffer();
+    Resource backBuffer = swapChain->GetCurrentBackBuffer();
 
-    commandAllocator->Reset();
-    commandList->Reset(*commandAllocator, nullptr);
+    commandList->Populate(*RTVdescriptorHeap, *commandAllocator, backBuffer, currentBackBufferIndex);
 
-    // clear the render target.
-    {
-        CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-            backBuffer.Get(),
-            D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-
-        commandList->ResourceBarrier(1, &barrier);
-
-        FLOAT clearColor[] = { 0.4f, 0.6f, 0.9f, 1.0f };
-        CD3DX12_CPU_DESCRIPTOR_HANDLE rtv(RTVdescriptorHeap->Get()->GetCPUDescriptorHandleForHeapStart(),
-            currentBackBufferIndex, RTVdescriptorHeap->GetRTVDescriptorSize());
-
-        commandList->ClearRenderTargetView(rtv, clearColor, 0, nullptr);
-    }
-
-    // Present
-    {
-        CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-            backBuffer.Get(),
-            D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-        commandList->ResourceBarrier(1, &barrier);
-
-        ThrowIfFailed(commandList->Close());
-
-        ID3D12CommandList* const commandLists[] = {
-            commandList->Get().Get()
-        };
-        commandQueue->Get()->ExecuteCommandLists(_countof(commandLists), commandLists);
-
-        frameFenceValues[currentBackBufferIndex] = fence->Signal(*commandQueue);
-
-        UINT syncInterval = VSync ? 1 : 0;
-        UINT presentFlags = allowTearing && !VSync ? DXGI_PRESENT_ALLOW_TEARING : 0;
-        ThrowIfFailed(swapChain->Get()->Present(syncInterval, presentFlags));
-
-        currentBackBufferIndex = swapChain->GetCurrentBackBufferIndex();
-
-        fence->WaitForFenceValue(frameFenceValues[currentBackBufferIndex]);
-    }
+    ID3D12CommandList* const commandLists[] = {
+        commandList->Get().Get()
+    };
+    commandQueue->Get()->ExecuteCommandLists(_countof(commandLists), commandLists);
+    
+    frameFenceValues[currentBackBufferIndex] = fence->Signal(*commandQueue);
+    
+    UINT syncInterval = VSync ? 1 : 0;
+    UINT presentFlags = allowTearing && !VSync ? DXGI_PRESENT_ALLOW_TEARING : 0;
+    ThrowIfFailed(swapChain->Get()->Present(syncInterval, presentFlags));
+    
+    currentBackBufferIndex = swapChain->GetCurrentBackBufferIndex();
+    
+    fence->WaitForFenceValue(frameFenceValues[currentBackBufferIndex]);
 }
 
 void Sample::OnDestroy()

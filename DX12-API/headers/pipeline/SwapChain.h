@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pipeline/Device.h"
+#include "resources/Resource.h"
 
 class CommandQueue;
 class DescriptorHeap;
@@ -12,7 +13,7 @@ public:
 
 	const ComPtr<IDXGISwapChain4>& Get() const;
 	const UINT GetCurrentBackBufferIndex();
-	const ComPtr<ID3D12Resource>& GetCurrentBackBuffer() const;
+	const Resource& GetCurrentBackBuffer() const;
 
 	void UpdateRenderTargetViews(const Device& device, const DescriptorHeap& descriptorHeap);
 
@@ -21,5 +22,5 @@ public:
 private:
 	UINT currentBackBufferIndex;
 	ComPtr<IDXGISwapChain4> swapChain;
-	ComPtr<ID3D12Resource> backBuffers[FrameCount];
+	Resource backBuffers[FrameCount];
 };

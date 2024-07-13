@@ -13,6 +13,11 @@ const ComPtr<ID3D12CommandAllocator>& CommandAllocator::Get() const
 	return commandAllocator;
 }
 
+ID3D12CommandAllocator* CommandAllocator::GetPtr() const
+{
+	return commandAllocator.Get();
+}
+
 HRESULT CommandAllocator::Reset()
 {
 	return commandAllocator->Reset();

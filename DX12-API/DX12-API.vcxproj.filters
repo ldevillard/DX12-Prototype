@@ -28,6 +28,12 @@
     <Filter Include="Source Files\rendering">
       <UniqueIdentifier>{0618fa05-fb00-4ef9-93e4-5f93fc8d6f66}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\resources">
+      <UniqueIdentifier>{1314af73-ca5e-47c3-b0f1-18962a11126d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\resources">
+      <UniqueIdentifier>{482c56c0-618a-4444-8d35-9a997c65d6de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\PrecompiledHeaders.h">
@@ -35,9 +41,6 @@
     </ClInclude>
     <ClInclude Include="headers\d3dx12.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\Helpers\Helpers.h">
-      <Filter>Header Files\helpers</Filter>
     </ClInclude>
     <ClInclude Include="headers\pipeline\Device.h">
       <Filter>Header Files\pipeline</Filter>
@@ -65,6 +68,12 @@
     </ClInclude>
     <ClInclude Include="headers\helpers\Timer.h">
       <Filter>Header Files\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\helpers\Helpers.h">
+      <Filter>Header Files\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\resources\Resource.h">
+      <Filter>Header Files\resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +106,9 @@
     </ClCompile>
     <ClCompile Include="srcs\helpers\Timer.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\resources\Resource.cpp">
+      <Filter>Source Files\resources</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

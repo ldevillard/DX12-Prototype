@@ -3,6 +3,8 @@
 #include "pipeline/Device.h"
 
 class CommandAllocator;
+class DescriptorHeap;
+class Resource;
 
 class CommandList
 {
@@ -11,11 +13,8 @@ public:
 
 	const ComPtr<ID3D12GraphicsCommandList>& Get();
 
-	HRESULT Reset(const CommandAllocator& commandAllocator, ID3D12PipelineState* pInitialState);
-	void ResourceBarrier(UINT numBarriers, const D3D12_RESOURCE_BARRIER* pBarriers);
-	void ClearRenderTargetView(D3D12_CPU_DESCRIPTOR_HANDLE RenderTargetView, const FLOAT ColorRGBA[4], UINT NumRects, const D3D12_RECT* pRects);
-	HRESULT Close();
-
+	void Populate(const DescriptorHeap& RTVdescriptorHeap, CommandAllocator& commandAllocator, const Resource& backBuffer, UINT currentBackBufferIndex);
+	
 private:
 	ComPtr<ID3D12GraphicsCommandList> commandList;
 };
