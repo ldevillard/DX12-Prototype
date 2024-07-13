@@ -102,6 +102,21 @@ void Window::createWindow(HINSTANCE hInst, const wchar_t* windowTitle)
     assert(handleWin && "Failed to create window");
 }
 
+void Window::onKeyDown(const UINT8 key)
+{
+    switch(key)
+    {
+        case 'V':
+            sample->ToggleVSync();
+            break;
+    }
+}
+
+void Window::onKeyUp(const UINT8 key)
+{
+
+}
+
 LRESULT CALLBACK Window::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     Sample* sample = reinterpret_cast<Sample*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
@@ -112,19 +127,32 @@ LRESULT CALLBACK Window::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
         {
             LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
             SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
+            return 0;
         }
-        return 0;
+        case WM_KEYDOWN:
+        {
+            onKeyDown(static_cast<UINT8>(wParam));
+            return 0;
+        }
+        case WM_KEYUP:
+        {
+            onKeyUp(static_cast<UINT8>(wParam));
+            return 0;
+        }
         case WM_PAINT:
+        {
             if (sample)
             {
                 sample->OnUpdate();
                 sample->OnRender();
             }
             return 0;
-
+        }
         case WM_DESTROY:
+        {
             PostQuitMessage(0);
             return 0;
+        }
     }
 
     // handle any messages the switch statement didn't.

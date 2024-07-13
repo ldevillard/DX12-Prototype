@@ -62,6 +62,11 @@ void Sample::OnDestroy()
     CloseHandle(fence->GetEvent());
 }
 
+void Sample::ToggleVSync()
+{
+    vSync = !vSync;
+}
+
 #pragma endregion
 
 #pragma region Private Methods

@@ -21,6 +21,8 @@ public:
 	void OnRender();
 	void OnDestroy();
 
+	void ToggleVSync();
+
 private:
 	bool checkTearingSupport();
 	void loadPipeline();
