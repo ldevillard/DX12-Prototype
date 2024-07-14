@@ -108,28 +108,6 @@ void Sample::OnUpdate()
 
 void Sample::OnRender()
 {
-    //UINT currentBackBufferIndex = swapChain->GetCurrentBackBufferIndex();
-    //std::unique_ptr<CommandAllocator>& commandAllocator = commandAllocators[currentBackBufferIndex];
-    //Resource backBuffer = swapChain->GetCurrentBackBuffer();
-    //
-    //commandList->Populate(*RTVdescriptorHeap, *DSVdescriptorHeap, *commandAllocator, backBuffer, currentBackBufferIndex);
-    //
-    //ID3D12CommandList* const commandLists[] = 
-    //{
-    //    commandList->GetPtr()
-    //};
-    //commandQueue->Get()->ExecuteCommandLists(_countof(commandLists), commandLists);
-    //
-    //frameFenceValues[currentBackBufferIndex] = fence->Signal(*commandQueue);
-    //
-    //UINT syncInterval = vSync ? 1 : 0;
-    //UINT presentFlags = allowTearing && !vSync ? DXGI_PRESENT_ALLOW_TEARING : 0;
-    //ThrowIfFailed(swapChain->Get()->Present(syncInterval, presentFlags));
-    //
-    //currentBackBufferIndex = swapChain->GetCurrentBackBufferIndex();
-    //
-    //fence->WaitForFenceValue(frameFenceValues[currentBackBufferIndex]);
-
     UINT currentBackBufferIndex = swapChain->GetCurrentBackBufferIndex();
     Resource backBuffer = swapChain->GetCurrentBackBuffer();
     auto rtv = RTVdescriptorHeap->GetRenderTargetView(currentBackBufferIndex);
@@ -297,6 +275,11 @@ void Sample::loadPipeline()
 
 void Sample::loadAssets()
 {
+    // TODO: don't reset the command list here but create it later without closing it
+    UINT currentBackBufferIndex = swapChain->GetCurrentBackBufferIndex();
+    commandAllocators[currentBackBufferIndex]->Reset();
+    commandList->Get()->Reset(commandAllocators[currentBackBufferIndex]->GetPtr(), nullptr);
+
     // upload vertex buffer data.
     Resource intermediateVertexBuffer;
     updateBufferResource(vertexBuffer, intermediateVertexBuffer, _countof(g_Vertices), sizeof(VertexPosColor), g_Vertices);
@@ -364,45 +347,30 @@ void Sample::loadAssets()
     ComPtr<ID3DBlob> errorBlob;
     ThrowIfFailed(D3DX12SerializeVersionedRootSignature(&rootSignatureDescription,
         featureData.HighestVersion, &rootSignatureBlob, &errorBlob));
+
     // create the root signature.
     ThrowIfFailed(device->Get()->CreateRootSignature(0, rootSignatureBlob->GetBufferPointer(),
         rootSignatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature)));
 
-    struct PipelineStateStream
-    {
-        CD3DX12_PIPELINE_STATE_STREAM_ROOT_SIGNATURE pRootSignature;
-        CD3DX12_PIPELINE_STATE_STREAM_INPUT_LAYOUT InputLayout;
-        CD3DX12_PIPELINE_STATE_STREAM_PRIMITIVE_TOPOLOGY PrimitiveTopologyType;
-        CD3DX12_PIPELINE_STATE_STREAM_VS VS;
-        CD3DX12_PIPELINE_STATE_STREAM_PS PS;
-        CD3DX12_PIPELINE_STATE_STREAM_DEPTH_STENCIL_FORMAT DSVFormat;
-        CD3DX12_PIPELINE_STATE_STREAM_RENDER_TARGET_FORMATS RTVFormats;
-    } pipelineStateStream;
-
-    D3D12_RT_FORMAT_ARRAY rtvFormats = {};
-    rtvFormats.NumRenderTargets = 1;
-    rtvFormats.RTFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-
-    pipelineStateStream.pRootSignature = rootSignature.Get();
-    pipelineStateStream.InputLayout = { inputLayout, _countof(inputLayout) };
-    pipelineStateStream.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-    pipelineStateStream.VS = CD3DX12_SHADER_BYTECODE(vertexShaderBlob.Get());
-    pipelineStateStream.PS = CD3DX12_SHADER_BYTECODE(pixelShaderBlob.Get());
-    pipelineStateStream.DSVFormat = DXGI_FORMAT_D32_FLOAT;
-    pipelineStateStream.RTVFormats = rtvFormats;
-
-    D3D12_PIPELINE_STATE_STREAM_DESC pipelineStateStreamDesc = {
-        sizeof(PipelineStateStream), &pipelineStateStream
-    };
-    ThrowIfFailed(device->Get()->CreatePipelineState(&pipelineStateStreamDesc, IID_PPV_ARGS(&pipelineState)));
+    // describe and create the graphics pipeline state object (PSO).
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
+    psoDesc.InputLayout = { inputLayout, _countof(inputLayout) };
+    psoDesc.pRootSignature = rootSignature.Get();
+    psoDesc.VS = CD3DX12_SHADER_BYTECODE(vertexShaderBlob.Get());
+    psoDesc.PS = CD3DX12_SHADER_BYTECODE(pixelShaderBlob.Get());
+    psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+    psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+    psoDesc.SampleMask = UINT_MAX;
+    psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+    psoDesc.NumRenderTargets = 1;
+    psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+    psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+    psoDesc.SampleDesc.Count = 1;
+    ThrowIfFailed(device->Get()->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineState)));
 
     // execute command list
     {
         ThrowIfFailed(commandList->Get()->Close());
-    
-        //ID3D12CommandAllocator* commandAlloc;
-        //UINT dataSize = sizeof(commandAlloc);
-        //ThrowIfFailed(commandList->Get()->GetPrivateData(__uuidof(ID3D12CommandAllocator), &dataSize, &commandAlloc));
     
         ID3D12CommandList* const commandLists[] = 
         {
@@ -410,8 +378,8 @@ void Sample::loadAssets()
         };
         
         commandQueue->Get()->ExecuteCommandLists(_countof(commandLists), commandLists);
+    
         uint64_t fenceValue = fence->Signal(*commandQueue);
-        //ThrowIfFailed(commandAlloc->Release());
         fence->WaitForFenceValue(fenceValue);
     }
 

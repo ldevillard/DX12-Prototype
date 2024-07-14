@@ -10,8 +10,7 @@
 CommandList::CommandList(const Device& device, const CommandAllocator& commandAllocator, D3D12_COMMAND_LIST_TYPE commandListType)
 {
     ThrowIfFailed(device.Get()->CreateCommandList(0, commandListType, commandAllocator.GetPtr(), nullptr, IID_PPV_ARGS(&commandList)));
-
-    //ThrowIfFailed(commandList->Close());
+    ThrowIfFailed(commandList->Close());
 }
 
 const ComPtr<ID3D12GraphicsCommandList>& CommandList::Get()
