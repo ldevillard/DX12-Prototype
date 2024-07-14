@@ -14,7 +14,7 @@
 class Sample
 {
 public:
-	Sample(uint32_t width, uint32_t heigth);
+	Sample(uint32_t width, uint32_t height);
 
 	void OnInit(HWND hWnd);
 	void OnUpdate();
@@ -22,6 +22,7 @@ public:
 	void OnDestroy();
 
 	void ToggleVSync();
+	void Resize(uint32_t width, uint32_t height);
 
 private:
 	bool checkTearingSupport();
@@ -33,7 +34,7 @@ private:
 	HWND handleWin;
 
 	uint32_t width;
-	uint32_t heigth;
+	uint32_t height;
 
 	bool useWarp;
 	bool allowTearing;

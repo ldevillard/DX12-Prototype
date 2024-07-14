@@ -9,7 +9,7 @@
 
 Sample::Sample(uint32_t w, uint32_t h)
 	: width(w)
-	, heigth(h)
+	, height(h)
     , timer()
 {
     parseCommandLineArguments();
@@ -67,6 +67,31 @@ void Sample::ToggleVSync()
     vSync = !vSync;
 }
 
+void Sample::Resize(uint32_t width, uint32_t height)
+{
+    if (this->width != width || this->height != height)
+    {
+        //dDon't allow 0 size swap chain back buffers.
+        this->width = std::max(1u, width);
+        this->height = std::max(1u, height);
+
+        // flush the GPU queue to make sure the swap chain's back buffers
+        // are not being referenced by an in-flight command list.
+        fence->Flush(*commandQueue);
+
+        for (int i = 0; i < SwapChain::FrameCount; ++i)
+        {
+            // Any references to the back buffers must be released
+            // before the swap chain can be resized.
+            swapChain->ResetBackBuffer(i);
+            frameFenceValues[i] = frameFenceValues[swapChain->GetCurrentBackBufferIndex()];
+        }
+
+        swapChain->Resize(this->width, this->height);
+        swapChain->UpdateRenderTargetViews(*device, *RTVdescriptorHeap);
+    }
+}
+
 #pragma endregion
 
 #pragma region Private Methods
@@ -101,7 +126,7 @@ void Sample::loadPipeline()
 {
 	device = std::make_unique<Device>(useWarp);
 	commandQueue = std::make_unique<CommandQueue>(*device);
-	swapChain = std::make_unique<SwapChain>(handleWin, *commandQueue, width, heigth, allowTearing);
+	swapChain = std::make_unique<SwapChain>(handleWin, *commandQueue, width, height, allowTearing);
     RTVdescriptorHeap = std::make_unique<DescriptorHeap>(*device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, SwapChain::FrameCount);
 
     swapChain->UpdateRenderTargetViews(*device, *RTVdescriptorHeap);

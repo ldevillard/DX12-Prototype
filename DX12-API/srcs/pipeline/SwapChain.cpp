@@ -79,4 +79,19 @@ void SwapChain::UpdateRenderTargetViews(const Device& device, const DescriptorHe
     }
 }
 
+void SwapChain::ResetBackBuffer(int index)
+{
+    backBuffers[index].Reset();
+}
+
+void SwapChain::Resize(uint32_t width, uint32_t height)
+{
+    DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
+    ThrowIfFailed(swapChain->GetDesc(&swapChainDesc));
+    ThrowIfFailed(swapChain->ResizeBuffers(FrameCount, width, height,
+        swapChainDesc.BufferDesc.Format, swapChainDesc.Flags));
+
+    currentBackBufferIndex = swapChain->GetCurrentBackBufferIndex();
+}
+
 #pragma endregion

@@ -18,4 +18,9 @@ ID3D12Resource* Resource::GetPtr() const
 	return resource.Get();
 }
 
+void Resource::Reset()
+{
+	resource.Reset();
+}
+
 #pragma endregion

@@ -12,6 +12,7 @@ private:
 	static void registerWindowClass(HINSTANCE hInst);
 	static void createWindow(HINSTANCE hInst, const wchar_t* windowTitle);
 	static void setFullScreen(bool fullScreen);
+	static void resize();
 
 	static void onKeyDown(const UINT8 key);
 	static void onKeyUp(const UINT8 key);
@@ -22,7 +23,7 @@ private:
 	static HWND handleWin;
 	static RECT windowRect;
 	static UINT width;
-	static UINT heigth;
+	static UINT height;
 	static std::wstring name;
 	static bool fullScreenState;
 

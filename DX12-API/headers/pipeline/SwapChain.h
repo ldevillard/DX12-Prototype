@@ -16,6 +16,8 @@ public:
 	const Resource& GetCurrentBackBuffer() const;
 
 	void UpdateRenderTargetViews(const Device& device, const DescriptorHeap& descriptorHeap);
+	void ResetBackBuffer(int index);
+	void Resize(uint32_t width, uint32_t height);
 
 	static constexpr UINT FrameCount = 3;
 

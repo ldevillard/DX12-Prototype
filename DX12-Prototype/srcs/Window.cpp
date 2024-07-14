@@ -6,7 +6,7 @@
 HWND Window::handleWin;
 RECT Window::windowRect;
 UINT Window::width;
-UINT Window::heigth;
+UINT Window::height;
 std::wstring Window::name;
 std::unique_ptr<Sample> Window::sample;
 bool Window::fullScreenState;
@@ -16,10 +16,10 @@ bool Window::fullScreenState;
 int Window::Run(HINSTANCE hInstance, UINT windowWidth, UINT windowHeight, std::wstring windowName, int cmdShow)
 {
     width = windowWidth;
-    heigth = windowHeight;
+    height = windowHeight;
     name = windowName;
 
-    sample = std::make_unique<Sample>(width, heigth);
+    sample = std::make_unique<Sample>(width, height);
 
     registerWindowClass(hInstance);
     createWindow(hInstance, L"DX12");
@@ -75,7 +75,7 @@ void Window::createWindow(HINSTANCE hInst, const wchar_t* windowTitle)
     int screenWidth = ::GetSystemMetrics(SM_CXSCREEN);
     int screenHeight = ::GetSystemMetrics(SM_CYSCREEN);
 
-    RECT windowRect = { 0, 0, static_cast<LONG>(width), static_cast<LONG>(heigth) };
+    RECT windowRect = { 0, 0, static_cast<LONG>(width), static_cast<LONG>(height) };
     ::AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
 
     int windowWidth = windowRect.right - windowRect.left;
@@ -129,7 +129,7 @@ void Window::setFullScreen(bool fullScreen)
             monitorInfo.cbSize = sizeof(MONITORINFOEX);
             ::GetMonitorInfo(hMonitor, &monitorInfo);
 
-            ::SetWindowPos(handleWin, HWND_TOPMOST,
+            ::SetWindowPos(handleWin, HWND_NOTOPMOST,
                 monitorInfo.rcMonitor.left,
                 monitorInfo.rcMonitor.top,
                 monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left,
@@ -155,6 +155,17 @@ void Window::setFullScreen(bool fullScreen)
     }
 }
 
+void Window::resize()
+{
+    RECT clientRect = {};
+    ::GetClientRect(handleWin, &clientRect);
+
+    width = clientRect.right - clientRect.left;
+    height = clientRect.bottom - clientRect.top;
+
+    sample->Resize(width, height);
+}
+
 void Window::onKeyDown(const UINT8 key)
 {
     switch(key)
@@ -172,7 +183,6 @@ void Window::onKeyDown(const UINT8 key)
 
 void Window::onKeyUp(const UINT8 key)
 {
-
 }
 
 LRESULT CALLBACK Window::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -204,6 +214,11 @@ LRESULT CALLBACK Window::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                 sample->OnUpdate();
                 sample->OnRender();
             }
+            return 0;
+        }
+        case WM_SIZE:
+        {
+            resize();
             return 0;
         }
         case WM_DESTROY:
