@@ -121,8 +121,8 @@ void Sample::OnRender()
         commandList->ClearDepth(dsv);
     }
 
-    commandList->Get()->SetPipelineState(m_PipelineState.Get());
-    commandList->Get()->SetGraphicsRootSignature(m_RootSignature.Get());
+    commandList->Get()->SetPipelineState(pipelineState.Get());
+    commandList->Get()->SetGraphicsRootSignature(rootSignature.Get());
 
     commandList->Get()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     commandList->Get()->IASetVertexBuffers(0, 1, &vertexBufferView);
@@ -133,12 +133,29 @@ void Sample::OnRender()
 
     commandList->Get()->OMSetRenderTargets(1, &rtv, FALSE, &dsv);
 
-    // Update the MVP matrix
-    XMMATRIX mvpMatrix = XMMatrixMultiply(modelMatrix, viewMatrix);
-    mvpMatrix = XMMatrixMultiply(mvpMatrix, projectionMatrix);
-    commandList->Get()->SetGraphicsRoot32BitConstants(0, sizeof(XMMATRIX) / 4, &mvpMatrix, 0);
+    // draws
+    {
+        // Update the MVP matrix
+        XMMATRIX mvpMatrix = XMMatrixMultiply(modelMatrix, viewMatrix);
+        mvpMatrix = XMMatrixMultiply(mvpMatrix, projectionMatrix);
+        commandList->Get()->SetGraphicsRoot32BitConstants(0, sizeof(XMMATRIX) / 4, &mvpMatrix, 0);
 
-    commandList->Get()->DrawIndexedInstanced(_countof(g_Indicies), 1, 0, 0, 0);
+        commandList->Get()->DrawIndexedInstanced(_countof(g_Indicies), 1, 0, 0, 0);
+
+        XMMATRIX trMatrix = XMMatrixMultiply(modelMatrix, XMMatrixTranslation(4, 0, 0));
+        XMMATRIX mvpMatrix2 = XMMatrixMultiply(trMatrix, viewMatrix);
+        mvpMatrix2 = XMMatrixMultiply(mvpMatrix2, projectionMatrix);
+        commandList->Get()->SetGraphicsRoot32BitConstants(0, sizeof(XMMATRIX) / 4, &mvpMatrix2, 0);
+
+        commandList->Get()->DrawIndexedInstanced(_countof(g_Indicies), 1, 0, 0, 0);
+
+        XMMATRIX trMatrix2 = XMMatrixMultiply(modelMatrix, XMMatrixTranslation(-4, 0, 0));
+        XMMATRIX mvpMatrix3 = XMMatrixMultiply(trMatrix2, viewMatrix);
+        mvpMatrix3 = XMMatrixMultiply(mvpMatrix3, projectionMatrix);
+        commandList->Get()->SetGraphicsRoot32BitConstants(0, sizeof(XMMATRIX) / 4, &mvpMatrix3, 0);
+
+        commandList->Get()->DrawIndexedInstanced(_countof(g_Indicies), 1, 0, 0, 0);
+    }
 
     // Present
     {
@@ -313,7 +330,7 @@ void Sample::loadAssets()
         featureData.HighestVersion, &rootSignatureBlob, &errorBlob));
     // create the root signature.
     ThrowIfFailed(device->Get()->CreateRootSignature(0, rootSignatureBlob->GetBufferPointer(),
-        rootSignatureBlob->GetBufferSize(), IID_PPV_ARGS(&m_RootSignature)));
+        rootSignatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature)));
 
     struct PipelineStateStream
     {
@@ -330,7 +347,7 @@ void Sample::loadAssets()
     rtvFormats.NumRenderTargets = 1;
     rtvFormats.RTFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 
-    pipelineStateStream.pRootSignature = m_RootSignature.Get();
+    pipelineStateStream.pRootSignature = rootSignature.Get();
     pipelineStateStream.InputLayout = { inputLayout, _countof(inputLayout) };
     pipelineStateStream.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
     pipelineStateStream.VS = CD3DX12_SHADER_BYTECODE(vertexShaderBlob.Get());
@@ -341,7 +358,7 @@ void Sample::loadAssets()
     D3D12_PIPELINE_STATE_STREAM_DESC pipelineStateStreamDesc = {
         sizeof(PipelineStateStream), &pipelineStateStream
     };
-    ThrowIfFailed(device->Get()->CreatePipelineState(&pipelineStateStreamDesc, IID_PPV_ARGS(&m_PipelineState)));
+    ThrowIfFailed(device->Get()->CreatePipelineState(&pipelineStateStreamDesc, IID_PPV_ARGS(&pipelineState)));
 
     // execute command list
     {

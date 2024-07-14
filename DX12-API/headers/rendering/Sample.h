@@ -70,9 +70,9 @@ private:
 	std::unique_ptr<DescriptorHeap> DSVdescriptorHeap;
 
 	// root signature
-	ComPtr<ID3D12RootSignature> m_RootSignature;
+	ComPtr<ID3D12RootSignature> rootSignature;
 	// pipeline state object.
-	ComPtr<ID3D12PipelineState> m_PipelineState;
+	ComPtr<ID3D12PipelineState> pipelineState;
 
 	D3D12_VIEWPORT viewport;
 	D3D12_RECT scissorRect;
