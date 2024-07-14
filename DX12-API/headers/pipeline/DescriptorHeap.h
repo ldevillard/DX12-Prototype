@@ -9,6 +9,8 @@ public:
 
 	const ComPtr<ID3D12DescriptorHeap>& Get() const;
 	const UINT GetRTVDescriptorSize() const;
+	const CD3DX12_CPU_DESCRIPTOR_HANDLE GetRenderTargetView(int currentBackBufferIndex) const;
+	const CD3DX12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandleForHeapStart() const;
 
 private:
 	UINT RTVDescriptorSize;

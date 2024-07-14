@@ -18,6 +18,11 @@ ID3D12Resource* Resource::GetPtr() const
 	return resource.Get();
 }
 
+void Resource::Set(const ComPtr<ID3D12Resource> ptr)
+{
+	resource = ptr;
+}
+
 void Resource::Reset()
 {
 	resource.Reset();

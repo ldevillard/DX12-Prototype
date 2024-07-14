@@ -111,4 +111,12 @@
       <Filter>Source Files\resources</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="resources\VertexShader.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\PixelShader.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+  </ItemGroup>
 </Project>

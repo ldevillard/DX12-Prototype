@@ -11,6 +11,8 @@ public:
 	const ComPtr<ID3D12Resource>& Get() const;
 	ID3D12Resource* GetPtr() const;
 
+	void Set(const ComPtr<ID3D12Resource> ptr);
+
 	void Reset();
 
 private :
