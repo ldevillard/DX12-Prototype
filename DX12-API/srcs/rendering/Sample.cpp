@@ -64,7 +64,7 @@ void Sample::OnUpdate()
     std::string fps = std::to_string(timer.GetFrameRate()) + "\n";
     OutputDebugStringA(fps.c_str());
 
-    float angle = static_cast<float>(45.0);
+    float angle = static_cast<float>(timer.GetTimeElapsed() * 45.0);
     const XMVECTOR rotationAxis = XMVectorSet(0, 1, 1, 0);
     modelMatrix = XMMatrixRotationAxis(rotationAxis, XMConvertToRadians(angle));
 
@@ -196,6 +196,9 @@ void Sample::Resize(uint32_t width, uint32_t height)
 
         swapChain->Resize(this->width, this->height);
         swapChain->UpdateRenderTargetViews(*device, *RTVdescriptorHeap);
+
+        viewport = CD3DX12_VIEWPORT(0.0f, 0.0f, static_cast<float>(this->width), static_cast<float>(this->height));
+        resizeDepthBuffer(this->width, this->height);
     }
 }
 
