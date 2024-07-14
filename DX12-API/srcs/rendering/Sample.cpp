@@ -13,27 +13,54 @@ struct VertexPosColor
 {
     XMFLOAT3 Position;
     XMFLOAT3 Color;
+    XMFLOAT3 Normal;
 };
 
-static VertexPosColor g_Vertices[8] = {
-    { XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) }, // 0
-    { XMFLOAT3(-1.0f,  1.0f, -1.0f), XMFLOAT3(0.0f, 1.0f, 0.0f) }, // 1
-    { XMFLOAT3(1.0f,  1.0f, -1.0f), XMFLOAT3(1.0f, 1.0f, 0.0f) }, // 2
-    { XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT3(1.0f, 0.0f, 0.0f) }, // 3
-    { XMFLOAT3(-1.0f, -1.0f,  1.0f), XMFLOAT3(0.0f, 0.0f, 1.0f) }, // 4
-    { XMFLOAT3(-1.0f,  1.0f,  1.0f), XMFLOAT3(0.0f, 1.0f, 1.0f) }, // 5
-    { XMFLOAT3(1.0f,  1.0f,  1.0f), XMFLOAT3(1.0f, 1.0f, 1.0f) }, // 6
-    { XMFLOAT3(1.0f, -1.0f,  1.0f), XMFLOAT3(1.0f, 0.0f, 1.0f) }  // 7
+static VertexPosColor g_Vertices[24] = {
+    // back face
+    { XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(0.0f, 0.0f, -1.0f) }, // 0
+    { XMFLOAT3(-1.0f,  1.0f, -1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(0.0f, 0.0f, -1.0f) }, // 1
+    { XMFLOAT3(1.0f,  1.0f, -1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(0.0f, 0.0f, -1.0f) }, // 2
+    { XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(0.0f, 0.0f, -1.0f) }, // 3
+
+    // front face
+    { XMFLOAT3(-1.0f, -1.0f,  1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(0.0f, 0.0f, 1.0f) }, // 4
+    { XMFLOAT3(-1.0f,  1.0f,  1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(0.0f, 0.0f, 1.0f) }, // 5
+    { XMFLOAT3(1.0f,  1.0f,  1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(0.0f, 0.0f, 1.0f) }, // 6
+    { XMFLOAT3(1.0f, -1.0f,  1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(0.0f, 0.0f, 1.0f) }, // 7
+
+    // left face
+    { XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(-1.0f, 0.0f, 0.0f) }, // 8
+    { XMFLOAT3(-1.0f,  -1.0f, 1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(-1.0f, 0.0f, 0.0f) }, // 9
+    { XMFLOAT3(-1.0f,  1.0f,  1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(-1.0f, 0.0f, 0.0f) }, // 10
+    { XMFLOAT3(-1.0f, 1.0f,  -1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(-1.0f, 0.0f, 0.0f) }, // 11
+
+    // right face
+    { XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(1.0f, 0.0f, 0.0f) }, // 12
+    { XMFLOAT3(1.0f,  1.0f, -1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(1.0f, 0.0f, 0.0f) }, // 13
+    { XMFLOAT3(1.0f,  1.0f,  1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(1.0f, 0.0f, 0.0f) }, // 14
+    { XMFLOAT3(1.0f, -1.0f,  1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(1.0f, 0.0f, 0.0f) }, // 15
+
+    // up face
+    { XMFLOAT3(-1.0f,  1.0f, -1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(0.0f, 1.0f, 0.0f) }, // 16
+    { XMFLOAT3(-1.0f,  1.0f,  1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(0.0f, 1.0f, 0.0f) }, // 17
+    { XMFLOAT3(1.0f,  1.0f,  1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(0.0f, 1.0f, 0.0f) }, // 18
+    { XMFLOAT3(1.0f,  1.0f, -1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(0.0f, 1.0f, 0.0f) }, // 19
+
+    // down face
+    { XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(0.0f, -1.0f, 0.0f) }, // 20
+    { XMFLOAT3(1.0f, -1.0f,  -1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(0.0f, -1.0f, 0.0f) }, // 21
+    { XMFLOAT3(1.0f, -1.0f,  1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(0.0f, -1.0f, 0.0f) }, // 22
+    { XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT3(0.78f, 0.549f, 0.941f), XMFLOAT3(0.0f, -1.0f, 0.0f) }  // 23
 };
 
-static WORD g_Indicies[36] =
-{
+static WORD g_Indices[36] = {
     0, 1, 2, 0, 2, 3,
     4, 6, 5, 4, 7, 6,
-    4, 5, 1, 4, 1, 0,
-    3, 2, 6, 3, 6, 7,
-    1, 5, 6, 1, 6, 2,
-    4, 0, 3, 4, 3, 7
+    8, 9, 10, 8, 10, 11,
+    12, 13, 14, 12, 14, 15,
+    16, 17, 18, 16, 18, 19,
+    20, 21, 22, 20, 22, 23
 };
 
 #pragma region Public Methods
@@ -64,12 +91,12 @@ void Sample::OnUpdate()
     std::string fps = std::to_string(timer.GetFrameRate()) + "\n";
     OutputDebugStringA(fps.c_str());
 
-    float angle = static_cast<float>(timer.GetTimeElapsed() * 45.0);
+    float angle = static_cast<float>(timer.GetTimeElapsed() * 90.0);
     const XMVECTOR rotationAxis = XMVectorSet(0, 1, 1, 0);
     modelMatrix = XMMatrixRotationAxis(rotationAxis, XMConvertToRadians(angle));
 
     // update the view matrix.
-    const XMVECTOR eyePosition = XMVectorSet(0, 0, -10, 1);
+    const XMVECTOR eyePosition = XMVectorSet(0, 5, -10, 1);
     const XMVECTOR focusPoint = XMVectorSet(0, 0, 0, 1);
     const XMVECTOR upDirection = XMVectorSet(0, 1, 0, 0);
     viewMatrix = XMMatrixLookAtLH(eyePosition, focusPoint, upDirection);
@@ -139,22 +166,25 @@ void Sample::OnRender()
         XMMATRIX mvpMatrix = XMMatrixMultiply(modelMatrix, viewMatrix);
         mvpMatrix = XMMatrixMultiply(mvpMatrix, projectionMatrix);
         commandList->Get()->SetGraphicsRoot32BitConstants(0, sizeof(XMMATRIX) / 4, &mvpMatrix, 0);
+        commandList->Get()->SetGraphicsRoot32BitConstants(1, sizeof(XMMATRIX) / 4, &modelMatrix, 0);
 
-        commandList->Get()->DrawIndexedInstanced(_countof(g_Indicies), 1, 0, 0, 0);
+        commandList->Get()->DrawIndexedInstanced(_countof(g_Indices), 1, 0, 0, 0);
 
-        XMMATRIX trMatrix = XMMatrixMultiply(modelMatrix, XMMatrixTranslation(4, 0, 0));
+        XMMATRIX trMatrix = XMMatrixMultiply(modelMatrix, XMMatrixTranslation(6, 0, 0));
         XMMATRIX mvpMatrix2 = XMMatrixMultiply(trMatrix, viewMatrix);
         mvpMatrix2 = XMMatrixMultiply(mvpMatrix2, projectionMatrix);
         commandList->Get()->SetGraphicsRoot32BitConstants(0, sizeof(XMMATRIX) / 4, &mvpMatrix2, 0);
-
-        commandList->Get()->DrawIndexedInstanced(_countof(g_Indicies), 1, 0, 0, 0);
-
-        XMMATRIX trMatrix2 = XMMatrixMultiply(modelMatrix, XMMatrixTranslation(-4, 0, 0));
+        commandList->Get()->SetGraphicsRoot32BitConstants(1, sizeof(XMMATRIX) / 4, &modelMatrix, 0);
+        
+        commandList->Get()->DrawIndexedInstanced(_countof(g_Indices), 1, 0, 0, 0);
+        
+        XMMATRIX trMatrix2 = XMMatrixMultiply(modelMatrix, XMMatrixTranslation(-6, 0, 0));
         XMMATRIX mvpMatrix3 = XMMatrixMultiply(trMatrix2, viewMatrix);
         mvpMatrix3 = XMMatrixMultiply(mvpMatrix3, projectionMatrix);
         commandList->Get()->SetGraphicsRoot32BitConstants(0, sizeof(XMMATRIX) / 4, &mvpMatrix3, 0);
-
-        commandList->Get()->DrawIndexedInstanced(_countof(g_Indicies), 1, 0, 0, 0);
+        commandList->Get()->SetGraphicsRoot32BitConstants(1, sizeof(XMMATRIX) / 4, &modelMatrix, 0);
+        
+        commandList->Get()->DrawIndexedInstanced(_countof(g_Indices), 1, 0, 0, 0);
     }
 
     // Present
@@ -277,27 +307,32 @@ void Sample::loadAssets()
 
     // upload index buffer data.
     Resource intermediateIndexBuffer;
-    updateBufferResource(indexBuffer, intermediateIndexBuffer, _countof(g_Indicies), sizeof(WORD), g_Indicies);
+    updateBufferResource(indexBuffer, intermediateIndexBuffer, _countof(g_Indices), sizeof(WORD), g_Indices);
     // Create index buffer view.
     indexBufferView.BufferLocation = indexBuffer.Get()->GetGPUVirtualAddress();
     indexBufferView.Format = DXGI_FORMAT_R16_UINT;
-    indexBufferView.SizeInBytes = sizeof(g_Indicies);
+    indexBufferView.SizeInBytes = sizeof(g_Indices);
 
     // create the descriptor heap for the depth-stencil view.
     DSVdescriptorHeap = std::make_unique<DescriptorHeap>(*device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1);
 
+    std::wstring directoryPath = GetExecutableDirectory();
+
     // load the vertex shader.
     ComPtr<ID3DBlob> vertexShaderBlob;
-    ThrowIfFailed(D3DReadFileToBlob(L"..\\x64\\Debug\\VertexShader.cso", &vertexShaderBlob));
+    std::wstring vertexShaderPath = directoryPath + L"\\VertexShader.cso";
+    ThrowIfFailed(D3DReadFileToBlob(vertexShaderPath.c_str(), &vertexShaderBlob));
 
     // load the pixel shader.
     ComPtr<ID3DBlob> pixelShaderBlob;
-    ThrowIfFailed(D3DReadFileToBlob(L"..\\x64\\Debug\\PixelShader.cso", &pixelShaderBlob));
+    std::wstring pixelShaderPath = directoryPath + L"\\PixelShader.cso";
+    ThrowIfFailed(D3DReadFileToBlob(pixelShaderPath.c_str(), &pixelShaderBlob));
 
     // create the vertex input layout
     D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
         { "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+        { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
     };
 
     // create a root signature.
@@ -317,8 +352,9 @@ void Sample::loadAssets()
         D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS;
 
     // a single 32-bit constant root parameter that is used by the vertex shader.
-    CD3DX12_ROOT_PARAMETER1 rootParameters[1];
+    CD3DX12_ROOT_PARAMETER1 rootParameters[2];
     rootParameters[0].InitAsConstants(sizeof(XMMATRIX) / 4, 0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
+    rootParameters[1].InitAsConstants(sizeof(XMMATRIX) / 4, 1, 0, D3D12_SHADER_VISIBILITY_VERTEX);
 
     CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDescription;
     rootSignatureDescription.Init_1_1(_countof(rootParameters), rootParameters, 0, nullptr, rootSignatureFlags);
