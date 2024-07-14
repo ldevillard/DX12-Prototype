@@ -9,6 +9,7 @@ UINT Window::width;
 UINT Window::heigth;
 std::wstring Window::name;
 std::unique_ptr<Sample> Window::sample;
+bool Window::fullScreenState;
 
 #pragma region Public Methods
 
@@ -102,12 +103,69 @@ void Window::createWindow(HINSTANCE hInst, const wchar_t* windowTitle)
     assert(handleWin && "Failed to create window");
 }
 
+void Window::setFullScreen(bool fullScreen)
+{
+    if (fullScreenState != fullScreen)
+    {
+        fullScreenState = fullScreen;
+
+        if (fullScreenState) // switching to fullscreen.
+        {
+            // store the current window dimensions so they can be restored 
+            // when switching out of fullscreen state.
+            ::GetWindowRect(handleWin, &windowRect);
+
+            // set the window style to a borderless window so the client area fills
+            // the entire screen.
+            UINT windowStyle = WS_OVERLAPPEDWINDOW & ~(WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX);
+
+            ::SetWindowLongW(handleWin, GWL_STYLE, windowStyle);
+
+            // query the name of the nearest display device for the window.
+            // this is required to set the fullscreen dimensions of the window
+            // when using a multi-monitor setup.
+            HMONITOR hMonitor = ::MonitorFromWindow(handleWin, MONITOR_DEFAULTTONEAREST);
+            MONITORINFOEX monitorInfo = {};
+            monitorInfo.cbSize = sizeof(MONITORINFOEX);
+            ::GetMonitorInfo(hMonitor, &monitorInfo);
+
+            ::SetWindowPos(handleWin, HWND_TOPMOST,
+                monitorInfo.rcMonitor.left,
+                monitorInfo.rcMonitor.top,
+                monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left,
+                monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top,
+                SWP_FRAMECHANGED | SWP_NOACTIVATE);
+
+            ::ShowWindow(handleWin, SW_MAXIMIZE);
+        }
+        else
+        {
+            // restore all the window decorators.
+            ::SetWindowLong(handleWin, GWL_STYLE, WS_OVERLAPPEDWINDOW);
+
+            ::SetWindowPos(handleWin, HWND_NOTOPMOST,
+                windowRect.left,
+                windowRect.top,
+                windowRect.right - windowRect.left,
+                windowRect.bottom - windowRect.top,
+                SWP_FRAMECHANGED | SWP_NOACTIVATE);
+
+            ::ShowWindow(handleWin, SW_NORMAL);
+        }
+    }
+}
+
 void Window::onKeyDown(const UINT8 key)
 {
     switch(key)
     {
         case 'V':
             sample->ToggleVSync();
+            break;
+        case VK_F11:
+            setFullScreen(!fullScreenState);
+            break;
+        default:
             break;
     }
 }

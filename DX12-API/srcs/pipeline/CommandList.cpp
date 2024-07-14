@@ -37,7 +37,7 @@ void CommandList::Populate(const DescriptorHeap& RTVdescriptorHeap, CommandAlloc
 
         commandList->ResourceBarrier(1, &barrier);
 
-        FLOAT clearColor[] = { 0.4f, 0.6f, 0.9f, 1.0f };
+        FLOAT clearColor[] = { 0.78f, 0.549f, 0.941f, 1.0f };
         CD3DX12_CPU_DESCRIPTOR_HANDLE rtv(RTVdescriptorHeap.Get()->GetCPUDescriptorHandleForHeapStart(),
             currentBackBufferIndex, RTVdescriptorHeap.GetRTVDescriptorSize());
 
