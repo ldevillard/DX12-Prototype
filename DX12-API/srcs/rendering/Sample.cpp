@@ -72,7 +72,7 @@ Sample::Sample(uint32_t w, uint32_t h)
     , scissorRect(CD3DX12_RECT(0, 0, LONG_MAX, LONG_MAX))
     , viewport(CD3DX12_VIEWPORT(0.0f, 0.0f, static_cast<float>(width), static_cast<float>(height)))
 {
-    eyePosition = XMVectorSet(0, 5, -10, 1);
+    eyePosition = XMVectorSet(0, 0, -10, 1);
 
     parseCommandLineArguments();
     enableDebugLayer();
@@ -362,6 +362,12 @@ void Sample::loadAssets()
     ThrowIfFailed(device->Get()->CreateRootSignature(0, rootSignatureBlob->GetBufferPointer(),
         rootSignatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature)));
 
+    D3D12_DEPTH_STENCIL_DESC depthStencilDesc = {};
+    depthStencilDesc.DepthEnable = TRUE;
+    depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+    depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+    depthStencilDesc.StencilEnable = FALSE;
+
     // describe and create the graphics pipeline state object (PSO).
     D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
     psoDesc.InputLayout = { inputLayout, _countof(inputLayout) };
@@ -376,6 +382,8 @@ void Sample::loadAssets()
     psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
     psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
     psoDesc.SampleDesc.Count = 1;
+    //psoDesc.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+    psoDesc.DepthStencilState = depthStencilDesc;
     ThrowIfFailed(device->Get()->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineState)));
 
     // execute command list
