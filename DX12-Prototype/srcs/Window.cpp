@@ -177,14 +177,8 @@ void Window::onKeyDown(const UINT8 key)
         case 'V':
             sample->ToggleVSync();
             break;
-        case 'W':
-            z = 1;
-            break;
         case 'A':
             x = -1;
-            break;
-        case 'S':
-            z = -1;
             break;
         case 'D':
             x = 1;
@@ -194,6 +188,12 @@ void Window::onKeyDown(const UINT8 key)
             break;
         case 'E':
             y = 1;
+            break;
+        case 'W':
+            z = 1;
+            break;
+        case 'S':
+            z = -1;
             break;
         case VK_F11:
             setFullScreen(!fullScreenState);

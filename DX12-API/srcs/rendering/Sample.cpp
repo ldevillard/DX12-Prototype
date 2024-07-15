@@ -4,6 +4,7 @@
 #include <chrono>
 #include <DirectXMath.h>
 
+#include "helpers/Time.h"
 #include "resources/Resource.h"
 
 using namespace DirectX;
@@ -68,11 +69,10 @@ static WORD g_Indices[36] = {
 Sample::Sample(uint32_t w, uint32_t h)
     : width(w)
     , height(h)
-    , timer()
     , scissorRect(CD3DX12_RECT(0, 0, LONG_MAX, LONG_MAX))
     , viewport(CD3DX12_VIEWPORT(0.0f, 0.0f, static_cast<float>(width), static_cast<float>(height)))
 {
-    eyePosition = XMVectorSet(0, 0, -10, 1);
+    camera = Camera({0, 0, -20, 1});
 
     parseCommandLineArguments();
     enableDebugLayer();
@@ -81,6 +81,8 @@ Sample::Sample(uint32_t w, uint32_t h)
 
 void Sample::OnInit(HWND hWnd)
 {
+    Time::OnInit();
+
     handleWin = hWnd;
 	loadPipeline();
     loadAssets();
@@ -88,23 +90,14 @@ void Sample::OnInit(HWND hWnd)
 
 void Sample::OnUpdate()
 {
-    timer.OnUpdate();
+    Time::OnUpdate();
 
-    std::string fps = std::to_string(timer.GetFrameRate()) + "\n";
+    std::string fps = std::to_string(Time::GetFrameRate()) + "\n";
     OutputDebugStringA(fps.c_str());
 
-    float angle = static_cast<float>(timer.GetTimeElapsed() * 90.0);
+    float angle = static_cast<float>(Time::GetTimeElapsed() * 90.0);
     const XMVECTOR rotationAxis = DirectX::XMVectorSet(0, 1, 1, 0);
     modelMatrix = XMMatrixRotationAxis(rotationAxis, XMConvertToRadians(angle));
-
-    // update the view matrix.
-    const XMVECTOR focusPoint = XMVectorSet(0, 0, 0, 1);
-    const XMVECTOR upDirection = XMVectorSet(0, 1, 0, 0);
-    viewMatrix = XMMatrixLookAtLH(eyePosition, focusPoint, upDirection);
-
-    // update the projection matrix.
-    float aspectRatio = static_cast<float>(width) / static_cast<float>(height);
-    projectionMatrix = XMMatrixPerspectiveFovLH(XMConvertToRadians(fov), aspectRatio, 0.1f, 100.0f);
 }
 
 void Sample::OnRender()
@@ -141,25 +134,28 @@ void Sample::OnRender()
 
     // draws
     {
+        XMMATRIX view = camera.GetViewMatrix();
+        XMMATRIX proj = camera.GetProjectionMatrix(width, height);
+
         // Update the MVP matrix
-        XMMATRIX mvpMatrix = XMMatrixMultiply(modelMatrix, viewMatrix);
-        mvpMatrix = XMMatrixMultiply(mvpMatrix, projectionMatrix);
+        XMMATRIX mvpMatrix = XMMatrixMultiply(modelMatrix, view);
+        mvpMatrix = XMMatrixMultiply(mvpMatrix, proj);
         commandList->Get()->SetGraphicsRoot32BitConstants(0, sizeof(XMMATRIX) / 4, &mvpMatrix, 0);
         commandList->Get()->SetGraphicsRoot32BitConstants(1, sizeof(XMMATRIX) / 4, &modelMatrix, 0);
 
         commandList->Get()->DrawIndexedInstanced(_countof(g_Indices), 1, 0, 0, 0);
 
         XMMATRIX trMatrix = XMMatrixMultiply(modelMatrix, XMMatrixTranslation(6, 0, 0));
-        XMMATRIX mvpMatrix2 = XMMatrixMultiply(trMatrix, viewMatrix);
-        mvpMatrix2 = XMMatrixMultiply(mvpMatrix2, projectionMatrix);
+        XMMATRIX mvpMatrix2 = XMMatrixMultiply(trMatrix, view);
+        mvpMatrix2 = XMMatrixMultiply(mvpMatrix2, proj);
         commandList->Get()->SetGraphicsRoot32BitConstants(0, sizeof(XMMATRIX) / 4, &mvpMatrix2, 0);
         commandList->Get()->SetGraphicsRoot32BitConstants(1, sizeof(XMMATRIX) / 4, &modelMatrix, 0);
         
         commandList->Get()->DrawIndexedInstanced(_countof(g_Indices), 1, 0, 0, 0);
         
         XMMATRIX trMatrix2 = XMMatrixMultiply(modelMatrix, XMMatrixTranslation(-6, 0, 0));
-        XMMATRIX mvpMatrix3 = XMMatrixMultiply(trMatrix2, viewMatrix);
-        mvpMatrix3 = XMMatrixMultiply(mvpMatrix3, projectionMatrix);
+        XMMATRIX mvpMatrix3 = XMMatrixMultiply(trMatrix2, view);
+        mvpMatrix3 = XMMatrixMultiply(mvpMatrix3, proj);
         commandList->Get()->SetGraphicsRoot32BitConstants(0, sizeof(XMMATRIX) / 4, &mvpMatrix3, 0);
         commandList->Get()->SetGraphicsRoot32BitConstants(1, sizeof(XMMATRIX) / 4, &modelMatrix, 0);
         
@@ -230,11 +226,7 @@ void Sample::Resize(uint32_t width, uint32_t height)
 
 void Sample::ProcessCameraInputs(float x, float y, float z)
 {
-    float _x = XMVectorGetX(eyePosition);
-    float _y = XMVectorGetY(eyePosition);
-    float _z = XMVectorGetZ(eyePosition);
-
-    eyePosition = XMVectorSet(_x + x * velocity, _y + y * velocity, _z + z * velocity, 1);
+    camera.ProcessInputs({ x, y, z });
 }
 
 #pragma endregion

@@ -71,10 +71,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\logan\Desktop\DX12-Prototype\DX12-API\headers;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\logan\Desktop\DX12-Prototype\DX12-Maths\headers;C:\Users\logan\Desktop\DX12-Prototype\DX12-API\headers;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\logan\Desktop\DX12-Prototype\DX12-API\headers;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\logan\Desktop\DX12-Prototype\DX12-Maths\headers;C:\Users\logan\Desktop\DX12-Prototype\DX12-API\headers;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>C:\Users\logan\Desktop\DX12-Prototype\DX12-API\headers;$(IncludePath)</IncludePath>
@@ -128,6 +128,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>PrecompiledHeaders.h</PrecompiledHeaderFile>
       <PrecompiledHeader>Use</PrecompiledHeader>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,6 +148,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PrecompiledHeaders.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -161,7 +163,9 @@
   <ItemGroup>
     <ClInclude Include="headers\d3dx12.h" />
     <ClInclude Include="headers\helpers\Helpers.h" />
-    <ClInclude Include="headers\helpers\Timer.h" />
+    <ClInclude Include="headers\helpers\Time.h" />
+    <ClInclude Include="headers\maths\Maths.h" />
+    <ClInclude Include="headers\objects\Camera.h" />
     <ClInclude Include="headers\pipeline\CommandAllocator.h" />
     <ClInclude Include="headers\pipeline\CommandList.h" />
     <ClInclude Include="headers\pipeline\CommandQueue.h" />
@@ -174,7 +178,8 @@
     <ClInclude Include="headers\resources\Resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="srcs\helpers\Timer.cpp" />
+    <ClCompile Include="srcs\helpers\Time.cpp" />
+    <ClCompile Include="srcs\objects\Camera.cpp" />
     <ClCompile Include="srcs\pipeline\CommandAllocator.cpp" />
     <ClCompile Include="srcs\pipeline\CommandList.cpp" />
     <ClCompile Include="srcs\pipeline\CommandQueue.cpp" />
@@ -192,25 +197,15 @@
     <ClCompile Include="srcs\resources\Resource.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="resources\PixelShader.hlsl">
+    <FxCompile Include="resources\shaders\PixelShader.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.1</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.1</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
     </FxCompile>
-    <FxCompile Include="resources\VertexShader.hlsl">
+    <FxCompile Include="resources\shaders\VertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.1</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.1</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

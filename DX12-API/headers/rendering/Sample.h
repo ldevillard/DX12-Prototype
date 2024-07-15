@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "helpers/Timer.h"
+#include "objects/Camera.h"
 #include "pipeline/CommandAllocator.h"
 #include "pipeline/CommandList.h"
 #include "pipeline/CommandQueue.h"
@@ -47,9 +47,8 @@ private:
 	bool useWarp;
 	bool allowTearing;
 	bool vSync = true;
-	float fov = 45.0f;
 
-	Timer timer;
+	Camera camera;
 
 	uint64_t frameFenceValues[SwapChain::FrameCount] = {};
 	std::unique_ptr<Device> device;
@@ -79,10 +78,5 @@ private:
 	D3D12_VIEWPORT viewport;
 	D3D12_RECT scissorRect;
 
-	// camera
-	float velocity = 1;
 	DirectX::XMMATRIX modelMatrix;
-	DirectX::XMMATRIX viewMatrix;
-	DirectX::XMMATRIX projectionMatrix;
-	DirectX::XMVECTOR eyePosition;
 };
