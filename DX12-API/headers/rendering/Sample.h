@@ -24,6 +24,8 @@ public:
 	void ToggleVSync();
 	void Resize(uint32_t width, uint32_t height);
 
+	void ProcessCameraInputs(float x, float y, float z);
+
 private:
 	bool checkTearingSupport();
 	void loadPipeline();
@@ -45,7 +47,7 @@ private:
 	bool useWarp;
 	bool allowTearing;
 	bool vSync = true;
-	float fov = 60.0f;
+	float fov = 45.0f;
 
 	Timer timer;
 
@@ -77,7 +79,10 @@ private:
 	D3D12_VIEWPORT viewport;
 	D3D12_RECT scissorRect;
 
+	// camera
+	float velocity = 1;
 	DirectX::XMMATRIX modelMatrix;
 	DirectX::XMMATRIX viewMatrix;
 	DirectX::XMMATRIX projectionMatrix;
+	DirectX::XMVECTOR eyePosition;
 };

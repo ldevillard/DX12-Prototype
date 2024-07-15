@@ -168,10 +168,32 @@ void Window::resize()
 
 void Window::onKeyDown(const UINT8 key)
 {
+    float x = 0;
+    float y = 0;
+    float z = 0;
+
     switch(key)
     {
         case 'V':
             sample->ToggleVSync();
+            break;
+        case 'W':
+            z = 1;
+            break;
+        case 'A':
+            x = -1;
+            break;
+        case 'S':
+            z = -1;
+            break;
+        case 'D':
+            x = 1;
+            break;
+        case 'Q':
+            y = -1;
+            break;
+        case 'E':
+            y = 1;
             break;
         case VK_F11:
             setFullScreen(!fullScreenState);
@@ -179,12 +201,14 @@ void Window::onKeyDown(const UINT8 key)
         default:
             break;
     }
+
+    sample->ProcessCameraInputs(x, y, z);
 }
 
 void Window::onKeyUp(const UINT8 key)
 {
 }
-
+bool keys[256] = { false };
 LRESULT CALLBACK Window::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     Sample* sample = reinterpret_cast<Sample*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
@@ -199,18 +223,31 @@ LRESULT CALLBACK Window::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
         }
         case WM_KEYDOWN:
         {
-            onKeyDown(static_cast<UINT8>(wParam));
+            UINT8 keyCode = static_cast<UINT8>(wParam);
+            if (!keys[keyCode])
+            {
+                keys[keyCode] = true;
+                //onKeyDown(keyCode);
+            }
             return 0;
         }
+
         case WM_KEYUP:
         {
-            onKeyUp(static_cast<UINT8>(wParam));
+            UINT8 keyCode = static_cast<UINT8>(wParam);
+            keys[keyCode] = false;
+            //onKeyUp(keyCode);
             return 0;
         }
         case WM_PAINT:
         {
             if (sample)
             {
+                for (int i = 0; i < 256; i++)
+                {
+                    if (keys[i] == true)
+                        onKeyDown(i);
+                }
                 sample->OnUpdate();
                 sample->OnRender();
             }

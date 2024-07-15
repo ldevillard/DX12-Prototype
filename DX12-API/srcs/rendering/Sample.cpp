@@ -72,6 +72,8 @@ Sample::Sample(uint32_t w, uint32_t h)
     , scissorRect(CD3DX12_RECT(0, 0, LONG_MAX, LONG_MAX))
     , viewport(CD3DX12_VIEWPORT(0.0f, 0.0f, static_cast<float>(width), static_cast<float>(height)))
 {
+    eyePosition = XMVectorSet(0, 5, -10, 1);
+
     parseCommandLineArguments();
     enableDebugLayer();
 	allowTearing = checkTearingSupport();
@@ -92,11 +94,10 @@ void Sample::OnUpdate()
     OutputDebugStringA(fps.c_str());
 
     float angle = static_cast<float>(timer.GetTimeElapsed() * 90.0);
-    const XMVECTOR rotationAxis = XMVectorSet(0, 1, 1, 0);
+    const XMVECTOR rotationAxis = DirectX::XMVectorSet(0, 1, 1, 0);
     modelMatrix = XMMatrixRotationAxis(rotationAxis, XMConvertToRadians(angle));
 
     // update the view matrix.
-    const XMVECTOR eyePosition = XMVectorSet(0, 5, -10, 1);
     const XMVECTOR focusPoint = XMVectorSet(0, 0, 0, 1);
     const XMVECTOR upDirection = XMVectorSet(0, 1, 0, 0);
     viewMatrix = XMMatrixLookAtLH(eyePosition, focusPoint, upDirection);
@@ -225,6 +226,15 @@ void Sample::Resize(uint32_t width, uint32_t height)
         viewport = CD3DX12_VIEWPORT(0.0f, 0.0f, static_cast<float>(this->width), static_cast<float>(this->height));
         resizeDepthBuffer(this->width, this->height);
     }
+}
+
+void Sample::ProcessCameraInputs(float x, float y, float z)
+{
+    float _x = XMVectorGetX(eyePosition);
+    float _y = XMVectorGetY(eyePosition);
+    float _z = XMVectorGetZ(eyePosition);
+
+    eyePosition = XMVectorSet(_x + x * velocity, _y + y * velocity, _z + z * velocity, 1);
 }
 
 #pragma endregion
