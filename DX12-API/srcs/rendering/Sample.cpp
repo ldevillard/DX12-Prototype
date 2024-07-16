@@ -171,8 +171,9 @@ void Sample::OnRender()
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::Begin("Hello, world!");
-        ImGui::Text("This is some useful text.");
+        ImGui::Begin("DX-12 Prototype");
+        ImGui::Text("Delta Time: %.1f ms", Time::GetDeltaTime() * 1000);
+        ImGui::Text("FPS: %.1f", Time::GetFrameRate());
         ImGui::End();
 
         ImGui::Render();

@@ -201,12 +201,12 @@ void Window::processMouse()
 {
     if (!ImGui::IsMouseDown(ImGuiMouseButton_Right))
     {
-        ShowCursor(TRUE);
+        SetCursor(LoadCursor(NULL, IDC_ARROW));
         firstMouse = true;
         return;
     }
 
-    ShowCursor(FALSE);
+    SetCursor(NULL);
 
     ImVec2 cursor = ImGui::GetMousePos();
 
