@@ -247,9 +247,9 @@ void Sample::Resize(uint32_t width, uint32_t height)
     }
 }
 
-void Sample::ProcessCameraInputs(float x, float y, float z)
+void Sample::ProcessCameraInputs(float x, float y, float z, bool accelerate)
 {
-    camera.ProcessInputs(x, y, z);
+    camera.ProcessInputs(x, y, z, accelerate);
 }
 
 void Sample::ProcessCameraMouseMovement(float xOffset, float yOffset)

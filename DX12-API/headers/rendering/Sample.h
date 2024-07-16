@@ -24,7 +24,7 @@ public:
 	void ToggleVSync();
 	void Resize(uint32_t width, uint32_t height);
 
-	void ProcessCameraInputs(float x, float y, float z);
+	void ProcessCameraInputs(float x, float y, float z, bool accelerate);
 	void ProcessCameraMouseMovement(float xOffset, float yOffset);
 
 private:

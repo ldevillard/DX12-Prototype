@@ -30,9 +30,10 @@ const Matrix4 Camera::GetProjectionMatrix(uint32_t width, uint32_t height) const
 	return XMMatrixPerspectiveFovLH(XMConvertToRadians(fov), aspectRatio, nearPlane, farPlane);
 }
 
-void Camera::ProcessInputs(float x, float y, float z)
+void Camera::ProcessInputs(float x, float y, float z, bool accelerate)
 {
-	float velocity = movementSpeed * Time::GetDeltaTime();
+	float speedFactor = accelerate ? movementSpeedFactor : 1;
+	float velocity = movementSpeed * Time::GetDeltaTime() * speedFactor;
 
 	position += front * velocity * z + right * velocity * x + up * velocity * y;
 }

@@ -178,6 +178,7 @@ void Window::processInputs()
     float x = 0;
     float y = 0;
     float z = 0;
+    bool accelerate = false;
 
     if (ImGui::IsKeyPressed(ImGuiKey_V, false))
         sample->ToggleVSync();
@@ -194,7 +195,9 @@ void Window::processInputs()
     if (ImGui::IsKeyDown(ImGuiKey_W)) z = 1;
     if (ImGui::IsKeyDown(ImGuiKey_S)) z = -1;
 
-    sample->ProcessCameraInputs(x, y, z);
+    if (ImGui::IsKeyDown(ImGuiKey_LeftShift)) accelerate = true;
+
+    sample->ProcessCameraInputs(x, y, z, accelerate);
 }
 
 void Window::processMouse()
