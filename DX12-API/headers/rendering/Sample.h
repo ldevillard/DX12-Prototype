@@ -26,6 +26,7 @@ public:
 
 	void ProcessCameraInputs(float x, float y, float z, bool accelerate);
 	void ProcessCameraMouseMovement(float xOffset, float yOffset);
+	void ProcessCameraMouseScroll(float offset);
 
 private:
 	bool checkTearingSupport();

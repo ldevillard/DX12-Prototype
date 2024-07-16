@@ -210,7 +210,6 @@ void Window::processMouse()
     }
 
     SetCursor(NULL);
-
     ImVec2 cursor = ImGui::GetMousePos();
 
     float xPos = cursor.x;
@@ -232,19 +231,19 @@ void Window::processMouse()
     sample->ProcessCameraMouseMovement(xOffset, yOffset);
 }
 
-LRESULT CALLBACK Window::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK Window::WinProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    if (ImGui_ImplWin32_WndProcHandler(hwnd, uMsg, wParam, lParam))
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
         return true;
 
-    Sample* sample = reinterpret_cast<Sample*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+    Sample* sample = reinterpret_cast<Sample*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
     
     switch (uMsg)
     {
         case WM_CREATE:
         {
             LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
-            SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
+            SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
             return 0;
         }
         case WM_PAINT:
@@ -253,9 +252,16 @@ LRESULT CALLBACK Window::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
             {
                 sample->OnUpdate();
                 sample->OnRender();
-
-                processInputs();
                 processMouse();
+                processInputs();
+            }
+            return 0;
+        }
+        case WM_MOUSEWHEEL:
+        {
+            if (sample)
+            {
+                sample->ProcessCameraMouseScroll(GET_WHEEL_DELTA_WPARAM(wParam));
             }
             return 0;
         }
@@ -272,7 +278,7 @@ LRESULT CALLBACK Window::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
     }
 
     // handle any messages the switch statement didn't.
-    return DefWindowProc(hwnd, uMsg, wParam, lParam);
+    return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
 #pragma endregion

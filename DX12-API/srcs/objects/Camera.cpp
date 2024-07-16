@@ -30,6 +30,11 @@ const Matrix4 Camera::GetProjectionMatrix(uint32_t width, uint32_t height) const
 	return XMMatrixPerspectiveFovLH(XMConvertToRadians(fov), aspectRatio, nearPlane, farPlane);
 }
 
+const float Camera::GetFOV() const
+{
+	return fov;
+}
+
 void Camera::ProcessInputs(float x, float y, float z, bool accelerate)
 {
 	float speedFactor = accelerate ? movementSpeedFactor : 1;
@@ -48,6 +53,12 @@ void Camera::ProcessMouseMovement(float xOffset, float yOffset)
 	pitch = std::clamp(pitch, -90.0f, 90.0f);
 
 	updateVectors();
+}
+
+void Camera::ProcessMouseScroll(float offset)
+{
+	// 0.01f is an arbitrary value to slow down the scroll
+	fov = std::clamp(fov - offset * 0.01f, 1.0f, 100.0f);
 }
 
 #pragma endregion

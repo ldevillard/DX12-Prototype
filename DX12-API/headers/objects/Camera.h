@@ -9,22 +9,26 @@ public:
 
 	const Matrix4 GetViewMatrix() const;
 	const Matrix4 GetProjectionMatrix(uint32_t width, uint32_t height) const;
+	const float GetFOV() const;
 
 	void ProcessInputs(float x, float y, float z, bool accelerate);
 	void ProcessMouseMovement(float xOffset, float yOffset);
+	void ProcessMouseScroll(float offset);
+
 
 private:
 	void updateVectors();
 
 private:
-	// settings
 	float movementSpeed = 10.f;
 	float movementSpeedFactor = 2.0f;
 	float rotationSpeed = 15.f;
 	float rotationSpeedFactor = 0.1f;
-	float fov = 45.0;
+
 	float nearPlane = 0.1f;
 	float farPlane = 1000.f;
+
+	float fov = 45.0;
 	float yaw = -90.0f;
 	float pitch = 0.0f;
 

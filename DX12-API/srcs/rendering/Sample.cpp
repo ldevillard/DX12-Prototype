@@ -174,6 +174,7 @@ void Sample::OnRender()
         ImGui::Begin("DX-12 Prototype");
         ImGui::Text("Delta Time: %.1f ms", Time::GetDeltaTime() * 1000);
         ImGui::Text("FPS: %.1f", Time::GetFrameRate());
+        ImGui::Text("FOV: %.1f", camera.GetFOV());
         ImGui::End();
 
         ImGui::Render();
@@ -255,6 +256,11 @@ void Sample::ProcessCameraInputs(float x, float y, float z, bool accelerate)
 void Sample::ProcessCameraMouseMovement(float xOffset, float yOffset)
 {
     camera.ProcessMouseMovement(xOffset, yOffset);
+}
+
+void Sample::ProcessCameraMouseScroll(float offset)
+{
+    camera.ProcessMouseScroll(offset);
 }
 
 #pragma endregion
