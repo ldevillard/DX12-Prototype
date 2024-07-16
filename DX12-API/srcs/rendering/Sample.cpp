@@ -86,6 +86,8 @@ void Sample::OnInit(HWND hWnd)
     handleWin = hWnd;
 	loadPipeline();
     loadAssets();
+
+    initImGui(hWnd);
 }
 
 void Sample::OnUpdate()
@@ -160,6 +162,22 @@ void Sample::OnRender()
         commandList->Get()->SetGraphicsRoot32BitConstants(1, sizeof(XMMATRIX) / 4, &modelMatrix, 0);
         
         commandList->Get()->DrawIndexedInstanced(_countof(g_Indices), 1, 0, 0, 0);
+
+        // ImGui
+        ID3D12DescriptorHeap* descriptorHeaps[] = { SRVdescriptorHeap->GetPtr() };
+        commandList->Get()->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+
+        ImGui_ImplDX12_NewFrame();
+        ImGui_ImplWin32_NewFrame();
+        ImGui::NewFrame();
+
+        ImGui::Begin("Hello, world!");
+        ImGui::Text("This is some useful text.");
+        ImGui::End();
+
+        ImGui::Render();
+        ImDrawData* draw_data = ImGui::GetDrawData();
+        ImGui_ImplDX12_RenderDrawData(draw_data, commandList->GetPtr());
     }
 
     // Present
@@ -187,6 +205,10 @@ void Sample::OnRender()
 
 void Sample::OnDestroy()
 {
+    ImGui_ImplDX12_Shutdown();
+    ImGui_ImplWin32_Shutdown();
+    ImGui::DestroyContext();
+
     fence->Flush(*commandQueue);
     CloseHandle(fence->GetEvent());
 }
@@ -226,7 +248,12 @@ void Sample::Resize(uint32_t width, uint32_t height)
 
 void Sample::ProcessCameraInputs(float x, float y, float z)
 {
-    camera.ProcessInputs({ x, y, z });
+    camera.ProcessInputs(x, y, z);
+}
+
+void Sample::ProcessCameraMouseMovement(float xOffset, float yOffset)
+{
+    camera.ProcessMouseMovement(xOffset, yOffset);
 }
 
 #pragma endregion
@@ -265,6 +292,7 @@ void Sample::loadPipeline()
 	commandQueue = std::make_unique<CommandQueue>(*device);
 	swapChain = std::make_unique<SwapChain>(handleWin, *commandQueue, width, height, allowTearing);
     RTVdescriptorHeap = std::make_unique<DescriptorHeap>(*device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, SwapChain::FrameCount);
+    SRVdescriptorHeap = std::make_unique<DescriptorHeap>(*device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, SwapChain::FrameCount, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE);
 
     swapChain->UpdateRenderTargetViews(*device, *RTVdescriptorHeap);
 
@@ -512,6 +540,24 @@ void Sample::resizeDepthBuffer(int width, int height)
 
     device->Get()->CreateDepthStencilView(pDepthBuffer.Get(), &dsv,
         DSVdescriptorHeap->GetCPUDescriptorHandleForHeapStart());
+}
+
+void Sample::initImGui(HWND hWnd)
+{
+   // create context
+   IMGUI_CHECKVERSION();
+   ImGui::CreateContext();
+   ImGuiIO& io = ImGui::GetIO(); (void)io;
+   
+   // imgui style
+   ImGui::StyleColorsDark();
+   
+   // init win32 and dx12 backends
+   ImGui_ImplWin32_Init(hWnd);
+   ImGui_ImplDX12_Init(device->GetPtr(), SwapChain::FrameCount,
+       DXGI_FORMAT_R8G8B8A8_UNORM, SRVdescriptorHeap->GetPtr(),
+       SRVdescriptorHeap->GetCPUDescriptorHandleForHeapStart(),
+       SRVdescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 }
 
 #pragma endregion

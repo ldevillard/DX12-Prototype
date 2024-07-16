@@ -11,6 +11,12 @@ std::wstring Window::name;
 std::unique_ptr<Sample> Window::sample;
 bool Window::fullScreenState;
 
+float Window::lastX;
+float Window::lastY;
+bool Window::firstMouse;
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 #pragma region Public Methods
 
 int Window::Run(HINSTANCE hInstance, UINT windowWidth, UINT windowHeight, std::wstring windowName, int cmdShow)
@@ -18,6 +24,7 @@ int Window::Run(HINSTANCE hInstance, UINT windowWidth, UINT windowHeight, std::w
     width = windowWidth;
     height = windowHeight;
     name = windowName;
+    firstMouse = true;
 
     sample = std::make_unique<Sample>(width, height);
 
@@ -166,53 +173,69 @@ void Window::resize()
     sample->Resize(width, height);
 }
 
-void Window::onKeyDown(const UINT8 key)
+void Window::processInputs()
 {
     float x = 0;
     float y = 0;
     float z = 0;
 
-    switch(key)
-    {
-        case 'V':
-            sample->ToggleVSync();
-            break;
-        case 'A':
-            x = -1;
-            break;
-        case 'D':
-            x = 1;
-            break;
-        case 'Q':
-            y = -1;
-            break;
-        case 'E':
-            y = 1;
-            break;
-        case 'W':
-            z = 1;
-            break;
-        case 'S':
-            z = -1;
-            break;
-        case VK_F11:
-            setFullScreen(!fullScreenState);
-            break;
-        default:
-            break;
-    }
+    if (ImGui::IsKeyPressed(ImGuiKey_V, false))
+        sample->ToggleVSync();
+
+    if (ImGui::IsKeyPressed(ImGuiKey_F11, false))
+        setFullScreen(!fullScreenState);
+
+    if (ImGui::IsKeyDown(ImGuiKey_A)) x = -1;
+    if (ImGui::IsKeyDown(ImGuiKey_D)) x = 1;
+
+    if (ImGui::IsKeyDown(ImGuiKey_Q)) y = -1;
+    if (ImGui::IsKeyDown(ImGuiKey_E)) y = 1;
+    
+    if (ImGui::IsKeyDown(ImGuiKey_W)) z = 1;
+    if (ImGui::IsKeyDown(ImGuiKey_S)) z = -1;
 
     sample->ProcessCameraInputs(x, y, z);
 }
 
-void Window::onKeyUp(const UINT8 key)
+void Window::processMouse()
 {
+    if (!ImGui::IsMouseDown(ImGuiMouseButton_Right))
+    {
+        ShowCursor(TRUE);
+        firstMouse = true;
+        return;
+    }
+
+    ShowCursor(FALSE);
+
+    ImVec2 cursor = ImGui::GetMousePos();
+
+    float xPos = cursor.x;
+    float yPos = cursor.y;
+
+    if (firstMouse)
+    {
+        lastX = xPos;
+        lastY = yPos;
+        firstMouse = false;
+    }
+
+    float xOffset = xPos - lastX;
+    float yOffset = lastY - yPos; // reversed since y-coordinates go from bottom to top
+
+    lastX = xPos;
+    lastY = yPos;
+
+    sample->ProcessCameraMouseMovement(xOffset, yOffset);
 }
-bool keys[256] = { false };
+
 LRESULT CALLBACK Window::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    Sample* sample = reinterpret_cast<Sample*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+    if (ImGui_ImplWin32_WndProcHandler(hwnd, uMsg, wParam, lParam))
+        return true;
 
+    Sample* sample = reinterpret_cast<Sample*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+    
     switch (uMsg)
     {
         case WM_CREATE:
@@ -221,35 +244,15 @@ LRESULT CALLBACK Window::WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
             SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
             return 0;
         }
-        case WM_KEYDOWN:
-        {
-            UINT8 keyCode = static_cast<UINT8>(wParam);
-            if (!keys[keyCode])
-            {
-                keys[keyCode] = true;
-                //onKeyDown(keyCode);
-            }
-            return 0;
-        }
-
-        case WM_KEYUP:
-        {
-            UINT8 keyCode = static_cast<UINT8>(wParam);
-            keys[keyCode] = false;
-            //onKeyUp(keyCode);
-            return 0;
-        }
         case WM_PAINT:
         {
             if (sample)
             {
-                for (int i = 0; i < 256; i++)
-                {
-                    if (keys[i] == true)
-                        onKeyDown(i);
-                }
                 sample->OnUpdate();
                 sample->OnRender();
+
+                processInputs();
+                processMouse();
             }
             return 0;
         }

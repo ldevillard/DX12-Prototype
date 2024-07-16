@@ -10,7 +10,8 @@ public:
 	const Matrix4 GetViewMatrix() const;
 	const Matrix4 GetProjectionMatrix(uint32_t width, uint32_t height) const;
 
-	void ProcessInputs(Vector4 direction);
+	void ProcessInputs(float x, float y, float z);
+	void ProcessMouseMovement(float xOffset, float yOffset);
 
 private:
 	void updateVectors();
@@ -18,7 +19,8 @@ private:
 private:
 	// settings
 	float movementSpeed = 10.f;
-	float rotationSpeed = 25.f;
+	float rotationSpeed = 15.f;
+	float rotationSpeedFactor = 0.1f;
 	float fov = 45.0;
 	float nearPlane = 0.1f;
 	float farPlane = 1000.f;

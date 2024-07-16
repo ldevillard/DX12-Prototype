@@ -1,6 +1,8 @@
 #include "PrecompiledHeaders.h"
 #include "objects/Camera.h"
 
+#include <algorithm>
+
 #include "helpers/Time.h"
 
 using namespace DirectX;
@@ -28,10 +30,23 @@ const Matrix4 Camera::GetProjectionMatrix(uint32_t width, uint32_t height) const
 	return XMMatrixPerspectiveFovLH(XMConvertToRadians(fov), aspectRatio, nearPlane, farPlane);
 }
 
-void Camera::ProcessInputs(Vector4 direction)
+void Camera::ProcessInputs(float x, float y, float z)
 {
 	float velocity = movementSpeed * Time::GetDeltaTime();
-	position += front * velocity * direction + right * velocity * direction + up * velocity * direction;
+
+	position += front * velocity * z + right * velocity * x + up * velocity * y;
+}
+
+void Camera::ProcessMouseMovement(float xOffset, float yOffset)
+{
+	float dt = Time::GetDeltaTime();
+
+	yaw -= xOffset * rotationSpeedFactor;
+	pitch -= yOffset * rotationSpeedFactor;
+
+	pitch = std::clamp(pitch, -90.0f, 90.0f);
+
+	updateVectors();
 }
 
 #pragma endregion
@@ -41,9 +56,9 @@ void Camera::ProcessInputs(Vector4 direction)
 void Camera::updateVectors()
 {
 	XMVECTOR frontVector = XMVectorSet(
-		cosf(XMConvertToRadians(yaw)) * cosf(XMConvertToRadians(pitch)),
-		sinf(XMConvertToRadians(pitch)),
-		sinf(XMConvertToRadians(yaw)) * cosf(XMConvertToRadians(pitch)),
+		-cosf(XMConvertToRadians(yaw)) * cosf(XMConvertToRadians(pitch)),
+		-sinf(XMConvertToRadians(pitch)),
+		-sinf(XMConvertToRadians(yaw)) * cosf(XMConvertToRadians(pitch)),
 		0.0f
 	);
 

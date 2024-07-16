@@ -25,6 +25,7 @@ public:
 	void Resize(uint32_t width, uint32_t height);
 
 	void ProcessCameraInputs(float x, float y, float z);
+	void ProcessCameraMouseMovement(float xOffset, float yOffset);
 
 private:
 	bool checkTearingSupport();
@@ -37,6 +38,8 @@ private:
 						      size_t numElements, size_t elementSize, const void* bufferData,
 						      D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_NONE);
 	void resizeDepthBuffer(int width, int height);
+
+	void initImGui(HWND hWnd);
 
 private:
 	HWND handleWin;
@@ -55,6 +58,7 @@ private:
 	std::unique_ptr<CommandQueue> commandQueue;
 	std::unique_ptr<SwapChain> swapChain;
 	std::unique_ptr<DescriptorHeap> RTVdescriptorHeap;
+	std::unique_ptr<DescriptorHeap> SRVdescriptorHeap;
 	std::unique_ptr<CommandAllocator> commandAllocators[SwapChain::FrameCount];
 	std::unique_ptr<CommandList> commandList;
 	std::unique_ptr<Fence> fence;

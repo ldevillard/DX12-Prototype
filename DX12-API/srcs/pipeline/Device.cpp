@@ -47,6 +47,11 @@ const ComPtr<ID3D12Device2>& Device::Get() const
     return device;
 }
 
+ID3D12Device2* Device::GetPtr() const
+{
+    return device.Get();
+}
+
 #pragma endregion
 
 #pragma region Private Methods

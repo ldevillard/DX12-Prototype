@@ -14,8 +14,9 @@ private:
 	static void setFullScreen(bool fullScreen);
 	static void resize();
 
-	static void onKeyDown(const UINT8 key);
-	static void onKeyUp(const UINT8 key);
+	static void processInputs();
+
+	static void processMouse();
 
 	static LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -28,4 +29,9 @@ private:
 	static bool fullScreenState;
 
 	static std::unique_ptr<Sample> sample;
+
+	// mouse settings -> Need input class
+	static float lastX;
+	static float lastY;
+	static bool firstMouse;
 };

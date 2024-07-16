@@ -71,10 +71,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\logan\Desktop\DX12-Prototype\DX12-Maths\headers;C:\Users\logan\Desktop\DX12-Prototype\DX12-API\headers;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\logan\Desktop\DX12-Prototype\DX12-ImGui\headers;C:\Users\logan\Desktop\DX12-Prototype\DX12-API\headers;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\logan\Desktop\DX12-Prototype\DX12-API\x64\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\logan\Desktop\DX12-Prototype\DX12-Maths\headers;C:\Users\logan\Desktop\DX12-Prototype\DX12-API\headers;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\logan\Desktop\DX12-Prototype\DX12-ImGui\headers;C:\Users\logan\Desktop\DX12-Prototype\DX12-API\headers;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\logan\Desktop\DX12-Prototype\DX12-API\x64\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>C:\Users\logan\Desktop\DX12-Prototype\DX12-API\headers;$(IncludePath)</IncludePath>
@@ -137,6 +139,10 @@
     <FxCompile>
       <ShaderModel>5.1</ShaderModel>
     </FxCompile>
+    <Lib>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -159,6 +165,10 @@
     <FxCompile>
       <ShaderModel>5.1</ShaderModel>
     </FxCompile>
+    <Lib>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="headers\d3dx12.h" />

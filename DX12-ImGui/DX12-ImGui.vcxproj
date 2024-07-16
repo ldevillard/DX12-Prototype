@@ -18,23 +18,11 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="srcs\MainApplication.cpp" />
-    <ClCompile Include="srcs\Window.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DX12-API\DX12-API.vcxproj">
-      <Project>{613b5e94-f948-4e51-ae47-94f2ccaf0877}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="headers\Window.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{14743e5b-862d-4fe7-8c8e-206b6de2bd5b}</ProjectGuid>
-    <RootNamespace>DX12Prototype</RootNamespace>
+    <ProjectGuid>{f15dd904-e875-480e-84ea-13b842adc52b}</ProjectGuid>
+    <RootNamespace>DX12ImGui</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -52,13 +40,13 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -83,16 +71,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\logan\Desktop\DX12-Prototype\DX12-API\headers;C:\Users\logan\Desktop\DX12-Prototype\DX12-ImGui\headers;C:\Users\logan\Desktop\DX12-Prototype\DX12-Prototype\headers;$(IncludePath)</IncludePath>
-    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
-    <ExternalIncludePath>C:\Users\logan\Desktop\DX12-Prototype\DX12-ImGui\headers;C:\Users\logan\Desktop\DX12-Prototype\DX12-API\headers;$(ExternalIncludePath)</ExternalIncludePath>
-    <LibraryPath>$(LibraryPath);$(SolutionDir)$(Platform)\$(Configuration)\</LibraryPath>
+    <IncludePath>C:\Users\logan\Desktop\DX12-Prototype\DX12-ImGui\headers;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\logan\Desktop\DX12-Prototype\DX12-API\headers;C:\Users\logan\Desktop\DX12-Prototype\DX12-ImGui\headers;C:\Users\logan\Desktop\DX12-Prototype\DX12-Prototype\headers;$(IncludePath)</IncludePath>
-    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
-    <ExternalIncludePath>C:\Users\logan\Desktop\DX12-Prototype\DX12-ImGui\headers;C:\Users\logan\Desktop\DX12-Prototype\DX12-API\headers;$(ExternalIncludePath)</ExternalIncludePath>
-    <LibraryPath>$(LibraryPath);$(SolutionDir)$(Platform)\$(Configuration)\</LibraryPath>
+    <IncludePath>C:\Users\logan\Desktop\DX12-Prototype\DX12-ImGui\headers;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -104,7 +86,6 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;dxgi.lib;d3dcompiler.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -121,7 +102,6 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;dxgi.lib;d3dcompiler.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -130,15 +110,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalOptions>/MP  %(AdditionalOptions)</AdditionalOptions>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;dxgi.lib;d3dcompiler.lib;DX12-ImGui.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -149,18 +125,34 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;dxgi.lib;d3dcompiler.lib;DX12-ImGui.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="headers\imconfig.h" />
+    <ClInclude Include="headers\imgui.h" />
+    <ClInclude Include="headers\imgui_impl_dx12.h" />
+    <ClInclude Include="headers\imgui_impl_win32.h" />
+    <ClInclude Include="headers\imgui_internal.h" />
+    <ClInclude Include="headers\imstb_rectpack.h" />
+    <ClInclude Include="headers\imstb_textedit.h" />
+    <ClInclude Include="headers\imstb_truetype.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="srcs\imgui.cpp" />
+    <ClCompile Include="srcs\imgui_demo.cpp" />
+    <ClCompile Include="srcs\imgui_draw.cpp" />
+    <ClCompile Include="srcs\imgui_impl_dx12.cpp" />
+    <ClCompile Include="srcs\imgui_impl_win32.cpp" />
+    <ClCompile Include="srcs\imgui_tables.cpp" />
+    <ClCompile Include="srcs\imgui_widgets.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
