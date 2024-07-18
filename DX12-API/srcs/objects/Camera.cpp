@@ -58,7 +58,7 @@ void Camera::ProcessMouseMovement(float xOffset, float yOffset)
 void Camera::ProcessMouseScroll(float offset)
 {
 	// 0.01f is an arbitrary value to slow down the scroll
-	fov = std::clamp(fov - offset * 0.01f, 1.0f, 100.0f);
+	fov = std::clamp(fov - offset * 0.01f, 1.0f, 120.0f);
 }
 
 #pragma endregion

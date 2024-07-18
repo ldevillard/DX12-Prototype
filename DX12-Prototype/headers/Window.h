@@ -15,8 +15,7 @@ private:
 	static void resize();
 
 	static void processInputs();
-
-	static void processMouse();
+	static void processMouseDrag();
 
 	static LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -31,7 +30,6 @@ private:
 	static std::unique_ptr<Sample> sample;
 
 	// mouse settings -> Need input class
-	static float lastX;
-	static float lastY;
-	static bool firstMouse;
+	static POINT screenCenter;
+	static bool firstDrag;
 };

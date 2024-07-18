@@ -11,9 +11,8 @@ std::wstring Window::name;
 std::unique_ptr<Sample> Window::sample;
 bool Window::fullScreenState;
 
-float Window::lastX;
-float Window::lastY;
-bool Window::firstMouse;
+POINT Window::screenCenter;
+bool Window::firstDrag;
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -24,7 +23,7 @@ int Window::Run(HINSTANCE hInstance, UINT windowWidth, UINT windowHeight, std::w
     width = windowWidth;
     height = windowHeight;
     name = windowName;
-    firstMouse = true;
+    firstDrag = true;
 
     sample = std::make_unique<Sample>(width, height);
 
@@ -200,35 +199,39 @@ void Window::processInputs()
     sample->ProcessCameraInputs(x, y, z, accelerate);
 }
 
-void Window::processMouse()
+void Window::processMouseDrag()
 {
     if (!ImGui::IsMouseDown(ImGuiMouseButton_Right))
     {
-        SetCursor(LoadCursor(NULL, IDC_ARROW));
-        firstMouse = true;
+        if (!firstDrag)
+        {
+            firstDrag = true;
+            SetCursorPos(screenCenter.x, screenCenter.y);
+            SetCursor(LoadCursor(NULL, IDC_ARROW));
+        }
         return;
     }
 
-    SetCursor(NULL);
-    ImVec2 cursor = ImGui::GetMousePos();
-
-    float xPos = cursor.x;
-    float yPos = cursor.y;
-
-    if (firstMouse)
+    if (firstDrag)
     {
-        lastX = xPos;
-        lastY = yPos;
-        firstMouse = false;
+        firstDrag = false;
+        
+        // center the cursor position
+        screenCenter.x = static_cast<LONG>(windowRect.left + (windowRect.right - windowRect.left) * 0.5f);
+        screenCenter.y = static_cast<LONG>(windowRect.top + (windowRect.bottom - windowRect.top) * 0.5f);
+        SetCursorPos(screenCenter.x, screenCenter.y);
     }
 
-    float xOffset = xPos - lastX;
-    float yOffset = lastY - yPos; // reversed since y-coordinates go from bottom to top
+    if (GetCursor() != NULL) SetCursor(NULL);
 
-    lastX = xPos;
-    lastY = yPos;
+    POINT cursorPos;
+    GetCursorPos(&cursorPos);
+
+    float xOffset = static_cast<float>(cursorPos.x - screenCenter.x);
+    float yOffset = static_cast<float>(screenCenter.y - cursorPos.y); // reversed since y-coordinates go from bottom to top
 
     sample->ProcessCameraMouseMovement(xOffset, yOffset);
+    SetCursorPos(screenCenter.x, screenCenter.y);
 }
 
 LRESULT CALLBACK Window::WinProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -237,7 +240,7 @@ LRESULT CALLBACK Window::WinProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
         return true;
 
     Sample* sample = reinterpret_cast<Sample*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
-    
+
     switch (uMsg)
     {
         case WM_CREATE:
@@ -252,22 +255,26 @@ LRESULT CALLBACK Window::WinProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
             {
                 sample->OnUpdate();
                 sample->OnRender();
-                processMouse();
                 processInputs();
             }
+            return 0;
+        }
+        case WM_MOUSEMOVE:
+        {
+            if (sample)
+                processMouseDrag();
             return 0;
         }
         case WM_MOUSEWHEEL:
         {
             if (sample)
-            {
                 sample->ProcessCameraMouseScroll(GET_WHEEL_DELTA_WPARAM(wParam));
-            }
             return 0;
         }
         case WM_SIZE:
         {
-            resize();
+            if (sample)
+                resize();
             return 0;
         }
         case WM_DESTROY:
