@@ -403,7 +403,7 @@ void Sample::loadAssets()
         psoDescriptor.VS = CD3DX12_SHADER_BYTECODE(vertexShaderBlob.Get());
         psoDescriptor.PS = CD3DX12_SHADER_BYTECODE(pixelShaderBlob.Get());
         psoDescriptor.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-        psoDescriptor.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+        //psoDescriptor.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
         psoDescriptor.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
         psoDescriptor.SampleMask = UINT_MAX;
         psoDescriptor.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
