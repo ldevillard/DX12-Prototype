@@ -9,6 +9,7 @@
 #include "pipeline/DescriptorHeap.h"
 #include "pipeline/Device.h"
 #include "pipeline/Fence.h"
+#include "pipeline/PipelineStateObject.h"
 #include "pipeline/SwapChain.h"
 
 class Sample
@@ -63,6 +64,7 @@ private:
 	std::unique_ptr<CommandAllocator> commandAllocators[SwapChain::FrameCount];
 	std::unique_ptr<CommandList> commandList;
 	std::unique_ptr<Fence> fence;
+	std::unique_ptr<PipelineStateObject> pipelineStateObject;
 
 	// vertex buffer for the cube.
 	Resource vertexBuffer;
@@ -77,8 +79,6 @@ private:
 
 	// root signature
 	ComPtr<ID3D12RootSignature> rootSignature;
-	// pipeline state object.
-	ComPtr<ID3D12PipelineState> pipelineState;
 
 	D3D12_VIEWPORT viewport;
 	D3D12_RECT scissorRect;

@@ -2,6 +2,7 @@
 #include "pipeline/Fence.h"
 
 #include "pipeline/CommandQueue.h"
+#include "pipeline/Device.h"
 
 #pragma region Public Methods
 

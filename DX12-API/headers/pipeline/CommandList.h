@@ -1,9 +1,10 @@
 #pragma once
 
-#include "pipeline/Device.h"
+#include "helpers/Helpers.h"
 
 class CommandAllocator;
 class DescriptorHeap;
+class Device;
 class Resource;
 
 class CommandList

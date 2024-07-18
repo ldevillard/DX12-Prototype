@@ -2,9 +2,10 @@
 
 #include <chrono>
 
-#include "pipeline/Device.h"
+#include "helpers/Helpers.h"
 
 class CommandQueue;
+class Device;
 
 class Fence
 {

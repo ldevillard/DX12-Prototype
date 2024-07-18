@@ -1,6 +1,8 @@
 #include "PrecompiledHeaders.h"
 #include "pipeline/DescriptorHeap.h"
 
+#include "pipeline/Device.h"
+
 #pragma region Public Methods
 
 DescriptorHeap::DescriptorHeap(const Device& device, D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t numDescriptors, D3D12_DESCRIPTOR_HEAP_FLAGS flags)

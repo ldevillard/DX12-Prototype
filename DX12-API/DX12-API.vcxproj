@@ -182,6 +182,7 @@
     <ClInclude Include="headers\pipeline\DescriptorHeap.h" />
     <ClInclude Include="headers\pipeline\Device.h" />
     <ClInclude Include="headers\pipeline\Fence.h" />
+    <ClInclude Include="headers\pipeline\PipelineStateObject.h" />
     <ClInclude Include="headers\pipeline\SwapChain.h" />
     <ClInclude Include="headers\PrecompiledHeaders.h" />
     <ClInclude Include="headers\rendering\Sample.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="srcs\pipeline\DescriptorHeap.cpp" />
     <ClCompile Include="srcs\pipeline\Device.cpp" />
     <ClCompile Include="srcs\pipeline\Fence.cpp" />
+    <ClCompile Include="srcs\pipeline\PipelineStateObject.cpp" />
     <ClCompile Include="srcs\pipeline\SwapChain.cpp" />
     <ClCompile Include="srcs\PrecompiledHeaders.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

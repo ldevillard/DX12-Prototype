@@ -1,10 +1,11 @@
 #pragma once
 
-#include "pipeline/Device.h"
+#include "helpers/Helpers.h"
 #include "resources/Resource.h"
 
 class CommandQueue;
 class DescriptorHeap;
+class Device;
 
 class SwapChain
 {

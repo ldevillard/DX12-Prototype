@@ -1,6 +1,8 @@
 #include "PrecompiledHeaders.h"
 #include "pipeline/CommandAllocator.h"
 
+#include "pipeline/Device.h"
+
 #pragma region Public Methods
 
 CommandAllocator::CommandAllocator(const Device& device, D3D12_COMMAND_LIST_TYPE commandListType)

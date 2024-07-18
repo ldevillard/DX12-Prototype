@@ -122,7 +122,7 @@ void Sample::OnRender()
         commandList->ClearDepth(dsv);
     }
 
-    commandList->Get()->SetPipelineState(pipelineState.Get());
+    commandList->Get()->SetPipelineState(pipelineStateObject->GetPtr());
     commandList->Get()->SetGraphicsRootSignature(rootSignature.Get());
 
     commandList->Get()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -389,29 +389,32 @@ void Sample::loadAssets()
     ThrowIfFailed(device->Get()->CreateRootSignature(0, rootSignatureBlob->GetBufferPointer(),
         rootSignatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature)));
 
-    D3D12_DEPTH_STENCIL_DESC depthStencilDesc = {};
-    depthStencilDesc.DepthEnable = TRUE;
-    depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-    depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-    depthStencilDesc.StencilEnable = FALSE;
-
     // describe and create the graphics pipeline state object (PSO).
-    D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
-    psoDesc.InputLayout = { inputLayout, _countof(inputLayout) };
-    psoDesc.pRootSignature = rootSignature.Get();
-    psoDesc.VS = CD3DX12_SHADER_BYTECODE(vertexShaderBlob.Get());
-    psoDesc.PS = CD3DX12_SHADER_BYTECODE(pixelShaderBlob.Get());
-    psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-    psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-    psoDesc.SampleMask = UINT_MAX;
-    psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-    psoDesc.NumRenderTargets = 1;
-    psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-    psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
-    psoDesc.SampleDesc.Count = 1;
-    //psoDesc.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
-    psoDesc.DepthStencilState = depthStencilDesc;
-    ThrowIfFailed(device->Get()->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineState)));
+    {
+        D3D12_DEPTH_STENCIL_DESC depthStencilDesc = {};
+        depthStencilDesc.DepthEnable = TRUE;
+        depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+        depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+        depthStencilDesc.StencilEnable = FALSE;
+
+        D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDescriptor = {};
+        psoDescriptor.InputLayout = { inputLayout, _countof(inputLayout) };
+        psoDescriptor.pRootSignature = rootSignature.Get();
+        psoDescriptor.VS = CD3DX12_SHADER_BYTECODE(vertexShaderBlob.Get());
+        psoDescriptor.PS = CD3DX12_SHADER_BYTECODE(pixelShaderBlob.Get());
+        psoDescriptor.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+        psoDescriptor.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+        psoDescriptor.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+        psoDescriptor.SampleMask = UINT_MAX;
+        psoDescriptor.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+        psoDescriptor.NumRenderTargets = 1;
+        psoDescriptor.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+        psoDescriptor.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+        psoDescriptor.SampleDesc.Count = 1;
+        psoDescriptor.DepthStencilState = depthStencilDesc;
+
+        pipelineStateObject = std::make_unique<PipelineStateObject>(*device, psoDescriptor);
+    }
 
     // execute command list
     {

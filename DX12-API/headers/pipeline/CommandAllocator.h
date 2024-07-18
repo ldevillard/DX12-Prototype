@@ -1,6 +1,8 @@
 #pragma once
 
-#include "pipeline/Device.h"
+#include "helpers/Helpers.h"
+
+class Device;
 
 class CommandAllocator
 {

@@ -96,6 +96,9 @@
     <ClInclude Include="headers\maths\Maths.h">
       <Filter>Header Files\maths</Filter>
     </ClInclude>
+    <ClInclude Include="headers\pipeline\PipelineStateObject.h">
+      <Filter>Header Files\pipeline</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="srcs\PrecompiledHeaders.cpp">
@@ -133,6 +136,9 @@
     </ClCompile>
     <ClCompile Include="srcs\helpers\Time.cpp">
       <Filter>Source Files\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\pipeline\PipelineStateObject.cpp">
+      <Filter>Source Files\pipeline</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
