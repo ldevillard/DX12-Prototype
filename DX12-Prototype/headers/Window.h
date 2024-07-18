@@ -29,9 +29,4 @@ private:
 	static bool fullScreenState;
 
 	static std::unique_ptr<Sample> sample;
-
-	// mouse settings -> Need input class
-	static float lastX;
-	static float lastY;
-	static bool firstMouse;
 };

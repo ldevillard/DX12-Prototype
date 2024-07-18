@@ -11,10 +11,6 @@ std::wstring Window::name;
 std::unique_ptr<Sample> Window::sample;
 bool Window::fullScreenState;
 
-float Window::lastX;
-float Window::lastY;
-bool Window::firstMouse;
-
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 #pragma region Public Methods
@@ -24,7 +20,6 @@ int Window::Run(HINSTANCE hInstance, UINT windowWidth, UINT windowHeight, std::w
     width = windowWidth;
     height = windowHeight;
     name = windowName;
-    firstMouse = true;
 
     sample = std::make_unique<Sample>(width, height);
 
@@ -204,31 +199,16 @@ void Window::processMouse()
 {
     if (!ImGui::IsMouseDown(ImGuiMouseButton_Right))
     {
-        SetCursor(LoadCursor(NULL, IDC_ARROW));
-        firstMouse = true;
+        if (GetCursor() == NULL) SetCursor(LoadCursor(NULL, IDC_ARROW));
         return;
     }
 
-    SetCursor(NULL);
-    ImVec2 cursor = ImGui::GetMousePos();
+    if (GetCursor() != NULL) SetCursor(NULL);
 
-    float xPos = cursor.x;
-    float yPos = cursor.y;
+    ImVec2 dragDelta = ImGui::GetMouseDragDelta(ImGuiMouseButton_Right);
 
-    if (firstMouse)
-    {
-        lastX = xPos;
-        lastY = yPos;
-        firstMouse = false;
-    }
-
-    float xOffset = xPos - lastX;
-    float yOffset = lastY - yPos; // reversed since y-coordinates go from bottom to top
-
-    lastX = xPos;
-    lastY = yPos;
-
-    sample->ProcessCameraMouseMovement(xOffset, yOffset);
+    sample->ProcessCameraMouseMovement(dragDelta.x, -dragDelta.y);
+    ImGui::ResetMouseDragDelta(ImGuiMouseButton_Right);
 }
 
 LRESULT CALLBACK Window::WinProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
