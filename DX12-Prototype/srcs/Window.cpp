@@ -35,7 +35,7 @@ int Window::Run(HINSTANCE hInstance, UINT windowWidth, UINT windowHeight, std::w
 
     sample->OnInit(handleWin);
 
-    ShowWindow(handleWin, cmdShow);
+    ::ShowWindow(handleWin, cmdShow);
 
     // main sample loop.
     MSG msg = {};
@@ -44,7 +44,7 @@ int Window::Run(HINSTANCE hInstance, UINT windowWidth, UINT windowHeight, std::w
         // process any messages in the queue.
         if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
         {
-            TranslateMessage(&msg);
+            ::TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
     }
@@ -206,8 +206,8 @@ void Window::processMouseDrag()
         if (!firstDrag)
         {
             firstDrag = true;
-            SetCursorPos(screenCenter.x, screenCenter.y);
-            SetCursor(LoadCursor(NULL, IDC_ARROW));
+            ::SetCursorPos(screenCenter.x, screenCenter.y);
+            ::SetCursor(LoadCursor(NULL, IDC_ARROW));
         }
         return;
     }
@@ -219,19 +219,19 @@ void Window::processMouseDrag()
         // center the cursor position
         screenCenter.x = static_cast<LONG>(windowRect.left + (windowRect.right - windowRect.left) * 0.5f);
         screenCenter.y = static_cast<LONG>(windowRect.top + (windowRect.bottom - windowRect.top) * 0.5f);
-        SetCursorPos(screenCenter.x, screenCenter.y);
+        ::SetCursorPos(screenCenter.x, screenCenter.y);
     }
 
-    if (GetCursor() != NULL) SetCursor(NULL);
+    if (::GetCursor() != NULL) ::SetCursor(NULL);
 
     POINT cursorPos;
-    GetCursorPos(&cursorPos);
+    ::GetCursorPos(&cursorPos);
 
     float xOffset = static_cast<float>(cursorPos.x - screenCenter.x);
     float yOffset = static_cast<float>(screenCenter.y - cursorPos.y); // reversed since y-coordinates go from bottom to top
 
     sample->ProcessCameraMouseMovement(xOffset, yOffset);
-    SetCursorPos(screenCenter.x, screenCenter.y);
+    ::SetCursorPos(screenCenter.x, screenCenter.y);
 }
 
 LRESULT CALLBACK Window::WinProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
