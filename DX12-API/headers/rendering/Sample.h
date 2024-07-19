@@ -11,6 +11,7 @@
 #include "pipeline/Fence.h"
 #include "pipeline/PipelineStateObject.h"
 #include "pipeline/SwapChain.h"
+#include "resources/IndexBuffer.h"
 #include "resources/VertexBuffer.h"
 
 class Sample
@@ -68,10 +69,8 @@ private:
 	std::unique_ptr<PipelineStateObject> pipelineStateObject;
 
 	VertexBuffer vertexBuffer;
+	IndexBuffer indexBuffer;
 
-	// index buffer for the cube.
-	Resource indexBuffer;
-	D3D12_INDEX_BUFFER_VIEW indexBufferView;
 	// depth buffer.
 	Resource depthBuffer;
 	// descriptor heap for depth buffer.

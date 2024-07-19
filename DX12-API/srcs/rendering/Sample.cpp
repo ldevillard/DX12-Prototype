@@ -126,6 +126,7 @@ void Sample::OnRender()
     commandList->Get()->SetGraphicsRootSignature(rootSignature.Get());
 
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView = vertexBuffer.GetVertexBufferView();
+    D3D12_INDEX_BUFFER_VIEW indexBufferView = indexBuffer.GetIndexBufferView();
     commandList->Get()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     commandList->Get()->IASetVertexBuffers(0, 1, &vertexBufferView);
     commandList->Get()->IASetIndexBuffer(&indexBufferView);
@@ -322,15 +323,13 @@ void Sample::loadAssets()
     Resource intermediateVertexBuffer;
     updateBufferResource(vertexBuffer, intermediateVertexBuffer, _countof(g_Vertices), sizeof(VertexPosColor), g_Vertices);
     // create the vertex buffer view.
-    vertexBuffer.CreateView(sizeof(g_Vertices) / sizeof(VertexPosColor), sizeof(VertexPosColor));
+    vertexBuffer.CreateView(_countof(g_Vertices), sizeof(VertexPosColor));
 
     // upload index buffer data.
     Resource intermediateIndexBuffer;
     updateBufferResource(indexBuffer, intermediateIndexBuffer, _countof(g_Indices), sizeof(WORD), g_Indices);
     // Create index buffer view.
-    indexBufferView.BufferLocation = indexBuffer.Get()->GetGPUVirtualAddress();
-    indexBufferView.Format = DXGI_FORMAT_R16_UINT;
-    indexBufferView.SizeInBytes = sizeof(g_Indices);
+    indexBuffer.CreateView(_countof(g_Indices), sizeof(WORD), DXGI_FORMAT_R16_UINT);
 
     // create the descriptor heap for the depth-stencil view.
     DSVdescriptorHeap = std::make_unique<DescriptorHeap>(*device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1);

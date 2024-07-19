@@ -105,6 +105,9 @@
     <ClInclude Include="headers\resources\VertexBuffer.h">
       <Filter>Header Files\resources</Filter>
     </ClInclude>
+    <ClInclude Include="headers\resources\IndexBuffer.h">
+      <Filter>Header Files\resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="srcs\PrecompiledHeaders.cpp">
@@ -150,6 +153,9 @@
       <Filter>Source Files\resources</Filter>
     </ClCompile>
     <ClCompile Include="srcs\resources\VertexBuffer.cpp">
+      <Filter>Source Files\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\resources\IndexBuffer.cpp">
       <Filter>Source Files\resources</Filter>
     </ClCompile>
   </ItemGroup>
