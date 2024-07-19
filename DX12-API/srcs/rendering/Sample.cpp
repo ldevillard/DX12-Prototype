@@ -97,7 +97,7 @@ void Sample::OnUpdate()
     std::string fps = std::to_string(Time::GetFrameRate()) + "\n";
     OutputDebugStringA(fps.c_str());
 
-    float angle = static_cast<float>(Time::GetTimeElapsed() * 90.0);
+    float angle = static_cast<float>(Time::GetTimeElapsed() * 45);
     const XMVECTOR rotationAxis = DirectX::XMVectorSet(0, 1, 1, 0);
     modelMatrix = XMMatrixRotationAxis(rotationAxis, XMConvertToRadians(angle));
 }
@@ -140,12 +140,14 @@ void Sample::OnRender()
     {
         XMMATRIX view = camera.GetViewMatrix();
         XMMATRIX proj = camera.GetProjectionMatrix(width, height);
+        XMVECTOR cameraPos = camera.GetPosition();
 
         // Update the MVP matrix
         XMMATRIX mvpMatrix = XMMatrixMultiply(modelMatrix, view);
         mvpMatrix = XMMatrixMultiply(mvpMatrix, proj);
         commandList->Get()->SetGraphicsRoot32BitConstants(0, sizeof(XMMATRIX) / 4, &mvpMatrix, 0);
         commandList->Get()->SetGraphicsRoot32BitConstants(1, sizeof(XMMATRIX) / 4, &modelMatrix, 0);
+        commandList->Get()->SetGraphicsRoot32BitConstants(2, sizeof(XMVECTOR) / 4, &cameraPos, 0);
 
         commandList->Get()->DrawIndexedInstanced(_countof(g_Indices), 1, 0, 0, 0);
 
@@ -226,7 +228,7 @@ void Sample::Resize(uint32_t width, uint32_t height)
 {
     if (this->width != width || this->height != height)
     {
-        //dDon't allow 0 size swap chain back buffers.
+        // don't allow 0 size swap chain back buffers.
         this->width = std::max(1u, width);
         this->height = std::max(1u, height);
 
@@ -366,13 +368,13 @@ void Sample::loadAssets()
         D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
         D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS |
         D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |
-        D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
-        D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS;
+        D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS;
 
     // a single 32-bit constant root parameter that is used by the vertex shader.
-    CD3DX12_ROOT_PARAMETER1 rootParameters[2];
+    CD3DX12_ROOT_PARAMETER1 rootParameters[3];
     rootParameters[0].InitAsConstants(sizeof(XMMATRIX) / 4, 0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
     rootParameters[1].InitAsConstants(sizeof(XMMATRIX) / 4, 1, 0, D3D12_SHADER_VISIBILITY_VERTEX);
+    rootParameters[2].InitAsConstants(sizeof(XMVECTOR) / 4, 0, 0, D3D12_SHADER_VISIBILITY_PIXEL);
 
     CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDescription;
     rootSignatureDescription.Init_1_1(_countof(rootParameters), rootParameters, 0, nullptr, rootSignatureFlags);

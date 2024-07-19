@@ -10,6 +10,7 @@ public:
 	const Matrix4 GetViewMatrix() const;
 	const Matrix4 GetProjectionMatrix(uint32_t width, uint32_t height) const;
 	const float GetFOV() const;
+	const Vector4 GetPosition() const;
 
 	void ProcessInputs(float x, float y, float z, bool accelerate);
 	void ProcessMouseMovement(float xOffset, float yOffset);

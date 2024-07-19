@@ -35,6 +35,11 @@ const float Camera::GetFOV() const
 	return fov;
 }
 
+const Vector4 Camera::GetPosition() const
+{
+	return position;
+}
+
 void Camera::ProcessInputs(float x, float y, float z, bool accelerate)
 {
 	float speedFactor = accelerate ? movementSpeedFactor : 1;
