@@ -65,7 +65,7 @@ const Resource& SwapChain::GetCurrentBackBuffer() const
 void SwapChain::UpdateRenderTargetViews(const Device& device, const DescriptorHeap& descriptorHeap)
 {
     CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(descriptorHeap.Get()->GetCPUDescriptorHandleForHeapStart());
-    UINT rtvDescriptorSize = descriptorHeap.GetRTVDescriptorSize();
+    UINT rtvDescriptorSize = descriptorHeap.GetDescriptorSize();
 
     for (int i = 0; i < FrameCount; ++i)
     {

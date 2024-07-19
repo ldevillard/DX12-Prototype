@@ -14,7 +14,7 @@ DescriptorHeap::DescriptorHeap(const Device& device, D3D12_DESCRIPTOR_HEAP_TYPE 
 
     ThrowIfFailed(device.Get()->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&descriptorHeap)));
 
-    RTVDescriptorSize = device.Get()->GetDescriptorHandleIncrementSize(type);
+    descriptorSize = device.Get()->GetDescriptorHandleIncrementSize(type);
 }
 
 const ComPtr<ID3D12DescriptorHeap>& DescriptorHeap::Get() const
@@ -27,15 +27,15 @@ ID3D12DescriptorHeap* DescriptorHeap::GetPtr() const
     return descriptorHeap.Get();
 }
 
-const UINT DescriptorHeap::GetRTVDescriptorSize() const
+const UINT DescriptorHeap::GetDescriptorSize() const
 {
-    return RTVDescriptorSize;
+    return descriptorSize;
 }
 
 const CD3DX12_CPU_DESCRIPTOR_HANDLE DescriptorHeap::GetRenderTargetView(int currentBackBufferIndex) const
 {
     return CD3DX12_CPU_DESCRIPTOR_HANDLE(descriptorHeap->GetCPUDescriptorHandleForHeapStart(),
-        currentBackBufferIndex, RTVDescriptorSize);
+        currentBackBufferIndex, descriptorSize);
 }
 
 const CD3DX12_CPU_DESCRIPTOR_HANDLE DescriptorHeap::GetCPUDescriptorHandleForHeapStart() const
