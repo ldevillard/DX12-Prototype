@@ -201,7 +201,8 @@ void Window::processInputs()
 
 void Window::processMouseDrag()
 {
-    if (!ImGui::IsMouseDown(ImGuiMouseButton_Right))
+    // check if right click is currently pressed
+    if (!GetAsyncKeyState(VK_RBUTTON))
     {
         if (!firstDrag)
         {
@@ -256,12 +257,13 @@ LRESULT CALLBACK Window::WinProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                 sample->OnUpdate();
                 sample->OnRender();
                 processInputs();
+                if (!firstDrag) processMouseDrag();
             }
             return 0;
         }
         case WM_MOUSEMOVE:
         {
-            if (sample)
+            if (sample && firstDrag)
                 processMouseDrag();
             return 0;
         }
