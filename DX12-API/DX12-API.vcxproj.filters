@@ -99,6 +99,12 @@
     <ClInclude Include="headers\pipeline\PipelineStateObject.h">
       <Filter>Header Files\pipeline</Filter>
     </ClInclude>
+    <ClInclude Include="headers\resources\Buffer.h">
+      <Filter>Header Files\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\resources\VertexBuffer.h">
+      <Filter>Header Files\resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="srcs\PrecompiledHeaders.cpp">
@@ -139,6 +145,12 @@
     </ClCompile>
     <ClCompile Include="srcs\pipeline\PipelineStateObject.cpp">
       <Filter>Source Files\pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\resources\Buffer.cpp">
+      <Filter>Source Files\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\resources\VertexBuffer.cpp">
+      <Filter>Source Files\resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -125,6 +125,7 @@ void Sample::OnRender()
     commandList->Get()->SetPipelineState(pipelineStateObject->GetPtr());
     commandList->Get()->SetGraphicsRootSignature(rootSignature.Get());
 
+    D3D12_VERTEX_BUFFER_VIEW vertexBufferView = vertexBuffer.GetVertexBufferView();
     commandList->Get()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     commandList->Get()->IASetVertexBuffers(0, 1, &vertexBufferView);
     commandList->Get()->IASetIndexBuffer(&indexBufferView);
@@ -321,9 +322,7 @@ void Sample::loadAssets()
     Resource intermediateVertexBuffer;
     updateBufferResource(vertexBuffer, intermediateVertexBuffer, _countof(g_Vertices), sizeof(VertexPosColor), g_Vertices);
     // create the vertex buffer view.
-    vertexBufferView.BufferLocation = vertexBuffer.Get()->GetGPUVirtualAddress();
-    vertexBufferView.SizeInBytes = sizeof(g_Vertices);
-    vertexBufferView.StrideInBytes = sizeof(VertexPosColor);
+    vertexBuffer.CreateView(sizeof(g_Vertices) / sizeof(VertexPosColor), sizeof(VertexPosColor));
 
     // upload index buffer data.
     Resource intermediateIndexBuffer;

@@ -3,6 +3,7 @@
 
 #include "pipeline/CommandQueue.h"
 #include "pipeline/DescriptorHeap.h"
+#include "pipeline/Device.h"
 
 #pragma region Public Methods
 

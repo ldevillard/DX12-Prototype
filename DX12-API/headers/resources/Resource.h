@@ -1,11 +1,11 @@
 #pragma once
 
-#include "pipeline/Device.h"
+#include "helpers/Helpers.h"
 
 class Resource
 {
 public:
-	Resource() = default;
+	Resource();
 	Resource(const ComPtr<ID3D12Resource>& res);
 
 	const ComPtr<ID3D12Resource>& Get() const;
@@ -15,6 +15,6 @@ public:
 
 	void Reset();
 
-private :
+protected:
 	ComPtr<ID3D12Resource> resource;
 };

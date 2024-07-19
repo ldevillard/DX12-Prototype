@@ -3,6 +3,7 @@
 
 #include "pipeline/CommandAllocator.h"
 #include "pipeline/DescriptorHeap.h"
+#include "pipeline/Device.h"
 #include "resources/Resource.h"
 
 #pragma region Public Methods

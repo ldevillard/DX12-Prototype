@@ -3,6 +3,10 @@
 
 #pragma region Public Methods
 
+Resource::Resource()
+{
+}
+
 Resource::Resource(const ComPtr<ID3D12Resource>& res)
 	: resource(res)
 {

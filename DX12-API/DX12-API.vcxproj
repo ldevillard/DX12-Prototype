@@ -186,7 +186,9 @@
     <ClInclude Include="headers\pipeline\SwapChain.h" />
     <ClInclude Include="headers\PrecompiledHeaders.h" />
     <ClInclude Include="headers\rendering\Sample.h" />
+    <ClInclude Include="headers\resources\Buffer.h" />
     <ClInclude Include="headers\resources\Resource.h" />
+    <ClInclude Include="headers\resources\VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="srcs\helpers\Time.cpp" />
@@ -206,7 +208,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="srcs\rendering\Sample.cpp" />
+    <ClCompile Include="srcs\resources\Buffer.cpp" />
     <ClCompile Include="srcs\resources\Resource.cpp" />
+    <ClCompile Include="srcs\resources\VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shaders\PixelShader.hlsl">
