@@ -14,7 +14,6 @@
 CommandList::CommandList(const Device& device, const CommandAllocator& commandAllocator, D3D12_COMMAND_LIST_TYPE commandListType)
 {
     ThrowIfFailed(device.Get()->CreateCommandList(0, commandListType, commandAllocator.GetPtr(), nullptr, IID_PPV_ARGS(&commandList)));
-    ThrowIfFailed(commandList->Close());
 }
 
 #pragma region Getters
@@ -64,6 +63,11 @@ void CommandList::ClearDepth(D3D12_CPU_DESCRIPTOR_HANDLE dsv, FLOAT depth)
 void CommandList::ClearRTV(D3D12_CPU_DESCRIPTOR_HANDLE rtv, FLOAT* clearColor)
 {
     commandList->ClearRenderTargetView(rtv, clearColor, 0, nullptr);
+}
+
+void CommandList::Close()
+{
+    ThrowIfFailed(commandList->Close());
 }
 
 void CommandList::PrepareInputAssemblerStage(const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer, D3D12_PRIMITIVE_TOPOLOGY primitiveTopology)

@@ -176,13 +176,10 @@ void Sample::OnRender()
     // Present
     {
         commandList->TransitionResource(backBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-        ThrowIfFailed(commandList->Get()->Close());
+        commandList->Close();
 
-        ID3D12CommandList* const commandLists[] = 
-        {
-            commandList->GetPtr()
-        };
-        commandQueue->Get()->ExecuteCommandLists(_countof(commandLists), commandLists);
+        ID3D12CommandList* const commandLists[] = { commandList->GetPtr() };
+        commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
         
         frameFenceValues[currentBackBufferIndex] = fence->Signal(*commandQueue);
         
@@ -300,11 +297,6 @@ void Sample::loadPipeline()
 
 void Sample::loadAssets()
 {
-    // TODO: don't reset the command list here but create it later without closing it
-    UINT currentBackBufferIndex = swapChain->GetCurrentBackBufferIndex();
-    commandAllocators[currentBackBufferIndex]->Reset();
-    commandList->Get()->Reset(commandAllocators[currentBackBufferIndex]->GetPtr(), nullptr);
-
     // upload vertex buffer data.
     Resource intermediateVertexBuffer;
     updateBufferResource(vertexBuffer, intermediateVertexBuffer, _countof(g_Vertices), sizeof(VertexPosColor), g_Vertices);
@@ -402,14 +394,10 @@ void Sample::loadAssets()
 
     // execute command list
     {
-        ThrowIfFailed(commandList->Get()->Close());
+        commandList->Close();
     
-        ID3D12CommandList* const commandLists[] = 
-        {
-            commandList->GetPtr()
-        };
-        
-        commandQueue->Get()->ExecuteCommandLists(_countof(commandLists), commandLists);
+        ID3D12CommandList* const commandLists[] = { commandList->GetPtr() };
+        commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
     
         uint64_t fenceValue = fence->Signal(*commandQueue);
         fence->WaitForFenceValue(fenceValue);

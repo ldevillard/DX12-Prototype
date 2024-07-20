@@ -28,4 +28,9 @@ ID3D12CommandQueue* CommandQueue::GetPtr() const
 
 #pragma endregion
 
+void CommandQueue::ExecuteCommandLists(UINT commandListsCount, ID3D12CommandList* const* commandLists)
+{
+	commandQueue->ExecuteCommandLists(commandListsCount, commandLists);
+}
+
 #pragma endregion
