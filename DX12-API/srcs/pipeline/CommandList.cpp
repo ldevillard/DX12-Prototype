@@ -27,6 +27,16 @@ ID3D12GraphicsCommandList* CommandList::GetPtr()
     return commandList.Get();
 }
 
+void CommandList::SetPipelineState(const PipelineStateObject& pso)
+{
+    commandList->SetPipelineState(pso.GetPtr());
+}
+
+void CommandList::SetGraphicsRootSignature(const ComPtr<ID3D12RootSignature>& rootSignature)
+{
+    commandList->SetGraphicsRootSignature(rootSignature.Get());
+}
+
 void CommandList::ClearRenderTargets(const Resource& backBuffer, D3D12_CPU_DESCRIPTOR_HANDLE rtv, D3D12_CPU_DESCRIPTOR_HANDLE dsv, Vector4 clearColor)
 {
     TransitionResource(backBuffer, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
@@ -78,9 +88,5 @@ void CommandList::TransitionResource(const Resource& resource, D3D12_RESOURCE_ST
     CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(resource.GetPtr(), beforeState, afterState);
     commandList->ResourceBarrier(1, &barrier);
 }
-
-#pragma endregion
-
-#pragma region Private Methods
 
 #pragma endregion

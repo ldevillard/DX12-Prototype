@@ -19,6 +19,9 @@ public:
 	const ComPtr<ID3D12GraphicsCommandList>& Get();
 	ID3D12GraphicsCommandList* GetPtr();
 
+	void SetPipelineState(const PipelineStateObject& pso);
+	void SetGraphicsRootSignature(const ComPtr<ID3D12RootSignature>& rootSignature); // TODO encapsulate root signature logic
+	
 	void ClearRenderTargets(const Resource& backBuffer, D3D12_CPU_DESCRIPTOR_HANDLE rtv, D3D12_CPU_DESCRIPTOR_HANDLE dsv, Vector4 clearColor = { 1, 1, 1, 1 });
 	void ClearDepth(D3D12_CPU_DESCRIPTOR_HANDLE dsv, FLOAT depth = 1.0f);
 	void ClearRTV(D3D12_CPU_DESCRIPTOR_HANDLE rtv, FLOAT* clearColor);

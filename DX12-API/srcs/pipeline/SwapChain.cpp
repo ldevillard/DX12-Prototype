@@ -62,6 +62,28 @@ const Resource& SwapChain::GetCurrentBackBuffer() const
     return backBuffers[currentBackBufferIndex];
 }
 
+void SwapChain::Present(bool vSync, bool allowTearing)
+{
+    UINT syncInterval = vSync ? 1 : 0;
+    UINT flags = allowTearing && !vSync ? DXGI_PRESENT_ALLOW_TEARING : 0;
+    ThrowIfFailed(swapChain->Present(syncInterval, flags));
+}
+
+void SwapChain::ResetBackBuffer(int index)
+{
+    backBuffers[index].Reset();
+}
+
+void SwapChain::Resize(uint32_t width, uint32_t height)
+{
+    DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
+    ThrowIfFailed(swapChain->GetDesc(&swapChainDesc));
+    ThrowIfFailed(swapChain->ResizeBuffers(FrameCount, width, height,
+        swapChainDesc.BufferDesc.Format, swapChainDesc.Flags));
+
+    currentBackBufferIndex = swapChain->GetCurrentBackBufferIndex();
+}
+
 void SwapChain::UpdateRenderTargetViews(const Device& device, const DescriptorHeap& descriptorHeap)
 {
     CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(descriptorHeap.Get()->GetCPUDescriptorHandleForHeapStart());
@@ -78,21 +100,6 @@ void SwapChain::UpdateRenderTargetViews(const Device& device, const DescriptorHe
 
         rtvHandle.Offset(rtvDescriptorSize);
     }
-}
-
-void SwapChain::ResetBackBuffer(int index)
-{
-    backBuffers[index].Reset();
-}
-
-void SwapChain::Resize(uint32_t width, uint32_t height)
-{
-    DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
-    ThrowIfFailed(swapChain->GetDesc(&swapChainDesc));
-    ThrowIfFailed(swapChain->ResizeBuffers(FrameCount, width, height,
-        swapChainDesc.BufferDesc.Format, swapChainDesc.Flags));
-
-    currentBackBufferIndex = swapChain->GetCurrentBackBufferIndex();
 }
 
 #pragma endregion

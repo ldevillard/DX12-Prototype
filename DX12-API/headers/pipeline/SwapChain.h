@@ -16,9 +16,10 @@ public:
 	const UINT GetCurrentBackBufferIndex();
 	const Resource& GetCurrentBackBuffer() const;
 
-	void UpdateRenderTargetViews(const Device& device, const DescriptorHeap& descriptorHeap);
+	void Present(bool vSync, bool allowTearing);
 	void ResetBackBuffer(int index);
 	void Resize(uint32_t width, uint32_t height);
+	void UpdateRenderTargetViews(const Device& device, const DescriptorHeap& descriptorHeap);
 
 	static constexpr UINT FrameCount = 3;
 

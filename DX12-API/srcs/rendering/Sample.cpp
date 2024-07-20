@@ -114,8 +114,8 @@ void Sample::OnRender()
 
     commandList->ClearRenderTargets(backBuffer, rtv, dsv, { 0.4f, 0.6f, 0.9f, 1.0f });
 
-    commandList->Get()->SetPipelineState(pipelineStateObject->GetPtr());
-    commandList->Get()->SetGraphicsRootSignature(rootSignature.Get());
+    commandList->SetPipelineState(*pipelineStateObject);
+    commandList->SetGraphicsRootSignature(rootSignature);
 
     // send buffers and primitive topology to the input assembler stage
     commandList->PrepareInputAssemblerStage(vertexBuffer, indexBuffer, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -186,12 +186,9 @@ void Sample::OnRender()
         
         frameFenceValues[currentBackBufferIndex] = fence->Signal(*commandQueue);
         
-        UINT syncInterval = vSync ? 1 : 0;
-        UINT presentFlags = allowTearing && !vSync ? DXGI_PRESENT_ALLOW_TEARING : 0;
-        ThrowIfFailed(swapChain->Get()->Present(syncInterval, presentFlags));
+        swapChain->Present(vSync, allowTearing);
         
         currentBackBufferIndex = swapChain->GetCurrentBackBufferIndex();
-        
         fence->WaitForFenceValue(frameFenceValues[currentBackBufferIndex]);
     }
 }
