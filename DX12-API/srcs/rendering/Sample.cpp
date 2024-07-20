@@ -110,17 +110,9 @@ void Sample::OnRender()
     auto dsv = DSVdescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
     commandAllocators[currentBackBufferIndex]->Reset();
-    commandList->Get()->Reset(commandAllocators[currentBackBufferIndex]->GetPtr(), nullptr);
+    commandList->Reset(*commandAllocators[currentBackBufferIndex], *pipelineStateObject);
 
-    // Clear the render targets.
-    {
-        commandList->TransitionResource(backBuffer, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-
-        FLOAT clearColor[] = { 0.4f, 0.6f, 0.9f, 1.0f };
-
-        commandList->ClearRTV(rtv, clearColor);
-        commandList->ClearDepth(dsv);
-    }
+    commandList->ClearRenderTargets(backBuffer, rtv, dsv, { 0.4f, 0.6f, 0.9f, 1.0f });
 
     commandList->Get()->SetPipelineState(pipelineStateObject->GetPtr());
     commandList->Get()->SetGraphicsRootSignature(rootSignature.Get());
