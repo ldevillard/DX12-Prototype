@@ -6,6 +6,7 @@
 
 #include "helpers/Time.h"
 #include "resources/Resource.h"
+#include "resources/Shader.h"
 
 using namespace DirectX;
 
@@ -297,16 +298,16 @@ void Sample::loadPipeline()
 
 void Sample::loadAssets()
 {
-    // upload vertex buffer data.
+    // upload vertex buffer data
     Resource intermediateVertexBuffer;
     updateBufferResource(vertexBuffer, intermediateVertexBuffer, _countof(g_Vertices), sizeof(VertexPosColor), g_Vertices);
-    // create the vertex buffer view.
+    // create the vertex buffer view
     vertexBuffer.CreateView(_countof(g_Vertices), sizeof(VertexPosColor));
 
-    // upload index buffer data.
+    // upload index buffer data
     Resource intermediateIndexBuffer;
     updateBufferResource(indexBuffer, intermediateIndexBuffer, _countof(g_Indices), sizeof(WORD), g_Indices);
-    // Create index buffer view.
+    // Create index buffer view
     indexBuffer.CreateView(_countof(g_Indices), sizeof(WORD), DXGI_FORMAT_R16_UINT);
 
     // create the descriptor heap for the depth-stencil view.
@@ -314,24 +315,19 @@ void Sample::loadAssets()
 
     std::wstring directoryPath = GetExecutableDirectory();
 
-    // load the vertex shader.
-    ComPtr<ID3DBlob> vertexShaderBlob;
-    std::wstring vertexShaderPath = directoryPath + L"\\VertexShader.cso";
-    ThrowIfFailed(D3DReadFileToBlob(vertexShaderPath.c_str(), &vertexShaderBlob));
-
-    // load the pixel shader.
-    ComPtr<ID3DBlob> pixelShaderBlob;
-    std::wstring pixelShaderPath = directoryPath + L"\\PixelShader.cso";
-    ThrowIfFailed(D3DReadFileToBlob(pixelShaderPath.c_str(), &pixelShaderBlob));
+    // load shaders
+    Shader vertexShader(directoryPath, L"VertexShader", VertexShader);
+    Shader pixelShader(directoryPath, L"PixelShader", PixelShader);
 
     // create the vertex input layout
-    D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
+    D3D12_INPUT_ELEMENT_DESC inputLayout[] = 
+    {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
         { "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
         { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
     };
 
-    // create a root signature.
+    // create a root signature
     D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
     featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
     if (FAILED(device->Get()->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData))))
@@ -339,14 +335,14 @@ void Sample::loadAssets()
         featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
     }
 
-    // allow input layout and deny unnecessary access to certain pipeline stages.
+    // allow input layout and deny unnecessary access to certain pipeline stages
     D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlags =
         D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
         D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS |
         D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |
         D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS;
 
-    // a single 32-bit constant root parameter that is used by the vertex shader.
+    // a single 32-bit constant root parameter that is used by the vertex shader
     CD3DX12_ROOT_PARAMETER1 rootParameters[3];
     rootParameters[0].InitAsConstants(sizeof(XMMATRIX) / 4, 0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
     rootParameters[1].InitAsConstants(sizeof(XMMATRIX) / 4, 1, 0, D3D12_SHADER_VISIBILITY_VERTEX);
@@ -355,17 +351,17 @@ void Sample::loadAssets()
     CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDescription;
     rootSignatureDescription.Init_1_1(_countof(rootParameters), rootParameters, 0, nullptr, rootSignatureFlags);
 
-    // serialize the root signature.
+    // serialize the root signature
     ComPtr<ID3DBlob> rootSignatureBlob;
     ComPtr<ID3DBlob> errorBlob;
     ThrowIfFailed(D3DX12SerializeVersionedRootSignature(&rootSignatureDescription,
         featureData.HighestVersion, &rootSignatureBlob, &errorBlob));
 
-    // create the root signature.
+    // create the root signature
     ThrowIfFailed(device->Get()->CreateRootSignature(0, rootSignatureBlob->GetBufferPointer(),
         rootSignatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature)));
 
-    // describe and create the graphics pipeline state object (PSO).
+    // describe and create the graphics pipeline state object (PSO)
     {
         D3D12_DEPTH_STENCIL_DESC depthStencilDesc = {};
         depthStencilDesc.DepthEnable = TRUE;
@@ -376,8 +372,8 @@ void Sample::loadAssets()
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDescriptor = {};
         psoDescriptor.InputLayout = { inputLayout, _countof(inputLayout) };
         psoDescriptor.pRootSignature = rootSignature.Get();
-        psoDescriptor.VS = CD3DX12_SHADER_BYTECODE(vertexShaderBlob.Get());
-        psoDescriptor.PS = CD3DX12_SHADER_BYTECODE(pixelShaderBlob.Get());
+        psoDescriptor.VS = vertexShader.GetByteCode();
+        psoDescriptor.PS = pixelShader.GetByteCode();
         psoDescriptor.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
         //psoDescriptor.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
         psoDescriptor.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
@@ -392,7 +388,7 @@ void Sample::loadAssets()
         pipelineStateObject = std::make_unique<PipelineStateObject>(*device, psoDescriptor);
     }
 
-    // execute command list
+    // execute command list to send data to gpu
     {
         commandList->Close();
     
@@ -403,7 +399,7 @@ void Sample::loadAssets()
         fence->WaitForFenceValue(fenceValue);
     }
 
-    // resize/Create the depth buffer.
+    // resize/Create the depth buffer
     resizeDepthBuffer(width, height);
 }
 
@@ -427,7 +423,7 @@ void Sample::enableDebugLayer()
 #if defined(_DEBUG)
     // always enable the debug layer before doing anything DX12 related
     // so all possible errors generated while creating DX12 objects
-    // are caught by the debug layer.
+    // are caught by the debug layer
     ComPtr<ID3D12Debug> debugInterface;
     ThrowIfFailed(D3D12GetDebugInterface(IID_PPV_ARGS(&debugInterface)));
     debugInterface->EnableDebugLayer();
@@ -443,7 +439,7 @@ void Sample::updateBufferResource(Resource& destinationResource, Resource& inter
     ComPtr<ID3D12Resource> pDestinationResource = destinationResource.Get();
     ComPtr<ID3D12Resource> pIntermediateResource = intermediateResource.Get();
 
-    // create a committed resource for the GPU resource in a default heap.
+    // create a committed resource for the GPU resource in a default heap
     CD3DX12_HEAP_PROPERTIES defaultHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
     CD3DX12_RESOURCE_DESC bufferDesc = CD3DX12_RESOURCE_DESC::Buffer(bufferSize, flags);
     
@@ -457,7 +453,7 @@ void Sample::updateBufferResource(Resource& destinationResource, Resource& inter
 
     destinationResource.Set(pDestinationResource);
 
-    // create a committed resource for the upload.
+    // create a committed resource for the upload
     if (bufferData)
     {
         CD3DX12_HEAP_PROPERTIES uploadHeapProperties(D3D12_HEAP_TYPE_UPLOAD);
@@ -484,14 +480,14 @@ void Sample::updateBufferResource(Resource& destinationResource, Resource& inter
 
 void Sample::resizeDepthBuffer(int width, int height)
 {
-    // Flush any GPU commands that might be referencing the depth buffer.
+    // Flush any GPU commands that might be referencing the depth buffer
     fence->Flush(*commandQueue);
 
     width = std::max(1, width);
     height = std::max(1, height);
 
-    // Resize screen dependent resources.
-    // Create a depth buffer.
+    // Resize screen dependent resources
+    // Create a depth buffer
     D3D12_CLEAR_VALUE optimizedClearValue = {};
     optimizedClearValue.Format = DXGI_FORMAT_D32_FLOAT;
     optimizedClearValue.DepthStencil = { 1.0f, 0 };
@@ -513,7 +509,7 @@ void Sample::resizeDepthBuffer(int width, int height)
 
     depthBuffer.Set(pDepthBuffer);
 
-    // Update the depth-stencil view.
+    // Update the depth-stencil view
     D3D12_DEPTH_STENCIL_VIEW_DESC dsv = {};
     dsv.Format = DXGI_FORMAT_D32_FLOAT;
     dsv.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;

@@ -189,6 +189,7 @@
     <ClInclude Include="headers\resources\Buffer.h" />
     <ClInclude Include="headers\resources\IndexBuffer.h" />
     <ClInclude Include="headers\resources\Resource.h" />
+    <ClInclude Include="headers\resources\Shader.h" />
     <ClInclude Include="headers\resources\VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -212,6 +213,7 @@
     <ClCompile Include="srcs\resources\Buffer.cpp" />
     <ClCompile Include="srcs\resources\IndexBuffer.cpp" />
     <ClCompile Include="srcs\resources\Resource.cpp" />
+    <ClCompile Include="srcs\resources\Shader.cpp" />
     <ClCompile Include="srcs\resources\VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
