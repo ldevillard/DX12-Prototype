@@ -5,7 +5,9 @@
 #include "pipeline/DescriptorHeap.h"
 #include "pipeline/Device.h"
 #include "pipeline/PipelineStateObject.h"
+#include "resources/IndexBuffer.h"
 #include "resources/Resource.h"
+#include "resources/VertexBuffer.h"
 
 #pragma region Public Methods
 
@@ -44,6 +46,26 @@ void CommandList::ClearDepth(D3D12_CPU_DESCRIPTOR_HANDLE dsv, FLOAT depth)
 void CommandList::ClearRTV(D3D12_CPU_DESCRIPTOR_HANDLE rtv, FLOAT* clearColor)
 {
     commandList->ClearRenderTargetView(rtv, clearColor, 0, nullptr);
+}
+
+void CommandList::PrepareInputAssemblerStage(const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer, D3D12_PRIMITIVE_TOPOLOGY primitiveTopology)
+{
+    D3D12_VERTEX_BUFFER_VIEW vertexBufferView = vertexBuffer.GetVertexBufferView();
+    D3D12_INDEX_BUFFER_VIEW indexBufferView = indexBuffer.GetIndexBufferView();
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
+    commandList->IASetIndexBuffer(&indexBufferView);
+}
+
+void CommandList::PrepareOutputMergerStage(D3D12_CPU_DESCRIPTOR_HANDLE* rtv, D3D12_CPU_DESCRIPTOR_HANDLE* dsv)
+{
+    commandList->OMSetRenderTargets(1, rtv, FALSE, dsv);
+}
+
+void CommandList::PrepareRasterizerStage(const D3D12_VIEWPORT& viewport, const D3D12_RECT& scissorRect)
+{
+    commandList->RSSetViewports(1, &viewport);
+    commandList->RSSetScissorRects(1, &scissorRect);
 }
 
 void CommandList::Reset(const CommandAllocator& commandAllocator, const PipelineStateObject initialState)

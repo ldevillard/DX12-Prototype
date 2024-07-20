@@ -117,16 +117,11 @@ void Sample::OnRender()
     commandList->Get()->SetPipelineState(pipelineStateObject->GetPtr());
     commandList->Get()->SetGraphicsRootSignature(rootSignature.Get());
 
-    D3D12_VERTEX_BUFFER_VIEW vertexBufferView = vertexBuffer.GetVertexBufferView();
-    D3D12_INDEX_BUFFER_VIEW indexBufferView = indexBuffer.GetIndexBufferView();
-    commandList->Get()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    commandList->Get()->IASetVertexBuffers(0, 1, &vertexBufferView);
-    commandList->Get()->IASetIndexBuffer(&indexBufferView);
-
-    commandList->Get()->RSSetViewports(1, &viewport);
-    commandList->Get()->RSSetScissorRects(1, &scissorRect);
-
-    commandList->Get()->OMSetRenderTargets(1, &rtv, FALSE, &dsv);
+    // send buffers and primitive topology to the input assembler stage
+    commandList->PrepareInputAssemblerStage(vertexBuffer, indexBuffer, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    // prepare other pipeline stages
+    commandList->PrepareRasterizerStage(viewport, scissorRect);
+    commandList->PrepareOutputMergerStage(&rtv, &dsv);
 
     // draws
     {
