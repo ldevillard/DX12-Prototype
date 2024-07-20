@@ -17,6 +17,8 @@ CommandList::CommandList(const Device& device, const CommandAllocator& commandAl
     ThrowIfFailed(commandList->Close());
 }
 
+#pragma region Getters
+
 const ComPtr<ID3D12GraphicsCommandList>& CommandList::Get()
 {
     return commandList;
@@ -27,6 +29,10 @@ ID3D12GraphicsCommandList* CommandList::GetPtr()
     return commandList.Get();
 }
 
+#pragma endregion
+
+#pragma region Setters
+
 void CommandList::SetPipelineState(const PipelineStateObject& pso)
 {
     commandList->SetPipelineState(pso.GetPtr());
@@ -36,6 +42,8 @@ void CommandList::SetGraphicsRootSignature(const ComPtr<ID3D12RootSignature>& ro
 {
     commandList->SetGraphicsRootSignature(rootSignature.Get());
 }
+
+#pragma endregion
 
 void CommandList::ClearRenderTargets(const Resource& backBuffer, D3D12_CPU_DESCRIPTOR_HANDLE rtv, D3D12_CPU_DESCRIPTOR_HANDLE dsv, Vector4 clearColor)
 {

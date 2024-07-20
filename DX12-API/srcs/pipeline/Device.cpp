@@ -42,6 +42,8 @@ Device::Device(bool useWarp)
 #endif
 }
 
+#pragma region Getters
+
 const ComPtr<ID3D12Device2>& Device::Get() const
 {
     return device;
@@ -52,6 +54,7 @@ ID3D12Device2* Device::GetPtr() const
     return device.Get();
 }
 
+#pragma endregion
 #pragma endregion
 
 #pragma region Private Methods

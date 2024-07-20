@@ -17,6 +17,8 @@ DescriptorHeap::DescriptorHeap(const Device& device, D3D12_DESCRIPTOR_HEAP_TYPE 
     descriptorSize = device.Get()->GetDescriptorHandleIncrementSize(type);
 }
 
+#pragma region Getters
+
 const ComPtr<ID3D12DescriptorHeap>& DescriptorHeap::Get() const
 {
     return descriptorHeap;
@@ -48,4 +50,5 @@ const CD3DX12_GPU_DESCRIPTOR_HANDLE DescriptorHeap::GetGPUDescriptorHandleForHea
     return CD3DX12_GPU_DESCRIPTOR_HANDLE(descriptorHeap->GetGPUDescriptorHandleForHeapStart());
 }
 
+#pragma endregion
 #pragma endregion

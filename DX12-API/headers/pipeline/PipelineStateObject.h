@@ -9,6 +9,7 @@ class PipelineStateObject
 public:
 	PipelineStateObject(const Device& device, D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDescriptor);
 
+	// getters
 	const ComPtr<ID3D12PipelineState>& Get() const;
 	ID3D12PipelineState* GetPtr() const;
 

@@ -7,8 +7,10 @@ class VertexBuffer : public Buffer
 public:
 	VertexBuffer();
 
-	void CreateView(size_t verticesCount, size_t vertexSize);
+	// getters
 	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() const;
+	
+	void CreateView(size_t verticesCount, size_t vertexSize);
 
 private:
 	size_t verticesCount;

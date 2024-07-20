@@ -7,8 +7,10 @@ class IndexBuffer : public Buffer
 public:
 	IndexBuffer();
 
-	void CreateView(size_t indiciesCount, USHORT indexSize, DXGI_FORMAT indexFormat);
+	// getters
 	D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
+
+	void CreateView(size_t indiciesCount, USHORT indexSize, DXGI_FORMAT indexFormat);
 
 private:
 	size_t indiciesCount;

@@ -11,6 +11,15 @@ VertexBuffer::VertexBuffer()
 {
 }
 
+#pragma region Getters
+
+D3D12_VERTEX_BUFFER_VIEW VertexBuffer::GetVertexBufferView() const
+{
+	return vertexBufferView;
+}
+
+#pragma endregion
+
 void VertexBuffer::CreateView(size_t verticesCount, size_t vertexSize)
 {
 	this->verticesCount = verticesCount;
@@ -19,11 +28,6 @@ void VertexBuffer::CreateView(size_t verticesCount, size_t vertexSize)
 	vertexBufferView.BufferLocation = resource->GetGPUVirtualAddress();
 	vertexBufferView.SizeInBytes = static_cast<UINT>(verticesCount * vertexSize);
 	vertexBufferView.StrideInBytes = static_cast<UINT>(vertexSize);
-}
-
-D3D12_VERTEX_BUFFER_VIEW VertexBuffer::GetVertexBufferView() const
-{
-	return vertexBufferView;
 }
 
 #pragma endregion

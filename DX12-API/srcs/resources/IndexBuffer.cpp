@@ -11,6 +11,15 @@ IndexBuffer::IndexBuffer()
 {
 }
 
+#pragma region Getters
+
+D3D12_INDEX_BUFFER_VIEW IndexBuffer::GetIndexBufferView() const
+{
+	return indexBufferView;
+}
+
+#pragma endregion
+
 void IndexBuffer::CreateView(size_t indiciesCount, USHORT indexSize, DXGI_FORMAT indexFormat)
 {
 	this->indiciesCount = indiciesCount;
@@ -19,11 +28,6 @@ void IndexBuffer::CreateView(size_t indiciesCount, USHORT indexSize, DXGI_FORMAT
 	indexBufferView.BufferLocation = resource->GetGPUVirtualAddress();
 	indexBufferView.Format = indexFormat;
 	indexBufferView.SizeInBytes = static_cast<UINT>(indiciesCount * indexSize);
-}
-
-D3D12_INDEX_BUFFER_VIEW IndexBuffer::GetIndexBufferView() const
-{
-	return indexBufferView;
 }
 
 #pragma endregion

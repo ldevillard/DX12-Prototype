@@ -12,6 +12,7 @@ class Fence
 public:
 	Fence(const Device& device);
 
+	// getters
 	HANDLE GetEvent() const;
 
     uint64_t Signal(const CommandQueue& commandQueue);

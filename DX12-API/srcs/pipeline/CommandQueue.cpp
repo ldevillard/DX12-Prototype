@@ -14,6 +14,8 @@ CommandQueue::CommandQueue(const Device& device)
 	ThrowIfFailed(device.Get()->CreateCommandQueue(&queueDescriptor, IID_PPV_ARGS(&commandQueue)));
 }
 
+#pragma region Getters
+
 const ComPtr<ID3D12CommandQueue>& CommandQueue::Get() const
 {
 	return commandQueue;
@@ -23,5 +25,7 @@ ID3D12CommandQueue* CommandQueue::GetPtr() const
 {
 	return commandQueue.Get();
 }
+
+#pragma endregion
 
 #pragma endregion

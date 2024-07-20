@@ -12,6 +12,7 @@ class SwapChain
 public:
 	SwapChain(HWND hWnd, const CommandQueue& commandQueue, uint32_t width, uint32_t height, bool allowTearing);
 
+	// getters
 	const ComPtr<IDXGISwapChain4>& Get() const;
 	const UINT GetCurrentBackBufferIndex();
 	const Resource& GetCurrentBackBuffer() const;

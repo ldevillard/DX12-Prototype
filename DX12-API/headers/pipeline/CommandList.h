@@ -16,9 +16,11 @@ class CommandList
 public:
 	CommandList(const Device& device, const CommandAllocator& commandAllocator, D3D12_COMMAND_LIST_TYPE commandListType);
 
+	// getters
 	const ComPtr<ID3D12GraphicsCommandList>& Get();
 	ID3D12GraphicsCommandList* GetPtr();
 
+	// setters
 	void SetPipelineState(const PipelineStateObject& pso);
 	void SetGraphicsRootSignature(const ComPtr<ID3D12RootSignature>& rootSignature); // TODO encapsulate root signature logic
 	

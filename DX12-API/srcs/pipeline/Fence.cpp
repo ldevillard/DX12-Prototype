@@ -12,10 +12,14 @@ Fence::Fence(const Device& device)
 	createFenceEventHandle();
 }
 
+#pragma region Getters
+
 HANDLE Fence::GetEvent() const
 {
 	return fenceEvent;
 }
+
+#pragma endregion
 
 uint64_t Fence::Signal(const CommandQueue& commandQueue)
 {

@@ -46,6 +46,8 @@ SwapChain::SwapChain(HWND hWnd, const CommandQueue& commandQueue, uint32_t width
     currentBackBufferIndex = swapChain->GetCurrentBackBufferIndex();
 }
 
+#pragma region Getters
+
 const ComPtr<IDXGISwapChain4>& SwapChain::Get() const
 {
     return swapChain;
@@ -61,6 +63,8 @@ const Resource& SwapChain::GetCurrentBackBuffer() const
 {
     return backBuffers[currentBackBufferIndex];
 }
+
+#pragma endregion
 
 void SwapChain::Present(bool vSync, bool allowTearing)
 {

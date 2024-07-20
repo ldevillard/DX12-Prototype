@@ -10,6 +10,8 @@ PipelineStateObject::PipelineStateObject(const Device& device, D3D12_GRAPHICS_PI
 	ThrowIfFailed(device.Get()->CreateGraphicsPipelineState(&psoDescriptor, IID_PPV_ARGS(&pipelineStateObject)));
 }
 
+#pragma region Getters
+
 const ComPtr<ID3D12PipelineState>& PipelineStateObject::Get() const
 {
 	return pipelineStateObject;
@@ -20,4 +22,5 @@ ID3D12PipelineState* PipelineStateObject::GetPtr() const
 	return pipelineStateObject.Get();
 }
 
+#pragma endregion
 #pragma endregion
