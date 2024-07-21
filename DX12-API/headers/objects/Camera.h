@@ -16,7 +16,6 @@ public:
 	void ProcessMouseMovement(float xOffset, float yOffset);
 	void ProcessMouseScroll(float offset);
 
-
 private:
 	void updateVectors();
 

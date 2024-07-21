@@ -10,6 +10,7 @@
 #include "pipeline/Device.h"
 #include "pipeline/Fence.h"
 #include "pipeline/PipelineStateObject.h"
+#include "pipeline/RootSignature.h"
 #include "pipeline/SwapChain.h"
 #include "resources/IndexBuffer.h"
 #include "resources/VertexBuffer.h"
@@ -58,15 +59,18 @@ private:
 	Camera camera;
 
 	uint64_t frameFenceValues[SwapChain::FrameCount] = {};
-	std::unique_ptr<Device> device;
-	std::unique_ptr<CommandQueue> commandQueue;
-	std::unique_ptr<SwapChain> swapChain;
-	std::unique_ptr<DescriptorHeap> RTVdescriptorHeap;
-	std::unique_ptr<DescriptorHeap> SRVdescriptorHeap;
+
+	// pipeline objects
 	std::unique_ptr<CommandAllocator> commandAllocators[SwapChain::FrameCount];
 	std::unique_ptr<CommandList> commandList;
+	std::unique_ptr<CommandQueue> commandQueue;
+	std::unique_ptr<Device> device;
 	std::unique_ptr<Fence> fence;
 	std::unique_ptr<PipelineStateObject> pipelineStateObject;
+	std::unique_ptr<RootSignature> rootSignature;
+	std::unique_ptr<DescriptorHeap> RTVdescriptorHeap;
+	std::unique_ptr<DescriptorHeap> SRVdescriptorHeap;
+	std::unique_ptr<SwapChain> swapChain;
 
 	VertexBuffer vertexBuffer;
 	IndexBuffer indexBuffer;
@@ -75,9 +79,6 @@ private:
 	Resource depthBuffer;
 	// descriptor heap for depth buffer.
 	std::unique_ptr<DescriptorHeap> DSVdescriptorHeap;
-
-	// root signature
-	ComPtr<ID3D12RootSignature> rootSignature;
 
 	D3D12_VIEWPORT viewport;
 	D3D12_RECT scissorRect;

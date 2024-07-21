@@ -116,7 +116,7 @@ void Sample::OnRender()
     commandList->ClearRenderTargets(backBuffer, rtv, dsv, { 0.4f, 0.6f, 0.9f, 1.0f });
 
     commandList->SetPipelineState(*pipelineStateObject);
-    commandList->SetGraphicsRootSignature(rootSignature);
+    commandList->SetGraphicsRootSignature(*rootSignature);
 
     // send buffers and primitive topology to the input assembler stage
     commandList->PrepareInputAssemblerStage(vertexBuffer, indexBuffer, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -327,39 +327,13 @@ void Sample::loadAssets()
         { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
     };
 
-    // create a root signature
-    D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
-    featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
-    if (FAILED(device->Get()->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData))))
-    {
-        featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
-    }
-
-    // allow input layout and deny unnecessary access to certain pipeline stages
-    D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlags =
-        D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
-        D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS |
-        D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |
-        D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS;
-
-    // a single 32-bit constant root parameter that is used by the vertex shader
-    CD3DX12_ROOT_PARAMETER1 rootParameters[3];
-    rootParameters[0].InitAsConstants(sizeof(XMMATRIX) / 4, 0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
-    rootParameters[1].InitAsConstants(sizeof(XMMATRIX) / 4, 1, 0, D3D12_SHADER_VISIBILITY_VERTEX);
-    rootParameters[2].InitAsConstants(sizeof(XMVECTOR) / 4, 0, 0, D3D12_SHADER_VISIBILITY_PIXEL);
-
-    CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDescription;
-    rootSignatureDescription.Init_1_1(_countof(rootParameters), rootParameters, 0, nullptr, rootSignatureFlags);
-
-    // serialize the root signature
-    ComPtr<ID3DBlob> rootSignatureBlob;
-    ComPtr<ID3DBlob> errorBlob;
-    ThrowIfFailed(D3DX12SerializeVersionedRootSignature(&rootSignatureDescription,
-        featureData.HighestVersion, &rootSignatureBlob, &errorBlob));
-
-    // create the root signature
-    ThrowIfFailed(device->Get()->CreateRootSignature(0, rootSignatureBlob->GetBufferPointer(),
-        rootSignatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature)));
+    // create, fill and create root signature
+    rootSignature = std::make_unique<RootSignature>();
+    // divided by for because we need the size in DWORD (4 bytes)
+    rootSignature->Add32BitConstant(sizeof(XMMATRIX) / 4, 0);
+    rootSignature->Add32BitConstant(sizeof(XMMATRIX) / 4, 1);
+    rootSignature->Add32BitConstant(sizeof(XMVECTOR) / 4, 2);
+    rootSignature->Create(*device);
 
     // describe and create the graphics pipeline state object (PSO)
     {
@@ -371,7 +345,7 @@ void Sample::loadAssets()
 
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDescriptor = {};
         psoDescriptor.InputLayout = { inputLayout, _countof(inputLayout) };
-        psoDescriptor.pRootSignature = rootSignature.Get();
+        psoDescriptor.pRootSignature = rootSignature->GetPtr();
         psoDescriptor.VS = vertexShader.GetByteCode();
         psoDescriptor.PS = pixelShader.GetByteCode();
         psoDescriptor.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);

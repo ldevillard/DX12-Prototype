@@ -5,6 +5,7 @@
 #include "pipeline/DescriptorHeap.h"
 #include "pipeline/Device.h"
 #include "pipeline/PipelineStateObject.h"
+#include "pipeline/RootSignature.h"
 #include "resources/IndexBuffer.h"
 #include "resources/Resource.h"
 #include "resources/VertexBuffer.h"
@@ -37,9 +38,9 @@ void CommandList::SetPipelineState(const PipelineStateObject& pso)
     commandList->SetPipelineState(pso.GetPtr());
 }
 
-void CommandList::SetGraphicsRootSignature(const ComPtr<ID3D12RootSignature>& rootSignature)
+void CommandList::SetGraphicsRootSignature(const RootSignature& rootSignature)
 {
-    commandList->SetGraphicsRootSignature(rootSignature.Get());
+    commandList->SetGraphicsRootSignature(rootSignature.GetPtr());
 }
 
 #pragma endregion
