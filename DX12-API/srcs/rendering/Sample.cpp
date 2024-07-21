@@ -102,18 +102,18 @@ void Sample::Resize(uint32_t width, uint32_t height)
 {
     if (this->width != width || this->height != height)
     {
-        // don't allow 0 size swap chain back buffers.
+        // don't allow 0 size swap chain back buffers
         this->width = std::max(1u, width);
         this->height = std::max(1u, height);
 
         // flush the GPU queue to make sure the swap chain's back buffers
-        // are not being referenced by an in-flight command list.
+        // are not being referenced by an in-flight command list
         fence->Flush(*commandQueue);
 
         for (int i = 0; i < SwapChain::FrameCount; ++i)
         {
             // Any references to the back buffers must be released
-            // before the swap chain can be resized.
+            // before the swap chain can be resized
             swapChain->ResetBackBuffer(i);
             frameFenceValues[i] = frameFenceValues[swapChain->GetCurrentBackBufferIndex()];
         }
@@ -128,7 +128,7 @@ void Sample::Resize(uint32_t width, uint32_t height)
 
 void Sample::SetupPipeline()
 {
-    // create the descriptor heap for the depth-stencil view.
+    // create the descriptor heap for the depth-stencil view
     DSVdescriptorHeap = std::make_unique<DescriptorHeap>(*device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1);
 
     // load shaders
@@ -160,7 +160,10 @@ void Sample::SetupPipeline()
         psoDescriptor.VS = vertexShader.GetByteCode();
         psoDescriptor.PS = pixelShader.GetByteCode();
         psoDescriptor.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+        
         //psoDescriptor.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+        //psoDescriptor.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+
         psoDescriptor.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
         psoDescriptor.SampleMask = UINT_MAX;
         psoDescriptor.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
@@ -184,7 +187,7 @@ void Sample::SetupPipeline()
         fence->WaitForFenceValue(fenceValue);
     }
 
-    // resize/Create the depth buffer
+    // resize/create the depth buffer
     resizeDepthBuffer(width, height);
     initImGui(hWnd);
 }
@@ -300,9 +303,7 @@ void Sample::preRender()
     commandList->SetPipelineState(*pipelineStateObject);
     commandList->SetGraphicsRootSignature(*rootSignature);
 
-    // send buffers and primitive topology to the input assembler stage
-    //commandList->PrepareInputAssemblerStage(vertexBuffer, indexBuffer, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    // prepare other pipeline stages
+    // prepare pipeline stages
     commandList->PrepareRasterizerStage(viewport, scissorRect);
     commandList->PrepareOutputMergerStage(&rtv, &dsv);
 
@@ -339,14 +340,14 @@ void Sample::enableDebugLayer()
 
 void Sample::resizeDepthBuffer(int width, int height)
 {
-    // Flush any GPU commands that might be referencing the depth buffer
+    // flush any GPU commands that might be referencing the depth buffer
     fence->Flush(*commandQueue);
 
     width = std::max(1, width);
     height = std::max(1, height);
 
-    // Resize screen dependent resources
-    // Create a depth buffer
+    // resize screen dependent resources
+    // create a depth buffer
     D3D12_CLEAR_VALUE optimizedClearValue = {};
     optimizedClearValue.Format = DXGI_FORMAT_D32_FLOAT;
     optimizedClearValue.DepthStencil = { 1.0f, 0 };
@@ -368,7 +369,7 @@ void Sample::resizeDepthBuffer(int width, int height)
 
     depthBuffer.Set(pDepthBuffer);
 
-    // Update the depth-stencil view
+    // update the depth-stencil view
     D3D12_DEPTH_STENCIL_VIEW_DESC dsv = {};
     dsv.Format = DXGI_FORMAT_D32_FLOAT;
     dsv.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;

@@ -30,7 +30,10 @@ void Mesh::OnRender(CommandList& commandList, int index) const
     if (index == 2)
         modelMat = DirectX::XMMatrixMultiply(modelMatrix, DirectX::XMMatrixTranslation(6, 0, 0));
 
+    // send buffers and primitive topology to the input assembler stage
     commandList.PrepareInputAssemblerStage(vertexBuffer, indexBuffer);
+
+    // then bind model matrix and draw
     commandList.Get()->SetGraphicsRoot32BitConstants(0, sizeof(Matrix4) / 4, &modelMat, 0);
     commandList.Get()->DrawIndexedInstanced(static_cast<UINT>(indices.size()), 1, 0, 0, 0);
 }
