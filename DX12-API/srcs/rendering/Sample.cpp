@@ -52,57 +52,19 @@ void Sample::OnUpdate()
     std::string fps = std::to_string(Time::GetFrameRate()) + "\n";
     OutputDebugStringA(fps.c_str());
 
-    //float angle = static_cast<float>(Time::GetTimeElapsed() * 45);
-    //const XMVECTOR rotationAxis = DirectX::XMVectorSet(0, 1, 1, 0);
-    //modelMatrix = XMMatrixRotationAxis(rotationAxis, XMConvertToRadians(angle));
-
     preRender();
 }
 
 void Sample::OnRender()
 {
-    
 
-    // draws
+    // ImGui
+    ImGui::Render();
+    ImDrawData* draw_data = ImGui::GetDrawData();
+    ImGui_ImplDX12_RenderDrawData(draw_data, commandList->GetPtr());
+
+    // present to the screen
     {
-        //XMMATRIX view = camera.GetViewMatrix();
-        //XMMATRIX proj = camera.GetProjectionMatrix(width, height);
-        //XMVECTOR cameraPos = camera.GetPosition();
-        //
-        //// Update the MVP matrix
-        //XMMATRIX mvpMatrix = XMMatrixMultiply(modelMatrix, view);
-        //mvpMatrix = XMMatrixMultiply(mvpMatrix, proj);
-        //commandList->Get()->SetGraphicsRoot32BitConstants(0, sizeof(XMMATRIX) / 4, &mvpMatrix, 0);
-        //commandList->Get()->SetGraphicsRoot32BitConstants(1, sizeof(XMMATRIX) / 4, &modelMatrix, 0);
-        //commandList->Get()->SetGraphicsRoot32BitConstants(2, sizeof(XMVECTOR) / 4, &cameraPos, 0);
-        //
-        //commandList->Get()->DrawIndexedInstanced(_countof(g_Indices), 1, 0, 0, 0);
-        //
-        //XMMATRIX trMatrix = XMMatrixMultiply(modelMatrix, XMMatrixTranslation(6, 0, 0));
-        //XMMATRIX mvpMatrix2 = XMMatrixMultiply(trMatrix, view);
-        //mvpMatrix2 = XMMatrixMultiply(mvpMatrix2, proj);
-        //commandList->Get()->SetGraphicsRoot32BitConstants(0, sizeof(XMMATRIX) / 4, &mvpMatrix2, 0);
-        //commandList->Get()->SetGraphicsRoot32BitConstants(1, sizeof(XMMATRIX) / 4, &modelMatrix, 0);
-        //
-        //commandList->Get()->DrawIndexedInstanced(_countof(g_Indices), 1, 0, 0, 0);
-        //
-        //XMMATRIX trMatrix2 = XMMatrixMultiply(modelMatrix, XMMatrixTranslation(-6, 0, 0));
-        //XMMATRIX mvpMatrix3 = XMMatrixMultiply(trMatrix2, view);
-        //mvpMatrix3 = XMMatrixMultiply(mvpMatrix3, proj);
-        //commandList->Get()->SetGraphicsRoot32BitConstants(0, sizeof(XMMATRIX) / 4, &mvpMatrix3, 0);
-        //commandList->Get()->SetGraphicsRoot32BitConstants(1, sizeof(XMMATRIX) / 4, &modelMatrix, 0);
-        //
-        //commandList->Get()->DrawIndexedInstanced(_countof(g_Indices), 1, 0, 0, 0);
-        //
-    }
-
-    // Present
-    {
-        // ImGui
-        ImGui::Render();
-        ImDrawData* draw_data = ImGui::GetDrawData();
-        ImGui_ImplDX12_RenderDrawData(draw_data, commandList->GetPtr());
-
         UINT currentBackBufferIndex = swapChain->GetCurrentBackBufferIndex();
         Resource backBuffer = swapChain->GetCurrentBackBuffer();
 
@@ -166,18 +128,6 @@ void Sample::Resize(uint32_t width, uint32_t height)
 
 void Sample::SetupPipeline()
 {
-    //// upload vertex buffer data
-    //Resource intermediateVertexBuffer;
-    //UpdateBufferResource(vertexBuffer, intermediateVertexBuffer, _countof(g_Vertices), sizeof(VertexPosColor), g_Vertices);
-    //// create the vertex buffer view
-    //vertexBuffer.CreateView(_countof(g_Vertices), sizeof(VertexPosColor));
-    //
-    //// upload index buffer data
-    //Resource intermediateIndexBuffer;
-    //UpdateBufferResource(indexBuffer, intermediateIndexBuffer, _countof(g_Indices), sizeof(WORD), g_Indices);
-    //// Create index buffer view
-    //indexBuffer.CreateView(_countof(g_Indices), sizeof(WORD), DXGI_FORMAT_R16_UINT);
-
     // create the descriptor heap for the depth-stencil view.
     DSVdescriptorHeap = std::make_unique<DescriptorHeap>(*device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1);
 

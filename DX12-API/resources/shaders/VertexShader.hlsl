@@ -1,15 +1,21 @@
-struct ModelViewProjection
-{
-    matrix MVP;
-};
-
 struct Model
 {
-    matrix M;
+    matrix ModelMatrix;
 };
 
-ConstantBuffer<ModelViewProjection> ModelViewProjectionCB : register(b0);
-ConstantBuffer<Model> ModelCB : register(b1);
+struct View
+{
+    matrix ViewMatrix;
+};
+
+struct Projection
+{
+    matrix ProjectionMatrix;
+};
+
+ConstantBuffer<Model> ModelCB : register(b0);
+ConstantBuffer<View> ViewCB : register(b1);
+ConstantBuffer<Projection> ProjectionCB : register(b2);
 
 struct VertexPosColor
 {
@@ -29,9 +35,11 @@ VertexShaderOutput main(VertexPosColor IN)
 {
     VertexShaderOutput OUT;
 
-    OUT.Position = mul(ModelViewProjectionCB.MVP, float4(IN.Position, 1.0f));
+    matrix MVPMatrix = mul(ProjectionCB.ProjectionMatrix, mul(ViewCB.ViewMatrix, ModelCB.ModelMatrix));
+    
+    OUT.Position = mul(MVPMatrix, float4(IN.Position, 1.0f));
     OUT.Color = float4(IN.Color, 1.0f);
-    OUT.Normal = mul(ModelCB.M, float4(IN.Normal, 0.0f));
+    OUT.Normal = mul(ModelCB.ModelMatrix, float4(IN.Normal, 0.0f));
 
     return OUT;
 }

@@ -3,7 +3,7 @@ struct CameraPos
     float4 Pos;
 };
 
-ConstantBuffer<CameraPos> CameraPosCB : register(b2);
+ConstantBuffer<CameraPos> CameraPosCB : register(b3);
 
 struct PixelShaderInput
 {

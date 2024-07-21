@@ -75,6 +75,8 @@ Editor::Editor(uint32_t _width, uint32_t _height)
         indices.push_back(g_Indices[i]);
 
     mesh = Mesh(vertices, indices);
+    mesh2 = Mesh(vertices, indices);
+    mesh3 = Mesh(vertices, indices);
 }
 
 void Editor::OnInit(HWND hWnd)
@@ -84,6 +86,8 @@ void Editor::OnInit(HWND hWnd)
 
     // init data (entities later) OnInit method?
     mesh.UpdateBuffersResource(*sample);
+    mesh2.UpdateBuffersResource(*sample);
+    mesh3.UpdateBuffersResource(*sample);
 
     sample->SetupPipeline();
 }
@@ -91,6 +95,10 @@ void Editor::OnInit(HWND hWnd)
 void Editor::OnUpdate()
 {
 	sample->OnUpdate();
+
+    mesh.OnUpdate();
+    mesh2.OnUpdate();
+    mesh3.OnUpdate();
 }
 
 void Editor::OnRender()
@@ -143,14 +151,14 @@ void Editor::render()
     Matrix4 view = camera->GetViewMatrix();
     Matrix4 proj = camera->GetProjectionMatrix(width, height);
     Vector cameraPos = camera->GetPosition();
-    Matrix4 mvpMatrix = XMMatrixMultiply(DirectX::XMMatrixIdentity(), view);
-    mvpMatrix = XMMatrixMultiply(mvpMatrix, proj);
-    commandList.Get()->SetGraphicsRoot32BitConstants(0, sizeof(Matrix4) / 4, &mvpMatrix, 0);
-    commandList.Get()->SetGraphicsRoot32BitConstants(2, sizeof(Vector) / 4, &cameraPos, 0);
+
+    commandList.Get()->SetGraphicsRoot32BitConstants(1, sizeof(Matrix4) / 4, &view, 0);
+    commandList.Get()->SetGraphicsRoot32BitConstants(2, sizeof(Matrix4) / 4, &proj, 0);
+    commandList.Get()->SetGraphicsRoot32BitConstants(3, sizeof(Vector) / 4, &cameraPos, 0);
 
     mesh.OnRender(commandList);
-    mesh2.OnRender(commandList);
-    mesh3.OnRender(commandList);
+    mesh2.OnRender(commandList, 1);
+    mesh3.OnRender(commandList, 2);
 
     // ImGui
     ImGui_ImplDX12_NewFrame();
@@ -160,7 +168,7 @@ void Editor::render()
     ImGui::Begin("DX-12 Prototype");
     ImGui::Text("Delta Time: %.1f ms", Time::GetDeltaTime() * 1000);
     ImGui::Text("FPS: %.1f", Time::GetFrameRate());
-    //ImGui::Text("FOV: %.1f", camera.GetFOV());
+    ImGui::Text("FOV: %.1f", camera->GetFOV());
     ImGui::End();
 }
 
@@ -171,6 +179,7 @@ void Editor::setupRootSignature()
     rootSignature.Add32BitConstant(sizeof(Matrix4) / 4, 0);
     rootSignature.Add32BitConstant(sizeof(Matrix4) / 4, 1);
     rootSignature.Add32BitConstant(sizeof(Matrix4) / 4, 2);
+    rootSignature.Add32BitConstant(sizeof(Vector) / 4, 3);
 }
 
 #pragma endregion
