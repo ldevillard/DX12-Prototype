@@ -8,7 +8,7 @@ RECT Window::windowRect;
 UINT Window::width;
 UINT Window::height;
 std::wstring Window::name;
-std::unique_ptr<Sample> Window::sample;
+std::unique_ptr<Editor> Window::editor;
 bool Window::fullScreenState;
 
 POINT Window::screenCenter;
@@ -25,7 +25,7 @@ int Window::Run(HINSTANCE hInstance, UINT windowWidth, UINT windowHeight, std::w
     name = windowName;
     firstDrag = true;
 
-    sample = std::make_unique<Sample>(width, height);
+    editor = std::make_unique<Editor>(width, height);
 
     registerWindowClass(hInstance);
     createWindow(hInstance, L"DX12");
@@ -33,7 +33,7 @@ int Window::Run(HINSTANCE hInstance, UINT windowWidth, UINT windowHeight, std::w
     // initialize the global window rect variable.
     ::GetWindowRect(handleWin, &windowRect);
 
-    sample->OnInit(handleWin);
+    editor->OnInit(handleWin);
 
     ::ShowWindow(handleWin, cmdShow);
 
@@ -49,7 +49,7 @@ int Window::Run(HINSTANCE hInstance, UINT windowWidth, UINT windowHeight, std::w
         }
     }
 
-    sample->OnDestroy();
+    editor->OnDestroy();
 
     // return this part of the WM_QUIT message to Windows.
     return static_cast<char>(msg.wParam);
@@ -103,7 +103,7 @@ void Window::createWindow(HINSTANCE hInst, const wchar_t* windowTitle)
         NULL,
         NULL,
         hInst,
-        sample.get()
+        editor.get()
     );
 
     assert(handleWin && "Failed to create window");
@@ -169,7 +169,7 @@ void Window::resize()
     width = clientRect.right - clientRect.left;
     height = clientRect.bottom - clientRect.top;
 
-    sample->Resize(width, height);
+    editor->Resize(width, height);
 }
 
 void Window::processInputs()
@@ -180,7 +180,7 @@ void Window::processInputs()
     bool accelerate = false;
 
     if (ImGui::IsKeyPressed(ImGuiKey_V, false))
-        sample->ToggleVSync();
+        editor->ToggleVSync();
 
     if (ImGui::IsKeyPressed(ImGuiKey_F11, false))
         setFullScreen(!fullScreenState);
@@ -190,13 +190,13 @@ void Window::processInputs()
 
     if (ImGui::IsKeyDown(ImGuiKey_Q)) y = -1;
     if (ImGui::IsKeyDown(ImGuiKey_E)) y = 1;
-    
+
     if (ImGui::IsKeyDown(ImGuiKey_W)) z = 1;
     if (ImGui::IsKeyDown(ImGuiKey_S)) z = -1;
 
     if (ImGui::IsKeyDown(ImGuiKey_LeftShift)) accelerate = true;
 
-    sample->ProcessCameraInputs(x, y, z, accelerate);
+    editor->ProcessCameraInputs(x, y, z, accelerate);
 }
 
 void Window::processMouseDrag()
@@ -231,7 +231,7 @@ void Window::processMouseDrag()
     float xOffset = static_cast<float>(cursorPos.x - screenCenter.x);
     float yOffset = static_cast<float>(screenCenter.y - cursorPos.y); // reversed since y-coordinates go from bottom to top
 
-    sample->ProcessCameraMouseMovement(xOffset, yOffset);
+    editor->ProcessCameraMouseMovement(xOffset, yOffset);
     ::SetCursorPos(screenCenter.x, screenCenter.y);
 }
 
@@ -240,7 +240,7 @@ LRESULT CALLBACK Window::WinProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
     if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
         return true;
 
-    Sample* sample = reinterpret_cast<Sample*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+    Editor* editor = reinterpret_cast<Editor*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 
     switch (uMsg)
     {
@@ -252,10 +252,9 @@ LRESULT CALLBACK Window::WinProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
         }
         case WM_PAINT:
         {
-            if (sample)
+            if (editor)
             {
-                sample->OnUpdate();
-                sample->OnRender();
+                editor->OnUpdate();
                 processInputs();
                 if (!firstDrag) processMouseDrag();
             }
@@ -263,19 +262,19 @@ LRESULT CALLBACK Window::WinProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
         }
         case WM_MOUSEMOVE:
         {
-            if (sample && firstDrag)
+            if (editor && firstDrag)
                 processMouseDrag();
             return 0;
         }
         case WM_MOUSEWHEEL:
         {
-            if (sample)
-                sample->ProcessCameraMouseScroll(GET_WHEEL_DELTA_WPARAM(wParam));
+            if (editor)
+                editor->ProcessCameraMouseScroll(GET_WHEEL_DELTA_WPARAM(wParam));
             return 0;
         }
         case WM_SIZE:
         {
-            if (sample)
+            if (editor)
                 resize();
             return 0;
         }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "helpers/Helpers.h"
-#include "rendering/Sample.h"
+#include "system/Editor.h"
 
 class Window
 {
@@ -20,16 +20,16 @@ private:
 	static LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
+	static uint32_t width;
+	static uint32_t height;
 	static HWND handleWin;
 	static RECT windowRect;
-	static UINT width;
-	static UINT height;
 	static std::wstring name;
 	static bool fullScreenState;
 
-	static std::unique_ptr<Sample> sample;
+	static std::unique_ptr<Editor> editor;
 
-	// mouse settings -> Need input class
+	// mouse settings, TODO: Need input class
 	static POINT screenCenter;
 	static bool firstDrag;
 };

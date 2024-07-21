@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="srcs\MainApplication.cpp" />
+    <ClCompile Include="srcs\system\Editor.cpp" />
     <ClCompile Include="srcs\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -28,6 +29,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="headers\system\Editor.h" />
     <ClInclude Include="headers\Window.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
