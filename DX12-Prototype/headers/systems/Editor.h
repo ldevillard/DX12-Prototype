@@ -1,15 +1,19 @@
 #pragma once
 
+#include "objects/Camera.h"
 #include "rendering/Sample.h"
+
+// test
+#include "objects/meshes/Mesh.h"
 
 class Editor
 {
 public:
 	Editor(uint32_t width, uint32_t height);
 
-	// states
 	void OnInit(HWND hWnd);
 	void OnUpdate();
+	void OnRender();
 	void OnDestroy();
 
 	// camera
@@ -21,8 +25,18 @@ public:
 	void ToggleVSync();
 
 private:
+	void render();
+	void setupRootSignature();
+
+private:
 	uint32_t width;
 	uint32_t height;
 
+	std::unique_ptr<Camera> camera;
 	std::unique_ptr<Sample> sample;
+
+	// test
+	Mesh mesh;
+	Mesh mesh2;
+	Mesh mesh3;
 };

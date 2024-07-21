@@ -45,12 +45,12 @@ void CommandList::SetGraphicsRootSignature(const RootSignature& rootSignature)
 
 #pragma endregion
 
-void CommandList::ClearRenderTargets(const Resource& backBuffer, D3D12_CPU_DESCRIPTOR_HANDLE rtv, D3D12_CPU_DESCRIPTOR_HANDLE dsv, Vector4 clearColor)
+void CommandList::ClearRenderTargets(const Resource& backBuffer, D3D12_CPU_DESCRIPTOR_HANDLE rtv, D3D12_CPU_DESCRIPTOR_HANDLE dsv, Vector clearColor)
 {
     TransitionResource(backBuffer, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
     
     FLOAT outArray[4];
-    Vec4ToFloat(clearColor, outArray);
+    VecToFloat(clearColor, outArray);
 
     ClearRTV(rtv, outArray);
     ClearDepth(dsv);

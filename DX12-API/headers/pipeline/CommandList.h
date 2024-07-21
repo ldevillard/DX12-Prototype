@@ -25,7 +25,7 @@ public:
 	void SetPipelineState(const PipelineStateObject& pso);
 	void SetGraphicsRootSignature(const RootSignature& rootSignature);
 	
-	void ClearRenderTargets(const Resource& backBuffer, D3D12_CPU_DESCRIPTOR_HANDLE rtv, D3D12_CPU_DESCRIPTOR_HANDLE dsv, Vector4 clearColor = { 1, 1, 1, 1 });
+	void ClearRenderTargets(const Resource& backBuffer, D3D12_CPU_DESCRIPTOR_HANDLE rtv, D3D12_CPU_DESCRIPTOR_HANDLE dsv, Vector clearColor = { 1, 1, 1, 1 });
 	void ClearDepth(D3D12_CPU_DESCRIPTOR_HANDLE dsv, FLOAT depth = 1.0f);
 	void ClearRTV(D3D12_CPU_DESCRIPTOR_HANDLE rtv, FLOAT* clearColor);
 	void Close();

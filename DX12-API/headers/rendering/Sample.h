@@ -2,7 +2,6 @@
 
 #include <memory>
 
-#include "objects/Camera.h"
 #include "pipeline/CommandAllocator.h"
 #include "pipeline/CommandList.h"
 #include "pipeline/CommandQueue.h"
@@ -20,34 +19,34 @@ class Sample
 public:
 	Sample(uint32_t width, uint32_t height);
 
+	CommandList& GetCommandList();
+	RootSignature& GetRootSignature();
+
 	void OnInit(HWND hWnd);
 	void OnUpdate();
 	void OnRender();
 	void OnDestroy();
 
-	void ToggleVSync();
 	void Resize(uint32_t width, uint32_t height);
+	void SetupPipeline();
+	void ToggleVSync();
 
-	void ProcessCameraInputs(float x, float y, float z, bool accelerate);
-	void ProcessCameraMouseMovement(float xOffset, float yOffset);
-	void ProcessCameraMouseScroll(float offset);
+	// create a GPU buffer.
+	void UpdateBufferResource(Resource& destinationResource, Resource& intermediateResource,
+		size_t elementsCount, size_t elementSize, const void* bufferData,
+		D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_NONE) const;
 
 private:
 	bool checkTearingSupport();
-	void loadPipeline();
-	void loadAssets();
-	void parseCommandLineArguments();
 	void enableDebugLayer();
-	// create a GPU buffer.
-	void updateBufferResource(Resource& destinationResource, Resource& intermediateResource,
-						      size_t numElements, size_t elementSize, const void* bufferData,
-						      D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_NONE);
+	void initPipeline();
+	void initImGui(HWND hWnd);
+	void parseCommandLineArguments();
+	void preRender();
 	void resizeDepthBuffer(int width, int height);
 
-	void initImGui(HWND hWnd);
-
 private:
-	HWND handleWin;
+	HWND hWnd;
 
 	uint32_t width;
 	uint32_t height;
@@ -55,8 +54,6 @@ private:
 	bool useWarp;
 	bool allowTearing;
 	bool vSync = true;
-
-	Camera camera;
 
 	uint64_t frameFenceValues[SwapChain::FrameCount] = {};
 
@@ -72,16 +69,10 @@ private:
 	std::unique_ptr<DescriptorHeap> SRVdescriptorHeap;
 	std::unique_ptr<SwapChain> swapChain;
 
-	VertexBuffer vertexBuffer;
-	IndexBuffer indexBuffer;
-
-	// depth buffer.
-	Resource depthBuffer;
-	// descriptor heap for depth buffer.
+	// depth buffer and its descriptor heap
+	Buffer depthBuffer;
 	std::unique_ptr<DescriptorHeap> DSVdescriptorHeap;
 
 	D3D12_VIEWPORT viewport;
 	D3D12_RECT scissorRect;
-
-	DirectX::XMMATRIX modelMatrix;
 };

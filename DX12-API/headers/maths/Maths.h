@@ -2,10 +2,11 @@
 
 #include <DirectXMath.h>
 
-using Vector4 = DirectX::XMVECTOR;
+using Float3 = DirectX::XMFLOAT3;
 using Matrix4 = DirectX::XMMATRIX;
+using Vector = DirectX::XMVECTOR;
 
-inline void Vec4ToFloat(Vector4 vec, FLOAT* outArray)
+inline void VecToFloat(Vector vec, FLOAT* outArray)
 {
     DirectX::XMFLOAT4 float4;
     DirectX::XMStoreFloat4(&float4, vec);

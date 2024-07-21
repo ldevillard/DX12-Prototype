@@ -13,11 +13,29 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\system">
+    <Filter Include="Source Files\systems">
+      <UniqueIdentifier>{36ccf6f2-ee21-4e73-a85a-27783a920036}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\systems">
       <UniqueIdentifier>{03584975-8b5a-4426-86e0-8f9e79b0a9da}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\system">
-      <UniqueIdentifier>{36ccf6f2-ee21-4e73-a85a-27783a920036}</UniqueIdentifier>
+    <Filter Include="Header Files\objects">
+      <UniqueIdentifier>{d25d3ea7-3a67-40b2-85f3-4b2b74e24733}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\objects">
+      <UniqueIdentifier>{0a28fe10-973d-4afd-b09e-f40f8ef5b436}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\data">
+      <UniqueIdentifier>{09ad79bd-6426-4911-bc14-76ef6ccae56f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\data\geometry">
+      <UniqueIdentifier>{e686b8ac-656c-41c0-b831-23707be67868}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\objects\meshes">
+      <UniqueIdentifier>{68337475-0ba5-41b1-8fde-137a68eb9e0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\objects\meshes">
+      <UniqueIdentifier>{1fac12af-3466-4ae2-949a-a1a19ce8a9a5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -27,16 +45,31 @@
     <ClCompile Include="srcs\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="srcs\system\Editor.cpp">
-      <Filter>Source Files\system</Filter>
+    <ClCompile Include="srcs\systems\Editor.cpp">
+      <Filter>Source Files\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\objects\Camera.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\objects\meshes\Mesh.cpp">
+      <Filter>Source Files\objects\meshes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\system\Editor.h">
-      <Filter>Header Files\system</Filter>
+    <ClInclude Include="headers\systems\Editor.h">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\objects\Camera.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\data\geometry\Vertex.h">
+      <Filter>Header Files\data\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\objects\meshes\Mesh.h">
+      <Filter>Header Files\objects\meshes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

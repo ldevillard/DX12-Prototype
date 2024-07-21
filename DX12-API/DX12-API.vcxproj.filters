@@ -34,12 +34,6 @@
     <Filter Include="Source Files\resources">
       <UniqueIdentifier>{482c56c0-618a-4444-8d35-9a997c65d6de}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\objects">
-      <UniqueIdentifier>{8150e494-bdcf-4e3a-bbc5-04120584c720}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\objects">
-      <UniqueIdentifier>{e1cac8a1-f370-45e1-a946-b5de23b6a369}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\shaders">
       <UniqueIdentifier>{a3e544fd-3c46-4ba0-bea2-0072c69b41c0}</UniqueIdentifier>
     </Filter>
@@ -89,9 +83,6 @@
     </ClInclude>
     <ClInclude Include="headers\resources\Resource.h">
       <Filter>Header Files\resources</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\objects\Camera.h">
-      <Filter>Header Files\objects</Filter>
     </ClInclude>
     <ClInclude Include="headers\maths\Maths.h">
       <Filter>Header Files\maths</Filter>
@@ -145,9 +136,6 @@
     </ClCompile>
     <ClCompile Include="srcs\resources\Resource.cpp">
       <Filter>Source Files\resources</Filter>
-    </ClCompile>
-    <ClCompile Include="srcs\objects\Camera.cpp">
-      <Filter>Source Files\objects</Filter>
     </ClCompile>
     <ClCompile Include="srcs\helpers\Time.cpp">
       <Filter>Source Files\helpers</Filter>

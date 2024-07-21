@@ -255,6 +255,7 @@ LRESULT CALLBACK Window::WinProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
             if (editor)
             {
                 editor->OnUpdate();
+                editor->OnRender();
                 processInputs();
                 if (!firstDrag) processMouseDrag();
             }

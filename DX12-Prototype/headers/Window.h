@@ -1,7 +1,7 @@
 #pragma once
 
 #include "helpers/Helpers.h"
-#include "system/Editor.h"
+#include "systems/Editor.h"
 
 class Window
 {

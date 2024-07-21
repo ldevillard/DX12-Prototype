@@ -175,7 +175,6 @@
     <ClInclude Include="headers\helpers\Helpers.h" />
     <ClInclude Include="headers\helpers\Time.h" />
     <ClInclude Include="headers\maths\Maths.h" />
-    <ClInclude Include="headers\objects\Camera.h" />
     <ClInclude Include="headers\pipeline\CommandAllocator.h" />
     <ClInclude Include="headers\pipeline\CommandList.h" />
     <ClInclude Include="headers\pipeline\CommandQueue.h" />
@@ -195,7 +194,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="srcs\helpers\Time.cpp" />
-    <ClCompile Include="srcs\objects\Camera.cpp" />
     <ClCompile Include="srcs\pipeline\CommandAllocator.cpp" />
     <ClCompile Include="srcs\pipeline\CommandList.cpp" />
     <ClCompile Include="srcs\pipeline\CommandQueue.cpp" />

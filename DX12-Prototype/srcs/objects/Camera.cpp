@@ -9,18 +9,18 @@ using namespace DirectX;
 
 #pragma region Public Methods
 
-Camera::Camera(Vector4 _position, Vector4 _up, float _yaw, float _pitch)
+Camera::Camera(Vector _position, Vector _up, float _yaw, float _pitch)
 	: position(_position)
 	, worldUp(_up)
 	, yaw(_yaw)
 	, pitch(_pitch)
-	, front({0, 0, 1, 0})
+	, front({ 0, 0, 1, 0 })
 {
 	updateVectors();
 }
 
 const Matrix4 Camera::GetViewMatrix() const
-{ 
+{
 	return XMMatrixLookAtLH(position, position + front, up);
 }
 
@@ -35,7 +35,7 @@ const float Camera::GetFOV() const
 	return fov;
 }
 
-const Vector4 Camera::GetPosition() const
+const Vector Camera::GetPosition() const
 {
 	return position;
 }
