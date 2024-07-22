@@ -340,7 +340,7 @@ void Sample::preRender()
     commandAllocators[currentBackBufferIndex]->Reset();
     commandList->Reset(*commandAllocators[currentBackBufferIndex], *pipelineStateObject);
 
-    commandList->ClearRenderTargets(backBuffer, rtv, dsv, { 0.4f, 0.6f, 0.9f, 1.0f });
+    commandList->ClearRenderTargets(backBuffer, rtv, dsv, clearColor);
 
     commandList->SetPipelineState(*pipelineStateObject);
     commandList->SetGraphicsRootSignature(*rootSignature);

@@ -46,6 +46,8 @@ private:
 	void resizeDepthBuffer(int width, int height);
 
 private:
+	static constexpr Vector clearColor = { 0.4f, 0.6f, 0.9f, 1.0f };
+
 	HWND hWnd;
 
 	uint32_t width;
