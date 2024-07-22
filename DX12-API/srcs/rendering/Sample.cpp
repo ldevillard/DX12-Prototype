@@ -93,11 +93,6 @@ void Sample::OnDestroy()
     CloseHandle(fence->GetEvent());
 }
 
-void Sample::ToggleVSync()
-{
-    vSync = !vSync;
-}
-
 void Sample::Resize(uint32_t width, uint32_t height)
 {
     if (this->width != width || this->height != height)
@@ -192,6 +187,11 @@ void Sample::SetupPipeline()
     initImGui(hWnd);
 }
 
+void Sample::ToggleVSync()
+{
+    vSync = !vSync;
+}
+
 void Sample::UpdateBufferResource(Resource& destinationResource, Resource& intermediateResource,
     size_t elementsCount, size_t elementSize, const void* bufferData,
     D3D12_RESOURCE_FLAGS flags) const
@@ -270,6 +270,18 @@ bool Sample::checkTearingSupport()
     return allowTearing == TRUE;
 }
 
+void Sample::enableDebugLayer()
+{
+#if defined(_DEBUG)
+    // always enable the debug layer before doing anything DX12 related
+    // so all possible errors generated while creating DX12 objects
+    // are caught by the debug layer
+    ComPtr<ID3D12Debug> debugInterface;
+    ThrowIfFailed(D3D12GetDebugInterface(IID_PPV_ARGS(&debugInterface)));
+    debugInterface->EnableDebugLayer();
+#endif
+}
+
 void Sample::initPipeline()
 {
 	device = std::make_unique<Device>(useWarp);
@@ -286,6 +298,39 @@ void Sample::initPipeline()
     commandList = std::make_unique<CommandList>(*device, *commandAllocators[swapChain->GetCurrentBackBufferIndex()], D3D12_COMMAND_LIST_TYPE_DIRECT);
     fence = std::make_unique<Fence>(*device);
     rootSignature = std::make_unique<RootSignature>();
+}
+
+void Sample::initImGui(HWND hWnd)
+{
+    // create context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+    // imgui style
+    ImGui::StyleColorsDark();
+
+    // init win32 and dx12 backends
+    ImGui_ImplWin32_Init(hWnd);
+    ImGui_ImplDX12_Init(device->GetPtr(), SwapChain::FrameCount,
+        DXGI_FORMAT_R8G8B8A8_UNORM, SRVdescriptorHeap->GetPtr(),
+        SRVdescriptorHeap->GetCPUDescriptorHandleForHeapStart(),
+        SRVdescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+}
+
+void Sample::parseCommandLineArguments()
+{
+    int argc;
+    wchar_t** argv = ::CommandLineToArgvW(::GetCommandLineW(), &argc);
+    for (int i = 1; i < argc; ++i)
+    {
+        if (_wcsnicmp(argv[i], L"-warp", wcslen(argv[i])) == 0 ||
+            _wcsnicmp(argv[i], L"/warp", wcslen(argv[i])) == 0)
+        {
+            useWarp = true;
+        }
+    }
+    ::LocalFree(argv);
 }
 
 void Sample::preRender()
@@ -309,33 +354,6 @@ void Sample::preRender()
 
     ID3D12DescriptorHeap* descriptorHeaps[] = { SRVdescriptorHeap->GetPtr() };
     commandList->Get()->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
-}
-
-void Sample::parseCommandLineArguments()
-{
-    int argc;
-    wchar_t** argv = ::CommandLineToArgvW(::GetCommandLineW(), &argc);
-    for (int i = 1; i < argc; ++i)
-    {
-        if (_wcsnicmp(argv[i], L"-warp", wcslen(argv[i])) == 0 ||
-            _wcsnicmp(argv[i], L"/warp", wcslen(argv[i])) == 0)
-        {
-            useWarp = true;
-        }
-    }
-    ::LocalFree(argv);
-}
-
-void Sample::enableDebugLayer()
-{
-#if defined(_DEBUG)
-    // always enable the debug layer before doing anything DX12 related
-    // so all possible errors generated while creating DX12 objects
-    // are caught by the debug layer
-    ComPtr<ID3D12Debug> debugInterface;
-    ThrowIfFailed(D3D12GetDebugInterface(IID_PPV_ARGS(&debugInterface)));
-    debugInterface->EnableDebugLayer();
-#endif
 }
 
 void Sample::resizeDepthBuffer(int width, int height)
@@ -378,24 +396,6 @@ void Sample::resizeDepthBuffer(int width, int height)
 
     device->Get()->CreateDepthStencilView(pDepthBuffer.Get(), &dsv,
         DSVdescriptorHeap->GetCPUDescriptorHandleForHeapStart());
-}
-
-void Sample::initImGui(HWND hWnd)
-{
-   // create context
-   IMGUI_CHECKVERSION();
-   ImGui::CreateContext();
-   ImGuiIO& io = ImGui::GetIO(); (void)io;
-   
-   // imgui style
-   ImGui::StyleColorsDark();
-   
-   // init win32 and dx12 backends
-   ImGui_ImplWin32_Init(hWnd);
-   ImGui_ImplDX12_Init(device->GetPtr(), SwapChain::FrameCount,
-       DXGI_FORMAT_R8G8B8A8_UNORM, SRVdescriptorHeap->GetPtr(),
-       SRVdescriptorHeap->GetCPUDescriptorHandleForHeapStart(),
-       SRVdescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 }
 
 #pragma endregion
