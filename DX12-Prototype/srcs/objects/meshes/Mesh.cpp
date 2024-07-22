@@ -7,7 +7,7 @@
 
 #pragma region Public Methods
 
-Mesh::Mesh(const std::vector<Vertex>& _vertices, const std::vector<WORD>& _indices)
+Mesh::Mesh(const std::vector<Vertex>& _vertices, const std::vector<UINT>& _indices)
 	: vertices(_vertices)
 	, indices(_indices)
 {
@@ -21,7 +21,7 @@ void Mesh::OnInit(const Sample& sample)
 void Mesh::OnRender(CommandList& commandList, int index) const
 {    
     // send buffers and primitive topology to the input assembler stage
-    commandList.PrepareInputAssemblerStage(vertexBuffer, indexBuffer);
+    commandList.PrepareInputAssemblerStage(vertexBuffer, indexBuffer, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     commandList.Get()->DrawIndexedInstanced(static_cast<UINT>(indices.size()), 1, 0, 0, 0);
 }
 
@@ -37,9 +37,9 @@ void Mesh::updateBuffersResource(const Sample& sample)
     vertexBuffer.CreateView(vertices.size(), sizeof(Vertex));
 
     // upload index buffer data
-    sample.UpdateBufferResource(indexBuffer, intermediateIndexBuffer, indices.size(), sizeof(WORD), indices.data());
+    sample.UpdateBufferResource(indexBuffer, intermediateIndexBuffer, indices.size(), sizeof(UINT), indices.data());
     // create index buffer view
-    indexBuffer.CreateView(indices.size(), sizeof(WORD), DXGI_FORMAT_R16_UINT);
+    indexBuffer.CreateView(indices.size(), sizeof(UINT), DXGI_FORMAT_R32_UINT);
 }
 
 #pragma endregion

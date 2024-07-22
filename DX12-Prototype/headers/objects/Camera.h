@@ -22,9 +22,9 @@ private:
 	void updateVectors();
 
 private:
-	float movementSpeed = 10.f;
+	float movementSpeed = 5.f;
 	float movementSpeedFactor = 2.0f;
-	float rotationSpeed = 15.f;
+	float rotationSpeed = 10.f;
 	float rotationSpeedFactor = 0.1f;
 
 	float nearPlane = 0.1f;

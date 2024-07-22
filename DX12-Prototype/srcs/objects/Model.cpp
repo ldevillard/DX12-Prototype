@@ -97,7 +97,7 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 {
     // data to fill
     std::vector<Vertex> vertices;
-    std::vector<WORD> indices;
+    std::vector<UINT> indices;
 
     // walk through each of the mesh's vertices
     for (unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -121,6 +121,7 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
             vertex.Normal = vector;
         }
 
+		vertex.Color = Float3(1, 0.5f, 0.5f);
         vertices.push_back(vertex);
     }
     // now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.

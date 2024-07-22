@@ -12,7 +12,7 @@ class Sample;
 class Mesh
 {
 public:
-	Mesh(const std::vector<Vertex>& vertices, const std::vector<WORD>& indices);
+	Mesh(const std::vector<Vertex>& vertices, const std::vector<UINT>& indices);
 
 	void OnInit(const Sample& sample);
 	void OnRender(CommandList& commandList, int index = 0) const;
@@ -25,7 +25,7 @@ protected:
 
 protected:
 	std::vector<Vertex> vertices;
-	std::vector<WORD> indices;
+	std::vector<UINT> indices;
 
 private:
 	IndexBuffer indexBuffer;

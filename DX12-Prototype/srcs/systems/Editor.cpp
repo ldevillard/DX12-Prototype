@@ -15,12 +15,14 @@ Editor::Editor(uint32_t _width, uint32_t _height)
 	, height(_height)
 {
 	sample = std::make_unique<Sample>(width, height);
-    camera = std::make_unique<Camera>(Vector({ 0, 0, -20, 1 }));
+    camera = std::make_unique<Camera>(Vector({ 0, 0, -10, 1 }));
 
-    //models.push_back(Model("C:\\Users\\logan\\Desktop\\DX12-Prototype\\x64\\Debug\\resources\\models\\dragon.fbx"));
+    models.push_back(Model("C:\\Users\\logan\\Desktop\\DX12-Prototype\\x64\\Debug\\resources\\models\\bike.obj"));
     //models.push_back(Model("C:\\Users\\logan\\Desktop\\DX12-Prototype\\x64\\Debug\\resources\\models\\pokemon.obj"));
     //models.push_back(Model("C:\\Users\\logan\\Desktop\\DX12-Prototype\\x64\\Debug\\resources\\models\\temple.obj"));
-    models.push_back(Model("C:\\Users\\logan\\Desktop\\DX12-Prototype\\x64\\Debug\\resources\\models\\sax.obj"));
+    //models.push_back(Model("C:\\Users\\logan\\Desktop\\DX12-Prototype\\x64\\Debug\\resources\\models\\sax.obj"));
+    //models.push_back(Model("C:\\Users\\logan\\Desktop\\DX12-Prototype\\x64\\Debug\\resources\\models\\crab.obj"));
+    
     //models.push_back(Model(ModelPrimitive::CubePrimitive));
     //models.push_back(Model(ModelPrimitive::CubePrimitive));
     //models.push_back(Model(ModelPrimitive::CubePrimitive));
@@ -44,14 +46,14 @@ void Editor::OnUpdate()
     camera->OnUpdate(width, height);
 
     // movement for testing
-    //float angle = static_cast<float>(sin(Time::GetTimeElapsed()) * 200);
-    //const Vector rotationAxis = DirectX::XMVectorSet(0, 1, 1, 0);
-    //Matrix4 rotation = DirectX::XMMatrixRotationAxis(rotationAxis, DirectX::XMConvertToRadians(angle));
-    //for (int i = 0; i < models.size(); i++)
-    //{
-    //    models[i].SetTransform(rotation * DirectX::XMMatrixTranslation(-6.0f * (static_cast<float>(i) - 1.0f), 0, 0));
-    //    models[i].OnUpdate();
-    //}
+    float angle = static_cast<float>(Time::GetTimeElapsed() * 45);
+    const Vector rotationAxis = DirectX::XMVectorSet(0, 1, 0, 0);
+    Matrix4 rotation = DirectX::XMMatrixRotationAxis(rotationAxis, DirectX::XMConvertToRadians(angle));
+    for (int i = 0; i < models.size(); i++)
+    {
+        models[i].SetTransform(rotation * DirectX::XMMatrixTranslation(-6.0f * (static_cast<float>(i) - 1.0f), 0, 0));
+        models[i].OnUpdate();
+    }
 }
 
 void Editor::OnRender()
