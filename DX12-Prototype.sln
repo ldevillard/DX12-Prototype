@@ -16,6 +16,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DX12-API", "DX12-API\DX12-A
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DX12-ImGui", "DX12-ImGui\DX12-ImGui.vcxproj", "{F15DD904-E875-480E-84EA-13B842ADC52B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DX12-Assimp", "DX12-Assimp\DX12-Assimp.vcxproj", "{B94C9354-E3CA-4AB6-BF79-F465B755EFA0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -48,6 +50,14 @@ Global
 		{F15DD904-E875-480E-84EA-13B842ADC52B}.Release|x64.Build.0 = Release|x64
 		{F15DD904-E875-480E-84EA-13B842ADC52B}.Release|x86.ActiveCfg = Release|Win32
 		{F15DD904-E875-480E-84EA-13B842ADC52B}.Release|x86.Build.0 = Release|Win32
+		{B94C9354-E3CA-4AB6-BF79-F465B755EFA0}.Debug|x64.ActiveCfg = Debug|x64
+		{B94C9354-E3CA-4AB6-BF79-F465B755EFA0}.Debug|x64.Build.0 = Debug|x64
+		{B94C9354-E3CA-4AB6-BF79-F465B755EFA0}.Debug|x86.ActiveCfg = Debug|Win32
+		{B94C9354-E3CA-4AB6-BF79-F465B755EFA0}.Debug|x86.Build.0 = Debug|Win32
+		{B94C9354-E3CA-4AB6-BF79-F465B755EFA0}.Release|x64.ActiveCfg = Release|x64
+		{B94C9354-E3CA-4AB6-BF79-F465B755EFA0}.Release|x64.Build.0 = Release|x64
+		{B94C9354-E3CA-4AB6-BF79-F465B755EFA0}.Release|x86.ActiveCfg = Release|Win32
+		{B94C9354-E3CA-4AB6-BF79-F465B755EFA0}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -6,6 +6,10 @@
 #include "maths/Maths.h"
 #include "objects/meshes/Mesh.h"
 
+struct aiMesh;
+struct aiNode;
+struct aiScene;
+
 class CommandList;
 class Sample;
 
@@ -27,6 +31,11 @@ public:
 	void OnInit(const Sample& sample);
 	void OnUpdate();
 	void OnRender(CommandList& commandList);
+
+private:
+	void loadModel(std::string modelPath);
+	void processNode(aiNode* node, const aiScene* scene);
+	Mesh processMesh(aiMesh* mesh, const aiScene* scene);
 
 private:
 	std::vector<Mesh> meshes;

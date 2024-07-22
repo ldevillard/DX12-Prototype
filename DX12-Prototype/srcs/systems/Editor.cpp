@@ -8,54 +8,6 @@
 #include "pipeline/CommandList.h"
 #include "pipeline/RootSignature.h"
 
-// testing variables
-static Vertex g_Vertices[24] = {
-    // back face
-    { Float3(-1.0f, -1.0f, -1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(0.0f, 0.0f, -1.0f) }, // 0
-    { Float3(-1.0f,  1.0f, -1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(0.0f, 0.0f, -1.0f) }, // 1
-    { Float3(1.0f,  1.0f, -1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(0.0f, 0.0f, -1.0f) }, // 2
-    { Float3(1.0f, -1.0f, -1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(0.0f, 0.0f, -1.0f) }, // 3
-
-    // front face
-    { Float3(-1.0f, -1.0f,  1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(0.0f, 0.0f, 1.0f) }, // 4
-    { Float3(-1.0f,  1.0f,  1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(0.0f, 0.0f, 1.0f) }, // 5
-    { Float3(1.0f,  1.0f,  1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(0.0f, 0.0f, 1.0f) }, // 6
-    { Float3(1.0f, -1.0f,  1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(0.0f, 0.0f, 1.0f) }, // 7
-
-    // left face
-    { Float3(-1.0f, -1.0f, -1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(-1.0f, 0.0f, 0.0f) }, // 8
-    { Float3(-1.0f,  -1.0f, 1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(-1.0f, 0.0f, 0.0f) }, // 9
-    { Float3(-1.0f,  1.0f,  1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(-1.0f, 0.0f, 0.0f) }, // 10
-    { Float3(-1.0f, 1.0f,  -1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(-1.0f, 0.0f, 0.0f) }, // 11
-
-    // right face
-    { Float3(1.0f, -1.0f, -1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(1.0f, 0.0f, 0.0f) }, // 12
-    { Float3(1.0f,  1.0f, -1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(1.0f, 0.0f, 0.0f) }, // 13
-    { Float3(1.0f,  1.0f,  1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(1.0f, 0.0f, 0.0f) }, // 14
-    { Float3(1.0f, -1.0f,  1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(1.0f, 0.0f, 0.0f) }, // 15
-
-    // up face
-    { Float3(-1.0f,  1.0f, -1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(0.0f, 1.0f, 0.0f) }, // 16
-    { Float3(-1.0f,  1.0f,  1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(0.0f, 1.0f, 0.0f) }, // 17
-    { Float3(1.0f,  1.0f,  1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(0.0f, 1.0f, 0.0f) }, // 18
-    { Float3(1.0f,  1.0f, -1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(0.0f, 1.0f, 0.0f) }, // 19
-
-    // down face
-    { Float3(-1.0f, -1.0f, -1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(0.0f, -1.0f, 0.0f) }, // 20
-    { Float3(1.0f, -1.0f,  -1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(0.0f, -1.0f, 0.0f) }, // 21
-    { Float3(1.0f, -1.0f,  1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(0.0f, -1.0f, 0.0f) }, // 22
-    { Float3(-1.0f, -1.0f, 1.0f), Float3(0.78f, 0.549f, 0.941f), Float3(0.0f, -1.0f, 0.0f) }  // 23
-};
-
-static WORD g_Indices[36] = {
-    0, 1, 2, 0, 2, 3,
-    4, 6, 5, 4, 7, 6,
-    8, 9, 10, 8, 10, 11,
-    12, 13, 14, 12, 14, 15,
-    16, 17, 18, 16, 18, 19,
-    20, 21, 22, 20, 22, 23
-};
-
 #pragma region Public Methods
 
 Editor::Editor(uint32_t _width, uint32_t _height)
@@ -65,9 +17,13 @@ Editor::Editor(uint32_t _width, uint32_t _height)
 	sample = std::make_unique<Sample>(width, height);
     camera = std::make_unique<Camera>(Vector({ 0, 0, -20, 1 }));
 
-    models.push_back(Model(ModelPrimitive::CubePrimitive));
-    models.push_back(Model(ModelPrimitive::CubePrimitive));
-    models.push_back(Model(ModelPrimitive::CubePrimitive));
+    //models.push_back(Model("C:\\Users\\logan\\Desktop\\DX12-Prototype\\x64\\Debug\\resources\\models\\dragon.fbx"));
+    //models.push_back(Model("C:\\Users\\logan\\Desktop\\DX12-Prototype\\x64\\Debug\\resources\\models\\pokemon.obj"));
+    //models.push_back(Model("C:\\Users\\logan\\Desktop\\DX12-Prototype\\x64\\Debug\\resources\\models\\temple.obj"));
+    models.push_back(Model("C:\\Users\\logan\\Desktop\\DX12-Prototype\\x64\\Debug\\resources\\models\\sax.obj"));
+    //models.push_back(Model(ModelPrimitive::CubePrimitive));
+    //models.push_back(Model(ModelPrimitive::CubePrimitive));
+    //models.push_back(Model(ModelPrimitive::CubePrimitive));
 }
 
 void Editor::OnInit(HWND hWnd)
@@ -88,14 +44,14 @@ void Editor::OnUpdate()
     camera->OnUpdate(width, height);
 
     // movement for testing
-    float angle = static_cast<float>(sin(Time::GetTimeElapsed()) * 200);
-    const Vector rotationAxis = DirectX::XMVectorSet(0, 1, 1, 0);
-    Matrix4 rotation = DirectX::XMMatrixRotationAxis(rotationAxis, DirectX::XMConvertToRadians(angle));
-    for (int i = 0; i < models.size(); i++)
-    {
-        models[i].SetTransform(rotation * DirectX::XMMatrixTranslation(-6 * (i - 1), 0, 0));
-        models[i].OnUpdate();
-    }
+    //float angle = static_cast<float>(sin(Time::GetTimeElapsed()) * 200);
+    //const Vector rotationAxis = DirectX::XMVectorSet(0, 1, 1, 0);
+    //Matrix4 rotation = DirectX::XMMatrixRotationAxis(rotationAxis, DirectX::XMConvertToRadians(angle));
+    //for (int i = 0; i < models.size(); i++)
+    //{
+    //    models[i].SetTransform(rotation * DirectX::XMMatrixTranslation(-6.0f * (static_cast<float>(i) - 1.0f), 0, 0));
+    //    models[i].OnUpdate();
+    //}
 }
 
 void Editor::OnRender()

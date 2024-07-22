@@ -18,34 +18,11 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="srcs\MainApplication.cpp" />
-    <ClCompile Include="srcs\objects\Camera.cpp" />
-    <ClCompile Include="srcs\objects\meshes\Cube.cpp" />
-    <ClCompile Include="srcs\objects\meshes\Mesh.cpp" />
-    <ClCompile Include="srcs\objects\Model.cpp" />
-    <ClCompile Include="srcs\systems\Editor.cpp" />
-    <ClCompile Include="srcs\Window.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DX12-API\DX12-API.vcxproj">
-      <Project>{613b5e94-f948-4e51-ae47-94f2ccaf0877}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="headers\data\geometry\Vertex.h" />
-    <ClInclude Include="headers\objects\Camera.h" />
-    <ClInclude Include="headers\objects\meshes\Cube.h" />
-    <ClInclude Include="headers\objects\meshes\Mesh.h" />
-    <ClInclude Include="headers\objects\Model.h" />
-    <ClInclude Include="headers\systems\Editor.h" />
-    <ClInclude Include="headers\Window.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{14743e5b-862d-4fe7-8c8e-206b6de2bd5b}</ProjectGuid>
-    <RootNamespace>DX12Prototype</RootNamespace>
+    <ProjectGuid>{b94c9354-e3ca-4ab6-bf79-f465b755efa0}</ProjectGuid>
+    <RootNamespace>DX12Assimp</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -94,16 +71,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\logan\Desktop\DX12-Prototype\DX12-API\headers;C:\Users\logan\Desktop\DX12-Prototype\DX12-ImGui\headers;C:\Users\logan\Desktop\DX12-Prototype\DX12-Assimp\headers;C:\Users\logan\Desktop\DX12-Prototype\DX12-Prototype\headers;$(IncludePath)</IncludePath>
-    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
-    <ExternalIncludePath>C:\Users\logan\Desktop\DX12-Prototype\DX12-ImGui\headers;C:\Users\logan\Desktop\DX12-Prototype\DX12-API\headers;$(ExternalIncludePath)</ExternalIncludePath>
-    <LibraryPath>$(LibraryPath);$(SolutionDir)$(Platform)\$(Configuration)\</LibraryPath>
+    <IncludePath>C:\Users\logan\Desktop\DX12-Prototype\DX12-Assimp\headers;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\logan\Desktop\DX12-Prototype\DX12-API\headers;C:\Users\logan\Desktop\DX12-Prototype\DX12-ImGui\headers;C:\Users\logan\Desktop\DX12-Prototype\DX12-Assimp\headers;C:\Users\logan\Desktop\DX12-Prototype\DX12-Prototype\headers;$(IncludePath)</IncludePath>
-    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
-    <ExternalIncludePath>C:\Users\logan\Desktop\DX12-Prototype\DX12-ImGui\headers;C:\Users\logan\Desktop\DX12-Prototype\DX12-API\headers;$(ExternalIncludePath)</ExternalIncludePath>
-    <LibraryPath>$(LibraryPath);$(SolutionDir)$(Platform)\$(Configuration)\</LibraryPath>
+    <IncludePath>C:\Users\logan\Desktop\DX12-Prototype\DX12-Assimp\headers;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -115,7 +86,6 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;dxgi.lib;d3dcompiler.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -132,7 +102,6 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;dxgi.lib;d3dcompiler.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -141,15 +110,10 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalOptions>/MP  %(AdditionalOptions)</AdditionalOptions>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;dxgi.lib;d3dcompiler.lib;DX12-ImGui.lib;assimp-vc143-mt.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -160,18 +124,111 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;dxgi.lib;d3dcompiler.lib;DX12-ImGui.lib;assimp-vc143-mt.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="headers\.editorconfig" />
+    <None Include="headers\color4.inl" />
+    <None Include="headers\config.h.in" />
+    <None Include="headers\material.inl" />
+    <None Include="headers\matrix3x3.inl" />
+    <None Include="headers\matrix4x4.inl" />
+    <None Include="headers\quaternion.inl" />
+    <None Include="headers\SmoothingGroups.inl" />
+    <None Include="headers\vector2.inl" />
+    <None Include="headers\vector3.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="headers\aabb.h" />
+    <ClInclude Include="headers\ai_assert.h" />
+    <ClInclude Include="headers\anim.h" />
+    <ClInclude Include="headers\AssertHandler.h" />
+    <ClInclude Include="headers\Base64.hpp" />
+    <ClInclude Include="headers\BaseImporter.h" />
+    <ClInclude Include="headers\Bitmap.h" />
+    <ClInclude Include="headers\BlobIOSystem.h" />
+    <ClInclude Include="headers\ByteSwapper.h" />
+    <ClInclude Include="headers\camera.h" />
+    <ClInclude Include="headers\cexport.h" />
+    <ClInclude Include="headers\cfileio.h" />
+    <ClInclude Include="headers\cimport.h" />
+    <ClInclude Include="headers\ColladaMetaData.h" />
+    <ClInclude Include="headers\color4.h" />
+    <ClInclude Include="headers\commonMetaData.h" />
+    <ClInclude Include="headers\Compiler\poppack1.h" />
+    <ClInclude Include="headers\Compiler\pstdint.h" />
+    <ClInclude Include="headers\Compiler\pushpack1.h" />
+    <ClInclude Include="headers\config.h" />
+    <ClInclude Include="headers\CreateAnimMesh.h" />
+    <ClInclude Include="headers\DefaultIOStream.h" />
+    <ClInclude Include="headers\DefaultIOSystem.h" />
+    <ClInclude Include="headers\DefaultLogger.hpp" />
+    <ClInclude Include="headers\defs.h" />
+    <ClInclude Include="headers\Exceptional.h" />
+    <ClInclude Include="headers\Exporter.hpp" />
+    <ClInclude Include="headers\fast_atof.h" />
+    <ClInclude Include="headers\GenericProperty.h" />
+    <ClInclude Include="headers\GltfMaterial.h" />
+    <ClInclude Include="headers\Hash.h" />
+    <ClInclude Include="headers\Importer.hpp" />
+    <ClInclude Include="headers\importerdesc.h" />
+    <ClInclude Include="headers\IOStream.hpp" />
+    <ClInclude Include="headers\IOStreamBuffer.h" />
+    <ClInclude Include="headers\IOSystem.hpp" />
+    <ClInclude Include="headers\light.h" />
+    <ClInclude Include="headers\LineSplitter.h" />
+    <ClInclude Include="headers\LogAux.h" />
+    <ClInclude Include="headers\Logger.hpp" />
+    <ClInclude Include="headers\LogStream.hpp" />
+    <ClInclude Include="headers\material.h" />
+    <ClInclude Include="headers\MathFunctions.h" />
+    <ClInclude Include="headers\matrix3x3.h" />
+    <ClInclude Include="headers\matrix4x4.h" />
+    <ClInclude Include="headers\MemoryIOWrapper.h" />
+    <ClInclude Include="headers\mesh.h" />
+    <ClInclude Include="headers\metadata.h" />
+    <ClInclude Include="headers\NullLogger.hpp" />
+    <ClInclude Include="headers\ObjMaterial.h" />
+    <ClInclude Include="headers\ParsingUtils.h" />
+    <ClInclude Include="headers\pbrmaterial.h" />
+    <ClInclude Include="headers\port\AndroidJNI\AndroidJNIIOSystem.h" />
+    <ClInclude Include="headers\port\AndroidJNI\BundledAssetIOSystem.h" />
+    <ClInclude Include="headers\postprocess.h" />
+    <ClInclude Include="headers\Profiler.h" />
+    <ClInclude Include="headers\ProgressHandler.hpp" />
+    <ClInclude Include="headers\qnan.h" />
+    <ClInclude Include="headers\quaternion.h" />
+    <ClInclude Include="headers\RemoveComments.h" />
+    <ClInclude Include="headers\scene.h" />
+    <ClInclude Include="headers\SceneCombiner.h" />
+    <ClInclude Include="headers\SGSpatialSort.h" />
+    <ClInclude Include="headers\SkeletonMeshBuilder.h" />
+    <ClInclude Include="headers\SmallVector.h" />
+    <ClInclude Include="headers\SmoothingGroups.h" />
+    <ClInclude Include="headers\SpatialSort.h" />
+    <ClInclude Include="headers\StandardShapes.h" />
+    <ClInclude Include="headers\StreamReader.h" />
+    <ClInclude Include="headers\StreamWriter.h" />
+    <ClInclude Include="headers\StringComparison.h" />
+    <ClInclude Include="headers\StringUtils.h" />
+    <ClInclude Include="headers\Subdivision.h" />
+    <ClInclude Include="headers\texture.h" />
+    <ClInclude Include="headers\TinyFormatter.h" />
+    <ClInclude Include="headers\types.h" />
+    <ClInclude Include="headers\vector2.h" />
+    <ClInclude Include="headers\vector3.h" />
+    <ClInclude Include="headers\version.h" />
+    <ClInclude Include="headers\Vertex.h" />
+    <ClInclude Include="headers\XmlParser.h" />
+    <ClInclude Include="headers\XMLTools.h" />
+    <ClInclude Include="headers\ZipArchiveIOSystem.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
