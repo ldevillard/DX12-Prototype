@@ -19,15 +19,14 @@ Camera::Camera(Vector _position, Vector _up, float _yaw, float _pitch)
 	updateVectors();
 }
 
-const Matrix4 Camera::GetViewMatrix() const
+const Matrix4& Camera::GetViewMatrix() const
 {
-	return XMMatrixLookAtLH(position, position + front, up);
+	return viewMatrix;
 }
 
-const Matrix4 Camera::GetProjectionMatrix(uint32_t width, uint32_t height) const
+const Matrix4& Camera::GetProjectionMatrix(uint32_t width, uint32_t height) const
 {
-	float aspectRatio = static_cast<float>(width) / static_cast<float>(height);
-	return XMMatrixPerspectiveFovLH(XMConvertToRadians(fov), aspectRatio, nearPlane, farPlane);
+	return projectionMatrix;
 }
 
 const float Camera::GetFOV() const
@@ -35,9 +34,18 @@ const float Camera::GetFOV() const
 	return fov;
 }
 
-const Vector Camera::GetPosition() const
+const Vector& Camera::GetPosition() const
 {
 	return position;
+}
+
+void Camera::OnUpdate(uint32_t width, uint32_t height)
+{
+	// update view and projection matrices
+	viewMatrix = XMMatrixLookAtLH(position, position + front, up);
+
+	float aspectRatio = static_cast<float>(width) / static_cast<float>(height);
+	projectionMatrix = XMMatrixPerspectiveFovLH(XMConvertToRadians(fov), aspectRatio, nearPlane, farPlane);
 }
 
 void Camera::ProcessInputs(float x, float y, float z, bool accelerate)

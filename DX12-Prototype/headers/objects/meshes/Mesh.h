@@ -15,7 +15,7 @@ public:
 	Mesh() = default;
 	Mesh(const std::vector<Vertex>& vertices, const std::vector<WORD>& indices);
 
-	void OnUpdate();
+	void OnUpdate(int index = 0);
 	void OnRender(CommandList& commandList, int index = 0) const;
 
 	void UpdateBuffersResource(const Sample& sample);

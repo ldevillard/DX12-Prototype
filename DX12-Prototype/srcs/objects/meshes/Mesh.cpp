@@ -14,9 +14,9 @@ Mesh::Mesh(const std::vector<Vertex>& _vertices, const std::vector<WORD>& _indic
 {
 }
 
-void Mesh::OnUpdate()
+void Mesh::OnUpdate(int index)
 {
-    float angle = static_cast<float>(Time::GetTimeElapsed() * 45);
+    float angle = static_cast<float>(Time::GetTimeElapsed() * 45 * std::exp(index));
     const Vector rotationAxis = DirectX::XMVectorSet(0, 1, 1, 0);
     modelMatrix = DirectX::XMMatrixRotationAxis(rotationAxis, DirectX::XMConvertToRadians(angle));
 }
@@ -47,7 +47,7 @@ void Mesh::UpdateBuffersResource(const Sample& sample)
 
     // upload index buffer data
     sample.UpdateBufferResource(indexBuffer, intermediateIndexBuffer, indices.size(), sizeof(WORD), indices.data());
-    // Create index buffer view
+    // create index buffer view
     indexBuffer.CreateView(indices.size(), sizeof(WORD), DXGI_FORMAT_R16_UINT);
 }
 

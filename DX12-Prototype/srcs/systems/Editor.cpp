@@ -95,10 +95,11 @@ void Editor::OnInit(HWND hWnd)
 void Editor::OnUpdate()
 {
 	sample->OnUpdate();
+    camera->OnUpdate(width, height);
 
-    mesh.OnUpdate();
-    mesh2.OnUpdate();
-    mesh3.OnUpdate();
+    mesh.OnUpdate(1);
+    mesh2.OnUpdate(0);
+    mesh3.OnUpdate(2);
 }
 
 void Editor::OnRender()
