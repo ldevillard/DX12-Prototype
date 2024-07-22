@@ -4,7 +4,7 @@
 #include "rendering/Sample.h"
 
 // test
-#include "objects/meshes/Mesh.h"
+#include "objects/Model.h"
 
 class Editor
 {
@@ -35,8 +35,6 @@ private:
 	std::unique_ptr<Camera> camera;
 	std::unique_ptr<Sample> sample;
 
-	// test
-	Mesh mesh;
-	Mesh mesh2;
-	Mesh mesh3;
+	// TODO: entity system
+	std::vector<Model> models;
 };

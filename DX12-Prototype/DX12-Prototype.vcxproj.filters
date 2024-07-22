@@ -54,6 +54,12 @@
     <ClCompile Include="srcs\objects\meshes\Mesh.cpp">
       <Filter>Source Files\objects\meshes</Filter>
     </ClCompile>
+    <ClCompile Include="srcs\objects\Model.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\objects\meshes\Cube.cpp">
+      <Filter>Source Files\objects\meshes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Window.h">
@@ -69,6 +75,12 @@
       <Filter>Header Files\data\geometry</Filter>
     </ClInclude>
     <ClInclude Include="headers\objects\meshes\Mesh.h">
+      <Filter>Header Files\objects\meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\objects\Model.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\objects\meshes\Cube.h">
       <Filter>Header Files\objects\meshes</Filter>
     </ClInclude>
   </ItemGroup>

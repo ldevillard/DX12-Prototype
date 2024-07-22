@@ -10,7 +10,6 @@
 Mesh::Mesh(const std::vector<Vertex>& _vertices, const std::vector<WORD>& _indices)
 	: vertices(_vertices)
 	, indices(_indices)
-    , modelMatrix(DirectX::XMMatrixIdentity())
 {
 }
 
@@ -19,27 +18,10 @@ void Mesh::OnInit(const Sample& sample)
     updateBuffersResource(sample);
 }
 
-void Mesh::OnUpdate(int index)
-{
-    float angle = static_cast<float>(Time::GetTimeElapsed() * 45 * std::exp(index));
-    const Vector rotationAxis = DirectX::XMVectorSet(0, 1, 1, 0);
-    modelMatrix = DirectX::XMMatrixRotationAxis(rotationAxis, DirectX::XMConvertToRadians(angle));
-}
-
 void Mesh::OnRender(CommandList& commandList, int index) const
 {    
-    Matrix4 modelMat = modelMatrix;
-
-    if (index == 1)
-        modelMat = DirectX::XMMatrixMultiply(modelMatrix, DirectX::XMMatrixTranslation(-6, 0, 0));
-    if (index == 2)
-        modelMat = DirectX::XMMatrixMultiply(modelMatrix, DirectX::XMMatrixTranslation(6, 0, 0));
-
     // send buffers and primitive topology to the input assembler stage
     commandList.PrepareInputAssemblerStage(vertexBuffer, indexBuffer);
-
-    // then bind model matrix and draw
-    commandList.Get()->SetGraphicsRoot32BitConstants(0, sizeof(Matrix4) / 4, &modelMat, 0);
     commandList.Get()->DrawIndexedInstanced(static_cast<UINT>(indices.size()), 1, 0, 0, 0);
 }
 

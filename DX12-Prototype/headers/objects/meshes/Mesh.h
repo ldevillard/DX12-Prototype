@@ -12,27 +12,26 @@ class Sample;
 class Mesh
 {
 public:
-	Mesh() = default;
 	Mesh(const std::vector<Vertex>& vertices, const std::vector<WORD>& indices);
 
 	void OnInit(const Sample& sample);
-	void OnUpdate(int index = 0);
 	void OnRender(CommandList& commandList, int index = 0) const;
 
 private:
 	void updateBuffersResource(const Sample& sample);
 
+protected:
+	Mesh() = default;
+
+protected:
+	std::vector<Vertex> vertices;
+	std::vector<WORD> indices;
+
 private:
 	IndexBuffer indexBuffer;
 	VertexBuffer vertexBuffer;
 
-	// TODO: make a destruction of these ressources after init
+	// TODO: maybe make a destruction of these ressources after init
 	Resource intermediateVertexBuffer;
 	Resource intermediateIndexBuffer;
-
-	// TODO: make a model class that encapsulate Mesh and Transform logic
-	Matrix4 modelMatrix;
-
-	std::vector<Vertex> vertices;
-	std::vector<WORD> indices;
 };

@@ -65,18 +65,9 @@ Editor::Editor(uint32_t _width, uint32_t _height)
 	sample = std::make_unique<Sample>(width, height);
     camera = std::make_unique<Camera>(Vector({ 0, 0, -20, 1 }));
 
-    //test
-    std::vector<Vertex> vertices;
-    for (int i = 0; i < 24; i++)
-        vertices.push_back(g_Vertices[i]);
-
-    std::vector<WORD> indices;
-    for (int i = 0; i < 36; i++)
-        indices.push_back(g_Indices[i]);
-
-    mesh = Mesh(vertices, indices);
-    mesh2 = Mesh(vertices, indices);
-    mesh3 = Mesh(vertices, indices);
+    models.push_back(Model(ModelPrimitive::CubePrimitive));
+    models.push_back(Model(ModelPrimitive::CubePrimitive));
+    models.push_back(Model(ModelPrimitive::CubePrimitive));
 }
 
 void Editor::OnInit(HWND hWnd)
@@ -84,10 +75,9 @@ void Editor::OnInit(HWND hWnd)
 	sample->OnInit(hWnd);
     setupRootSignature();
 
-    // init data (entities later) OnInit method?
-    mesh.OnInit(*sample);
-    mesh2.OnInit(*sample);
-    mesh3.OnInit(*sample);
+    // init data (entities later)
+    for (Model& model : models)
+        model.OnInit(*sample);
 
     sample->SetupPipeline();
 }
@@ -97,9 +87,15 @@ void Editor::OnUpdate()
 	sample->OnUpdate();
     camera->OnUpdate(width, height);
 
-    mesh.OnUpdate(1);
-    mesh2.OnUpdate(0);
-    mesh3.OnUpdate(2);
+    // movement for testing
+    float angle = static_cast<float>(sin(Time::GetTimeElapsed()) * 200);
+    const Vector rotationAxis = DirectX::XMVectorSet(0, 1, 1, 0);
+    Matrix4 rotation = DirectX::XMMatrixRotationAxis(rotationAxis, DirectX::XMConvertToRadians(angle));
+    for (int i = 0; i < models.size(); i++)
+    {
+        models[i].SetTransform(rotation * DirectX::XMMatrixTranslation(-6 * (i - 1), 0, 0));
+        models[i].OnUpdate();
+    }
 }
 
 void Editor::OnRender()
@@ -157,9 +153,8 @@ void Editor::render()
     commandList.Get()->SetGraphicsRoot32BitConstants(2, sizeof(Matrix4) / 4, &proj, 0);
     commandList.Get()->SetGraphicsRoot32BitConstants(3, sizeof(Vector) / 4, &cameraPos, 0);
 
-    mesh.OnRender(commandList);
-    mesh2.OnRender(commandList, 1);
-    mesh3.OnRender(commandList, 2);
+    for (Model& model : models)
+        model.OnRender(commandList);
 
     // ImGui
     ImGui_ImplDX12_NewFrame();

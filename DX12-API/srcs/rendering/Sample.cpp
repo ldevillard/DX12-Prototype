@@ -57,7 +57,6 @@ void Sample::OnUpdate()
 
 void Sample::OnRender()
 {
-
     // ImGui
     ImGui::Render();
     ImDrawData* draw_data = ImGui::GetDrawData();
