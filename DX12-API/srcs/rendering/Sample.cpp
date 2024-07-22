@@ -171,16 +171,13 @@ void Sample::SetupPipeline()
         pipelineStateObject = std::make_unique<PipelineStateObject>(*device, psoDescriptor);
     }
 
-    // execute command list to send data to gpu
-    {
-        commandList->Close();
-
-        ID3D12CommandList* const commandLists[] = { commandList->GetPtr() };
-        commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
-
-        uint64_t fenceValue = fence->Signal(*commandQueue);
-        fence->WaitForFenceValue(fenceValue);
-    }
+    // close and execute command list to send data to gpu
+    commandList->Close();
+    ID3D12CommandList* const commandLists[] = { commandList->GetPtr() };
+    commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);    
+    
+    // wait for the end of the command list execution
+    fence->Flush(*commandQueue);
 
     // resize/create the depth buffer
     resizeDepthBuffer(width, height);
@@ -358,9 +355,6 @@ void Sample::preRender()
 
 void Sample::resizeDepthBuffer(int width, int height)
 {
-    // flush any GPU commands that might be referencing the depth buffer
-    fence->Flush(*commandQueue);
-
     width = std::max(1, width);
     height = std::max(1, height);
 

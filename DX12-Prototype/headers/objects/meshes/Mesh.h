@@ -15,10 +15,12 @@ public:
 	Mesh() = default;
 	Mesh(const std::vector<Vertex>& vertices, const std::vector<WORD>& indices);
 
+	void OnInit(const Sample& sample);
 	void OnUpdate(int index = 0);
 	void OnRender(CommandList& commandList, int index = 0) const;
 
-	void UpdateBuffersResource(const Sample& sample);
+private:
+	void updateBuffersResource(const Sample& sample);
 
 private:
 	IndexBuffer indexBuffer;

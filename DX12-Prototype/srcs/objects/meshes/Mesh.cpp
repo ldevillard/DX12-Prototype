@@ -14,6 +14,11 @@ Mesh::Mesh(const std::vector<Vertex>& _vertices, const std::vector<WORD>& _indic
 {
 }
 
+void Mesh::OnInit(const Sample& sample)
+{
+    updateBuffersResource(sample);
+}
+
 void Mesh::OnUpdate(int index)
 {
     float angle = static_cast<float>(Time::GetTimeElapsed() * 45 * std::exp(index));
@@ -38,7 +43,11 @@ void Mesh::OnRender(CommandList& commandList, int index) const
     commandList.Get()->DrawIndexedInstanced(static_cast<UINT>(indices.size()), 1, 0, 0, 0);
 }
 
-void Mesh::UpdateBuffersResource(const Sample& sample)
+#pragma endregion
+
+#pragma region Private Methods
+
+void Mesh::updateBuffersResource(const Sample& sample)
 {
     // upload vertex buffer data
     sample.UpdateBufferResource(vertexBuffer, intermediateVertexBuffer, vertices.size(), sizeof(Vertex), vertices.data());

@@ -85,9 +85,9 @@ void Editor::OnInit(HWND hWnd)
     setupRootSignature();
 
     // init data (entities later) OnInit method?
-    mesh.UpdateBuffersResource(*sample);
-    mesh2.UpdateBuffersResource(*sample);
-    mesh3.UpdateBuffersResource(*sample);
+    mesh.OnInit(*sample);
+    mesh2.OnInit(*sample);
+    mesh3.OnInit(*sample);
 
     sample->SetupPipeline();
 }
