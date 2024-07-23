@@ -17,7 +17,8 @@ Editor::Editor(uint32_t _width, uint32_t _height)
 	sample = std::make_unique<Sample>(width, height);
     camera = std::make_unique<Camera>(Vector({ 0, 0, -10, 1 }));
 
-    models.push_back(Model("C:\\Users\\logan\\Desktop\\DX12-Prototype\\x64\\Debug\\resources\\models\\bike.obj"));
+    std::string directory = GetExecutableDirectoryA();
+    models.push_back(Model(directory + "\\resources\\models\\bike.obj"));
     //models.push_back(Model("C:\\Users\\logan\\Desktop\\DX12-Prototype\\x64\\Debug\\resources\\models\\pokemon.obj"));
     //models.push_back(Model("C:\\Users\\logan\\Desktop\\DX12-Prototype\\x64\\Debug\\resources\\models\\temple.obj"));
     //models.push_back(Model("C:\\Users\\logan\\Desktop\\DX12-Prototype\\x64\\Debug\\resources\\models\\sax.obj"));

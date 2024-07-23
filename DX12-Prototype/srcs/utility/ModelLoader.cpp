@@ -19,6 +19,7 @@ void ModelLoader::Load(const std::string& modelPath, std::vector<Mesh>& outMeshe
 	{
 		std::string errorMessage("ERROR::ASSIMP::" + std::string(import.GetErrorString()) + "\n");
 		OutputDebugStringA(errorMessage.c_str());
+        MessageBoxA(NULL, errorMessage.c_str(), "Warning", MB_OK | MB_ICONWARNING);
 		return;
 	}
 	processNode(scene->mRootNode, scene, outMeshes);

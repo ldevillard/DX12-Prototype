@@ -38,3 +38,12 @@ inline std::wstring GetExecutableDirectory()
     std::wstring::size_type pos = std::wstring(buffer).find_last_of(L"\\/");
     return std::wstring(buffer).substr(0, pos);
 }
+
+inline std::string GetExecutableDirectoryA()
+{
+    char buffer[MAX_PATH];
+    GetModuleFileNameA(NULL, buffer, MAX_PATH);
+
+    std::string::size_type pos = std::string(buffer).find_last_of("\\/");
+    return std::string(buffer).substr(0, pos);
+}
