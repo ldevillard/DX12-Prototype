@@ -140,6 +140,7 @@
     <ClInclude Include="headers\imgui_impl_dx12.h" />
     <ClInclude Include="headers\imgui_impl_win32.h" />
     <ClInclude Include="headers\imgui_internal.h" />
+    <ClInclude Include="headers\imgui_utility.h" />
     <ClInclude Include="headers\imstb_rectpack.h" />
     <ClInclude Include="headers\imstb_textedit.h" />
     <ClInclude Include="headers\imstb_truetype.h" />

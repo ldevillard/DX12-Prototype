@@ -3,6 +3,7 @@
 
 #include "data/geometry/Vertex.h"
 #include "helpers/Time.h"
+#include "imgui_utility.h"
 #include "maths/Maths.h"
 #include "objects/meshes/Mesh.h"
 #include "pipeline/CommandList.h"
@@ -18,8 +19,8 @@ Editor::Editor(uint32_t _width, uint32_t _height)
     camera = std::make_unique<Camera>(Vector({ 0, 0, -10, 1 }));
 
     std::string directory = GetExecutableDirectoryA();
-    models.push_back(Model(directory + "\\resources\\models\\bike.obj"));
-    //models.push_back(Model("C:\\Users\\logan\\Desktop\\DX12-Prototype\\x64\\Debug\\resources\\models\\pokemon.obj"));
+    // models.push_back(Model(directory + "\\resources\\models\\bike.obj"));
+    models.push_back(Model("C:\\Users\\logan\\Desktop\\DX12-Prototype\\x64\\Debug\\resources\\models\\pokemon.obj"));
     //models.push_back(Model("C:\\Users\\logan\\Desktop\\DX12-Prototype\\x64\\Debug\\resources\\models\\temple.obj"));
     //models.push_back(Model("C:\\Users\\logan\\Desktop\\DX12-Prototype\\x64\\Debug\\resources\\models\\sax.obj"));
     //models.push_back(Model("C:\\Users\\logan\\Desktop\\DX12-Prototype\\x64\\Debug\\resources\\models\\crab.obj"));
@@ -52,7 +53,7 @@ void Editor::OnUpdate()
     Matrix4 rotation = DirectX::XMMatrixRotationAxis(rotationAxis, DirectX::XMConvertToRadians(angle));
     for (int i = 0; i < models.size(); i++)
     {
-        models[i].SetTransform(rotation * DirectX::XMMatrixTranslation(-6.0f * (static_cast<float>(i) - 1.0f), 0, 0));
+        models[i].SetTransform(rotation);
         models[i].OnUpdate();
     }
 }
@@ -124,6 +125,12 @@ void Editor::render()
     ImGui::Text("Delta Time: %.1f ms", Time::GetDeltaTime() * 1000);
     ImGui::Text("FPS: %.1f", Time::GetFrameRate());
     ImGui::Text("FOV: %.1f", camera->GetFOV());
+
+    // wireframe
+    bool wireframe = sample->GetWireframe();
+    ImGui::DrawBoolControl("Wireframe: ", wireframe, 80);
+    sample->SetWireframe(wireframe);
+
     ImGui::End();
 }
 

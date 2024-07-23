@@ -35,6 +35,20 @@ RootSignature& Sample::GetRootSignature()
     return *rootSignature;
 }
 
+bool Sample::GetWireframe() const
+{
+    return wireframe;
+}
+
+#pragma endregion
+
+#pragma region Setters
+
+void Sample::SetWireframe(bool _wireframe)
+{
+    wireframe = _wireframe;
+}
+
 #pragma endregion
 
 void Sample::OnInit(HWND _hWnd)
@@ -154,10 +168,7 @@ void Sample::SetupPipeline()
         psoDescriptor.VS = vertexShader.GetByteCode();
         psoDescriptor.PS = pixelShader.GetByteCode();
         psoDescriptor.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-        
-        //psoDescriptor.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
         //psoDescriptor.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
-
         psoDescriptor.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
         psoDescriptor.SampleMask = UINT_MAX;
         psoDescriptor.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
@@ -168,6 +179,10 @@ void Sample::SetupPipeline()
         psoDescriptor.DepthStencilState = depthStencilDesc;
 
         pipelineStateObject = std::make_unique<PipelineStateObject>(*device, psoDescriptor);
+        
+        // wireframe pso
+        psoDescriptor.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+        pipelineStateObjectWireframe = std::make_unique<PipelineStateObject>(*device, psoDescriptor);
     }
 
     // close and execute command list to send data to gpu
@@ -336,12 +351,14 @@ void Sample::preRender()
     auto rtv = RTVdescriptorHeap->GetRenderTargetView(currentBackBufferIndex);
     auto dsv = DSVdescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
+    PipelineStateObject& pso = wireframe ? *pipelineStateObjectWireframe : *pipelineStateObject;
+
     commandAllocators[currentBackBufferIndex]->Reset();
-    commandList->Reset(*commandAllocators[currentBackBufferIndex], *pipelineStateObject);
+    commandList->Reset(*commandAllocators[currentBackBufferIndex], pso);
 
     commandList->ClearRenderTargets(backBuffer, rtv, dsv, clearColor);
 
-    commandList->SetPipelineState(*pipelineStateObject);
+    commandList->SetPipelineState(pso);
     commandList->SetGraphicsRootSignature(*rootSignature);
 
     // prepare pipeline stages

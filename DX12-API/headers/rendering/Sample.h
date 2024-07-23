@@ -21,6 +21,9 @@ public:
 
 	CommandList& GetCommandList();
 	RootSignature& GetRootSignature();
+	bool GetWireframe() const;
+
+	void SetWireframe(bool wireframe);
 
 	void OnInit(HWND hWnd);
 	void OnUpdate();
@@ -56,6 +59,7 @@ private:
 	bool useWarp;
 	bool allowTearing;
 	bool vSync = true;
+	bool wireframe;
 
 	uint64_t frameFenceValues[SwapChain::FrameCount] = {};
 
@@ -65,11 +69,13 @@ private:
 	std::unique_ptr<CommandQueue> commandQueue;
 	std::unique_ptr<Device> device;
 	std::unique_ptr<Fence> fence;
-	std::unique_ptr<PipelineStateObject> pipelineStateObject;
 	std::unique_ptr<RootSignature> rootSignature;
 	std::unique_ptr<DescriptorHeap> RTVdescriptorHeap;
 	std::unique_ptr<DescriptorHeap> SRVdescriptorHeap;
 	std::unique_ptr<SwapChain> swapChain;
+	// pso
+	std::unique_ptr<PipelineStateObject> pipelineStateObject;
+	std::unique_ptr<PipelineStateObject> pipelineStateObjectWireframe;
 
 	// depth buffer and its descriptor heap
 	Buffer depthBuffer;
