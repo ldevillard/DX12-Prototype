@@ -37,6 +37,12 @@
     <Filter Include="Source Files\objects\meshes">
       <UniqueIdentifier>{1fac12af-3466-4ae2-949a-a1a19ce8a9a5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\utility">
+      <UniqueIdentifier>{185b0637-96d0-42f9-a2d3-c098f2f2ff7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\utility">
+      <UniqueIdentifier>{b57ac684-b270-4494-b2ef-56689e314a2b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="srcs\MainApplication.cpp">
@@ -60,6 +66,9 @@
     <ClCompile Include="srcs\objects\meshes\Cube.cpp">
       <Filter>Source Files\objects\meshes</Filter>
     </ClCompile>
+    <ClCompile Include="srcs\utility\ModelLoader.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Window.h">
@@ -82,6 +91,9 @@
     </ClInclude>
     <ClInclude Include="headers\objects\meshes\Cube.h">
       <Filter>Header Files\objects\meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\utility\ModelLoader.h">
+      <Filter>Header Files\utility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

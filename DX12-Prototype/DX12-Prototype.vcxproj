@@ -25,6 +25,7 @@
     <ClCompile Include="srcs\objects\meshes\Mesh.cpp" />
     <ClCompile Include="srcs\objects\Model.cpp" />
     <ClCompile Include="srcs\systems\Editor.cpp" />
+    <ClCompile Include="srcs\utility\ModelLoader.cpp" />
     <ClCompile Include="srcs\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -39,6 +40,7 @@
     <ClInclude Include="headers\objects\meshes\Mesh.h" />
     <ClInclude Include="headers\objects\Model.h" />
     <ClInclude Include="headers\systems\Editor.h" />
+    <ClInclude Include="headers\utility\ModelLoader.h" />
     <ClInclude Include="headers\Window.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
