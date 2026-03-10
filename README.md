@@ -22,4 +22,5 @@ A DirectX 12 protoype to experiment and learn the d3d12 graphic API ! 🚀
 
 ## Showcase
 
-![Raytraced Screen](https://github.com/ldevillard/DX12-Prototype/blob/main/Thumbnails/bike-render.png)
+![Bike Gif](https://github.com/ldevillard/DX12-Prototype/blob/main/Thumbnails/bike-showcase.gif)
+![Bike](https://github.com/ldevillard/DX12-Prototype/blob/main/Thumbnails/bike-render.png)
